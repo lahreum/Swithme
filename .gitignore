@@ -1,7 +1,12 @@
-# Initially taken from Github's Python gitignore file
+# Logs
+logs/
 
-# Image Files
-images/
+# Weights / Checkpoints
+data/
+checkpoints/
+
+# Datasets
+datasets/
 
 # Project Configs
 .idea/
