@@ -21,7 +21,7 @@
         </v-row>
         <v-row no-gutters style="margin-bottom: 5px; letter-spacing: -0.6px;">
           대표자 : 이기호 | 사업자등록번호 : 123-32-12345 | 개인정보 관리 책임자
-          : 임찬규(changu13@gmail.com)
+          : 임찬규
         </v-row>
         <v-row
           no-gutters
