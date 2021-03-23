@@ -1,13 +1,16 @@
 <template>
   <div>
     <v-avatar size="70px">
-      <img src="@/assets/img/avatars/01.png" alt="Profile" />
+      <img :src="src" />
     </v-avatar>
+    {{ src }}
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  props: ["src"],
+};
 </script>
 
 <style></style>
