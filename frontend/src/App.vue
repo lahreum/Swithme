@@ -19,6 +19,7 @@
       :btnNameColor="'white'"
       :btnName="'중복체크'"
     />
+    <ProfileStudying :src="'https://ifh.cc/g/wyakuA.jpg'" />
     <v-main>
       <router-view />
     </v-main>
@@ -33,6 +34,7 @@ import InfoChip from "./components/common/InfoChip.vue";
 import AppBtnLarge from "./components/common/AppBtnLarge.vue";
 import AppBtnMiddle from "./components/common/AppBtnMiddle.vue";
 import AppBtnSmall from "./components/common/AppBtnSmall.vue";
+import ProfileStudying from "./components/common/ProfileStudying.vue";
 
 export default {
   components: {
@@ -42,6 +44,7 @@ export default {
     AppBtnMiddle,
     AppBtnLarge,
     AppBtnSmall,
+    ProfileStudying,
   },
 };
 </script>
