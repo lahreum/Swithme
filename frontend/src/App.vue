@@ -20,6 +20,7 @@
       :btnName="'중복체크'"
     />
     <ProfileStudying :src="'https://ifh.cc/g/wyakuA.jpg'" />
+    <ProgressBar :progressValue="30" />
     <v-main>
       <router-view />
     </v-main>
@@ -35,6 +36,7 @@ import AppBtnLarge from "./components/common/AppBtnLarge.vue";
 import AppBtnMiddle from "./components/common/AppBtnMiddle.vue";
 import AppBtnSmall from "./components/common/AppBtnSmall.vue";
 import ProfileStudying from "./components/common/ProfileStudying.vue";
+import ProgressBar from "./components/common/ProgressBar.vue";
 
 export default {
   components: {
@@ -45,6 +47,7 @@ export default {
     AppBtnLarge,
     AppBtnSmall,
     ProfileStudying,
+    ProgressBar,
   },
 };
 </script>
