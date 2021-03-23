@@ -13,6 +13,12 @@
       :btnNameColor="'white'"
       :btnName="'완료'"
     />
+    <br />
+    <AppBtnSmall
+      :btnColor="'purple'"
+      :btnNameColor="'white'"
+      :btnName="'중복체크'"
+    />
     <v-main>
       <router-view />
     </v-main>
@@ -26,6 +32,7 @@ import AppHeader from "./components/include/AppHeader.vue";
 import InfoChip from "./components/common/InfoChip.vue";
 import AppBtnLarge from "./components/common/AppBtnLarge.vue";
 import AppBtnMiddle from "./components/common/AppBtnMiddle.vue";
+import AppBtnSmall from "./components/common/AppBtnSmall.vue";
 
 export default {
   components: {
@@ -34,6 +41,7 @@ export default {
     "info-chip": InfoChip,
     AppBtnMiddle,
     AppBtnLarge,
+    AppBtnSmall,
   },
 };
 </script>
