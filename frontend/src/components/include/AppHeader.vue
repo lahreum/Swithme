@@ -3,7 +3,7 @@
     <v-row no-gutters align="center" style="height: 100px;">
       <v-col cols="2" class="logo">
         <img
-          src="../assets/img/logo_bl.png"
+          src="../../assets/img/logo_bl.png"
           alt="swithme-logo"
           style="width: 75%; height: auto;"
         />
@@ -21,13 +21,18 @@
       </v-col>
       <!-- 로그인, 프로필 영역 -->
       <v-col cols="2">
-        <v-row no-gutters v-if="!isLogin" justify="center">
+        <v-row
+          no-gutters
+          v-if="!isLogin"
+          justify="center"
+          style="margin-left: 60px;"
+        >
           <div class="login-item" @click="signIn">로그인</div>
           <div class="login-item">|</div>
           <div class="login-item">회원가입</div>
         </v-row>
-        <v-row no-gutters v-else>
-          <!-- 여기에 프로필 사진 컴포넌트 넣어야 함 -->
+        <v-row no-gutters v-else style="margin-left: 60px;">
+          <!-- 이 위치에 프로필 사진 컴포넌트 넣어야 함 -->
           <v-col align="center" @click="showPop">
             {{ username }}님, 안녕하세요!
           </v-col>
