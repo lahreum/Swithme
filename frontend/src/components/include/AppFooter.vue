@@ -1,6 +1,6 @@
 <template>
   <footer>
-    <v-row class="bg" align="center">
+    <v-row no-gutters class="bg" align="center">
       <v-col class="item" cols="4" align="center">
         <img
           src="../../assets/img/logo_wh.png"
@@ -42,7 +42,7 @@ export default {};
 .bg {
   background-color: black;
   height: 250px;
-  margin-top: 150px;
+  margin-top: 150px !important;
   padding-right: 20%;
   padding-left: 20%;
 }
