@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <app-header></app-header>
-    <info-chip :text="'상위 30%'"></info-chip>
+    <comment-input-bar></comment-input-bar>
     <v-main>
       <router-view />
     </v-main>
@@ -12,13 +12,13 @@
 <script>
 import AppFooter from './components/include/AppFooter.vue';
 import AppHeader from './components/include/AppHeader.vue';
-import InfoChip from './components/common/InfoChip.vue';
+import CommentInputBar from './components/common/CommentInputBar.vue';
 
 export default {
   components: {
     'app-header': AppHeader,
     'app-footer': AppFooter,
-    'info-chip': InfoChip,
+    'comment-input-bar': CommentInputBar,
   },
 };
 </script>
