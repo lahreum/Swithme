@@ -3,7 +3,7 @@
     <v-row no-gutters align="center" style="height: 100px;">
       <v-col cols="2" class="logo">
         <img
-          src="../assets/img/logo_bl.png"
+          src="../../assets/img/logo_bl.png"
           alt="swithme-logo"
           style="width: 75%; height: auto;"
         />

@@ -3,7 +3,7 @@
     <v-row class="bg" align="center">
       <v-col class="item" cols="4" align="center">
         <img
-          src="../assets/img/logo_wh.png"
+          src="../../assets/img/logo_wh.png"
           alt="swithme-logo"
           style="width: 90%; height: auto;"
         />
