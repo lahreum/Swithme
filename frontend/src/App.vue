@@ -1,5 +1,5 @@
 <template>
-  <v-app id="app">
+  <v-app>
     <app-header></app-header>
     <app-footer></app-footer>
   </v-app>
@@ -13,7 +13,6 @@ export default {
   components: {
     'app-header': AppHeader,
     'app-footer': AppFooter,
-    'input-bar': InputBar,
   },
 };
 </script>
