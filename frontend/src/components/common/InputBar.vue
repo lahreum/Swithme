@@ -20,6 +20,8 @@ export default {
 <style scoped>
 .v-text-field--outlined >>> fieldset {
   border-color: #E0E0E0;
-  border-width: 4px;
+  border-radius: 4px;
+  width: 100px;
+  font-size: 5px;
 }
 </style>
