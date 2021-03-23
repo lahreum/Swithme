@@ -5,11 +5,12 @@
 </template>
 
 <script>
-import AppHeader from './components/AppHeader.vue';
+import AppHeader from './components/include/AppHeader.vue';
 
 export default {
   components: {
     'app-header': AppHeader,
+    'input-bar': InputBar,
   },
 };
 </script>
