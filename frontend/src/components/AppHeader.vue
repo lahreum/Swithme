@@ -21,12 +21,17 @@
       </v-col>
       <!-- 로그인, 프로필 영역 -->
       <v-col cols="2">
-        <v-row no-gutters v-if="!isLogin" justify="center">
+        <v-row
+          no-gutters
+          v-if="!isLogin"
+          justify="center"
+          style="margin-left: 60px;"
+        >
           <div class="login-item" @click="signIn">로그인</div>
           <div class="login-item">|</div>
           <div class="login-item">회원가입</div>
         </v-row>
-        <v-row no-gutters v-else>
+        <v-row no-gutters v-else style="margin-left: 60px;">
           <!-- 여기에 프로필 사진 컴포넌트 넣어야 함 -->
           <v-col align="center" @click="showPop">
             {{ username }}님, 안녕하세요!
