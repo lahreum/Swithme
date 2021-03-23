@@ -13,6 +13,7 @@ export default {
   components: {
     'app-header': AppHeader,
     'app-footer': AppFooter,
+    'input-bar': InputBar,
   },
 };
 </script>
