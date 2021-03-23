@@ -32,7 +32,7 @@
           <div class="login-item">회원가입</div>
         </v-row>
         <v-row no-gutters v-else style="margin-left: 60px;">
-          <!-- 여기에 프로필 사진 컴포넌트 넣어야 함 -->
+          <!-- 이 위치에 프로필 사진 컴포넌트 넣어야 함 -->
           <v-col align="center" @click="showPop">
             {{ username }}님, 안녕하세요!
           </v-col>
