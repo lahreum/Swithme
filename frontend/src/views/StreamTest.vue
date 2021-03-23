@@ -53,16 +53,20 @@ export default {
               imageCapture
                 .grabFrame()
                 .then((imageBitmap) => {
+                  // 서버로 데이터를 전송할 폼 생성
                   let data = new FormData();
-                  // 캡처한 이미지를 Data URL로 변환
+
+                  // canvas에 이미지 등록
                   ctx.drawImage(imageBitmap, 0, 0);
 
+                  // canvas에서 이미지를 데이터로 변환
                   canvas.toBlob((blob) => {
+                    // 폼에 데이터 추가
                     data.append('data', blob);
 
-                    // 집중 여부 판단을 위해 이미지를 서비스 서버로 전송
+                    // 집중 여부 판단을 위해 이미지를 인공지능 서버로 전송
                     axios
-                      .post('http://localhost:9999/predict', data)
+                      .post('http://localhost:8000/predict', data)
                       .then((response) => {
                         // <img>에 출력하도록 Data URL 연결
                         img.src = 'data:image/png;base64,' + response.data;
