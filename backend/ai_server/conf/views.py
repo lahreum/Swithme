@@ -1,7 +1,7 @@
 import cv2
 import base64
 import numpy as np
-# from contents import train
+from contents import detect
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
