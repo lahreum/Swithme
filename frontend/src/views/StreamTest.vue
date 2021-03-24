@@ -1,5 +1,5 @@
 <template>
-  <img />
+  <img id="image" />
 </template>
 
 <script>
@@ -15,7 +15,7 @@ export default {
   mounted() {
     // Element 생성
     let canvas = document.createElement('canvas');
-    let img = document.querySelector('img');
+    let img = document.getElementById('image');
 
     // 제약 조건 정의
     let constaints = {
@@ -40,7 +40,7 @@ export default {
           .applyConstraints(constaints)
           .then(() => {
             // 이미지 캡처 주기 설정
-            let period = 100;
+            let period = 200;
 
             // 이미지를 캡처하기 위한 객체 생성
             let imageCapture = new ImageCapture(this.track);
@@ -68,6 +68,7 @@ export default {
                     axios
                       .post('http://localhost:8000/predict', data)
                       .then((response) => {
+                        console.log(response.data);
                         // <img>에 출력하도록 Data URL 연결
                         img.src = 'data:image/png;base64,' + response.data;
                       })
