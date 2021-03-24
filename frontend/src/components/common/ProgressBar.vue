@@ -2,11 +2,14 @@
   <div>
     <v-progress-linear
       color="#673fb4"
-      height="30"
+      height="50"
       :value="progressValue"
       rounded
     >
-      <strong>{{ progressValue }}%</strong>
+      <strong v-if="isNaN(progressValue) === true"
+        >투두리스트를 추가해주세요</strong
+      >
+      <strong v-else>{{ progressValue }}%</strong>
     </v-progress-linear>
   </div>
 </template>
