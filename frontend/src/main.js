@@ -4,7 +4,6 @@ import VueRouter from 'vue-router';
 import routes from './routes';
 import store from './vuex/store';
 import vuetify from './plugins/vuetify';
-import '@/fontAwesomeIcon.js';  // fontAwesome.js 불러옴
 
 Vue.config.productionTip = false;
 
