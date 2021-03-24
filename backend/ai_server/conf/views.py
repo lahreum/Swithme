@@ -8,12 +8,15 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
+# 파라미터 설정
 num_classes = 80
 weights = './contents/checkpoints/yolov3.tf'
 
+# GPU 메모리 설정
 physical_devices = tf.config.experimental.list_physical_devices('GPU')
 tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
+# 모델 생성
 settings.YOLO = YoloV3(classes=num_classes)
 settings.YOLO.load_weights(weights)
 
@@ -29,16 +32,14 @@ def predict(request):
     # 1차원에서 3차원 ndarray로 변환
     image = cv2.imdecode(image, cv2.IMREAD_COLOR)
 
-    # ------------ predict ------------
+    # 집중 여부 판단
     image = detect(image)
 
-    # ---------------------------------
-
-    # 시각화된 3차원 ndarray를 byte 단위의 이미지로 변환
+    # 시각화된 3차원 ndarray를 1차원 int형 ndarray로 변환
     _, image = cv2.imencode('.png', image)
-    image_bytes = image.tobytes()
 
-    # ---------------------------------
+    # 1차원 ndarray를 byte 단위의 이미지로 변환
+    image_bytes = image.tobytes()
 
     # Base64 인코딩
     image_bytes = base64.b64encode(image_bytes)
