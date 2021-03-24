@@ -2,7 +2,7 @@
     <v-app class="groupInfo">
         <v-flex xs2>
             <v-img :src="src" style="border-radius:10px;">
-                <div class="groupCnt"><p><font-awesome-icon icon="user" style="margin-right:5px;"/>16/20</p></div>
+                <div class="groupCnt"><v-icon dark>mdi-account</v-icon><span>{{ groupCnt }} / {{ groupTotalCnt}}</span></div>
             </v-img>
         </v-flex>
         <div>
@@ -14,7 +14,7 @@
 
 <script>
 export default {
-  props: ["src", "groupName", "groupDesc"],
+  props: ["src", "groupName", "groupDesc", "groupCnt", "groupTotalCnt"],
 };
 </script>
 
