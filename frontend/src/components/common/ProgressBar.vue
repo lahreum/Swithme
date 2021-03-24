@@ -1,5 +1,5 @@
 <template>
-  <div style="width:350px">
+  <div>
     <v-progress-linear
       color="#673fb4"
       height="30"
