@@ -6,17 +6,21 @@
           src="../../assets/img/logo_bl.png"
           alt="swithme-logo"
           style="width: 75%; height: auto;"
+          @click="goMain"
         />
       </v-col>
       <v-col cols="8">
         <v-row no-gutters align="center">
-          <div class="menu-item">튜토리얼</div>
-          <div class="menu-item">공부하러가기</div>
-          <div class="menu-item">나의학습</div>
-          <div class="menu-item">랭킹</div>
-          <div class="menu-item">그룹</div>
-          <div class="menu-item">커뮤니티</div>
-          <div class="menu-item"></div>
+          <router-link class="menu-item" to="/tutorial"> 튜토리얼 </router-link>
+          <router-link class="menu-item" to="/study">
+            공부하러가기
+          </router-link>
+          <router-link class="menu-item" to="/mystudy"> 나의학습 </router-link>
+          <router-link class="menu-item" to="/ranking"> 랭킹 </router-link>
+          <router-link class="menu-item" to="/group"> 그룹 </router-link>
+          <router-link class="menu-item" to="/community">
+            커뮤니티
+          </router-link>
         </v-row>
       </v-col>
       <!-- 로그인, 프로필 영역 -->
@@ -64,16 +68,21 @@ export default {
     showPop: function() {
       this.flag = !this.flag;
     },
+    goMain: function() {
+      this.$router.push('/');
+    },
   },
 };
 </script>
 
 <style>
 .menu-item {
-  float: left;
   margin-left: 40px;
   letter-spacing: -1px;
   font-size: 1.2rem;
+  color: black !important;
+  /* display: inline-block; */
+  text-decoration: none;
 }
 .login-item {
   float: right;
