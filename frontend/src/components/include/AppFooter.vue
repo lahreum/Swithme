@@ -1,6 +1,6 @@
 <template>
   <footer>
-    <v-row class="bg" align="center">
+    <v-row no-gutters class="bg" align="center">
       <v-col class="item" cols="4" align="center">
         <img
           src="../../assets/img/logo_wh.png"
@@ -21,7 +21,7 @@
         </v-row>
         <v-row no-gutters style="margin-bottom: 5px; letter-spacing: -0.6px;">
           대표자 : 이기호 | 사업자등록번호 : 123-32-12345 | 개인정보 관리 책임자
-          : 임찬규(changu13@gmail.com)
+          : 임찬규
         </v-row>
         <v-row
           no-gutters
@@ -42,7 +42,7 @@ export default {};
 .bg {
   background-color: black;
   height: 250px;
-  margin-top: 150px;
+  margin-top: 150px !important;
   padding-right: 20%;
   padding-left: 20%;
 }

@@ -1,10 +1,8 @@
 <template>
   <v-app>
-    <app-header></app-header>
-    <v-main>
-      <router-view />
-    </v-main>
-    <app-footer></app-footer>
+    <app-header v-show="$route.path=== '/timer' ? false : true"></app-header>
+    <router-view />
+    <app-footer v-show="$route.path=== '/timer' || $route.path=== '/'  ? false : true"></app-footer>
   </v-app>
 </template>
 
