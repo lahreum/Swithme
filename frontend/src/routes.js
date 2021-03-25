@@ -1,4 +1,3 @@
-import StreamTest from '@/views/StreamTest.vue';
 import Tutorial from '@/views/HomeTutorial.vue';
 import MyStudy from '@/views/MyStudy.vue';
 import Ranking from '@/views/Ranking.vue';
@@ -42,10 +41,5 @@ export default [
     path: '/community',
     name: 'Community',
     component: Community,
-  },
-  {
-    path: '/stream',
-    name: 'StreamTest',
-    component: StreamTest,
   },
 ];
