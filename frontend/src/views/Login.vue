@@ -1,11 +1,8 @@
 <template>
     <v-row justify="center">
-        <v-dialog
-        v-model="dialog"
-        max-width="420" overlay-opacity="-1" persistent
-        >
-        <v-card class="round" max-width="420" >
-            <!-- <v-btn
+        <div style="width:50%;">
+            <!-- 버튼도 v-dialog와 동시에 출력되도록 수정필요 -->
+            <v-btn
             class="cancelBtn"
             fab
             dark
@@ -15,7 +12,12 @@
                 <v-icon dark>
                     mdi-close
                 </v-icon>
-            </v-btn> -->
+            </v-btn>
+        <v-dialog
+        v-model="dialog"
+        max-width="420" persistent
+        >
+        <v-card class="round" max-width="420" >
             <!-- 로그인 -->
             <v-card-title>
             <p class="headLine">LOGIN</p>
@@ -50,6 +52,7 @@
 
         </v-card>
     </v-dialog>
+    </div>
   </v-row>
 </template>
 
@@ -144,10 +147,14 @@ div.container {
     left: -10px;
 }
 
-/* .cancelBtn {
+.cancelBtn {
     position: absolute;
-    top:-14px;
-    right: -14px;
+    top:45px;
+    right: 535px;
+    /* top:-14px;
+    right: -14px; */
     cursor: pointer;
-} */
+    z-index: 1000;
+    border-radius: 100% !important;
+}
 </style>

@@ -1,38 +1,40 @@
 <template>
     <v-row justify="center">
+      <div style="width:50%;">
+        <v-btn
+        class="cancelBtn"
+        fab
+        dark
+        small
+        color="#BDBDBD"
+        >
+            <v-icon dark>
+                mdi-close
+            </v-icon>
+        </v-btn>
         <v-dialog
         v-model="dialog"
         max-width="300" overlay-opacity="-1" persistent
         >
         <v-card class="round" max-width="300" >
-            <!-- <v-btn
-            class="cancelBtn"
-            fab
-            dark
-            small
-            color="#BDBDBD"
-            >
-                <v-icon dark>
-                    mdi-close
-                </v-icon>
-            </v-btn> -->
             <!-- 상단 문구 -->
             <v-card-title>
-            <p class="headLine">로그인이 필요한 서비스 입니다.</p>
+            <p class="headLine">{{ message }}</p>
             </v-card-title>
             <!-- 하단 문구 -->
             <v-card-text>
-            <p class="bottomLine">로그인 후 이용하실 수 있습니다.</p>
+            <p class="bottomLine">{{ subMessage }}</p>
             </v-card-text>
 
             <v-card-actions>
             <v-spacer></v-spacer>
 
-            <div @click="dialog = false"><app-btn-small class="btnOption" :btnColor="'#673fb4'" :btnName="'로그인'" :btnNameColor="'white'" ></app-btn-small></div>
-            <div @click="dialog = false"><app-btn-small class="btnOption" :btnColor="'#424242'" :btnName="'취소'" :btnNameColor="'white'"></app-btn-small></div>
+            <div @click="dialog = false"><app-btn-small class="btnOption" :btnColor="btnLeft" :btnName="'로그인'" :btnNameColor="'white'" ></app-btn-small></div>
+            <div @click="dialog = false"><app-btn-small class="btnOption" :btnColor="btnRight" :btnName="'취소'" :btnNameColor="'white'"></app-btn-small></div>
             </v-card-actions>
         </v-card>
     </v-dialog>
+      </div>
   </v-row>
 </template>
 
@@ -44,6 +46,7 @@ import AppBtnSmall from './AppBtnSmall.vue';
     components: { 
         'app-btn-small': AppBtnSmall,
     },
+    props: ["message", "subMessage", "btnLeft", "btnRight"],
     data () {
       return {
         dialog: true,
@@ -77,10 +80,12 @@ import AppBtnSmall from './AppBtnSmall.vue';
     border-radius: 25px!important;
     position: relative;
 }
-/* .cancelBtn {
+.cancelBtn {
     position: absolute;
-    top:-14px;
-    right: -14px;
+    top:210px;
+    right: 595px;
     cursor: pointer;
-} */
+    z-index: 1000;
+    border-radius: 100% !important;
+}
 </style>

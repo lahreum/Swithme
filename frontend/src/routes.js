@@ -5,11 +5,13 @@ import MyStudy from '@/views/MyStudy.vue';
 import Ranking from '@/views/Ranking.vue';
 import GroupMain from '@/views/GroupMain.vue';
 import Community from '@/views/Community.vue';
+import Home from '@/views/Home.vue';
 
 export default [
   {
     path: '/',
-    name: 'Main'
+    name: 'Home',
+    component: Home,
   },
   {
     path: '/tutorial',
