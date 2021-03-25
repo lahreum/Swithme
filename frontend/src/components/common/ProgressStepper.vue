@@ -4,7 +4,7 @@
     <!-- 1 -->
     <v-col class="pg-item pg-order-1" align-self="center" @click="activate1">
       <v-row no-gutters justify="center" class="pg-order-1">
-        <v-avatar size="50" :color="isActive1 == true ? '#673fb4' : '#d9d9d9'">
+        <v-avatar size="60" :color="isActive1 == true ? '#673fb4' : '#d9d9d9'">
           <span :class="{ 'active-num': isActive1, 'default-num': !isActive1 }">
             1
           </span>
@@ -121,24 +121,24 @@ export default {
 
 <style>
 .pg-container {
-  padding-left: 180px;
-  padding-right: 180px;
+  padding-left: 200px;
+  padding-right: 200px;
 }
 .pg-word {
   color: #b2b2b2;
-  letter-spacing: -0.7px;
+  letter-spacing: -1px;
   font-size: 0.8rem;
   margin: 0;
   margin-top: 10px;
 }
 .active-num {
   color: white;
-  font-size: 1.5rem;
-  font-weight: bold;
+  font-size: 1.7rem;
+  /* font-weight: bold; */
 }
 .default-num {
   color: #673fb4;
-  font-size: 1.5rem;
-  font-weight: bold;
+  font-size: 1.7rem;
+  /* font-weight: bold; */
 }
 </style>
