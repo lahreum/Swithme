@@ -3,7 +3,6 @@
     <v-avatar size="70px">
       <img :src="src" />
     </v-avatar>
-    {{ src }}
   </div>
 </template>
 

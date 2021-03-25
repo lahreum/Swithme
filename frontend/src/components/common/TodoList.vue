@@ -29,15 +29,12 @@ export default {
   data() {
     return {
       list: [],
-      progress: {
-        type: Number,
-      },
+      progress: 0,
     };
   },
   mounted() {
     const list = JSON.parse(localStorage.getItem("list"));
     this.list = list || [];
-    console.log(this.list);
     this.UpdateProgress();
   },
   methods: {
@@ -78,9 +75,7 @@ export default {
         }
       }
       this.progress = parseInt((100 * doneTodos) / lengthList);
-      console.log(doneTodos);
-      console.log(lengthList);
-      console.log(this.progress);
+      console.log(typeof(this.progress));
     },
   },
 };
@@ -89,6 +84,7 @@ export default {
 <style>
 .todoList {
   padding: 0;
-  height: 500px;
+  height: 330px;
+  /* overflow: scroll; */
 }
 </style>
