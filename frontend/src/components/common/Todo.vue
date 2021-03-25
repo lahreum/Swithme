@@ -1,12 +1,12 @@
 <template>
   <v-list-item class="todo">
-    <v-checkbox @click="doneTodo(id)" v-model="doneData"></v-checkbox>
+    <v-checkbox @click="doneTodo(id)" v-model="doneData" color="#616161"></v-checkbox>
     <div :class="{ 'todo_title-done': doneData }" class="todo_title">
       {{ title }}
     </div>
     <v-spacer></v-spacer>
     <v-btn @click="deleteTodo(id)" class="todo_action" icon small>
-      <v-icon>mdi-delete</v-icon>
+      <v-icon>mdi-close</v-icon>
     </v-btn>
   </v-list-item>
 </template>

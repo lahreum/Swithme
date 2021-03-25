@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-btn width="360px" height="55px" :color="btnColor">
+    <v-btn width="100%" height="55px" :color="btnColor">
       <h3 :style="'color:' + btnNameColor">{{ btnName }}</h3>
     </v-btn>
   </div>
