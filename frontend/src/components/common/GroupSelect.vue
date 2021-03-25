@@ -1,9 +1,17 @@
 <template>
-  <div>
+  <div style="display:inline-block;">
     <v-menu left offset-y v-model="menu" :close-on-content-click="false">
       <template v-slot:activator="{ on, attrs }">
-        <v-btn fab color="primary" v-bind="attrs" v-on="on">
-          v
+        <v-btn
+          depressed
+          outlined
+          fab
+          width="20"
+          height="20"
+          v-bind="attrs"
+          v-on="on"
+        >
+          <v-icon>mdi-chevron-down</v-icon>
         </v-btn>
       </template>
       <v-row
