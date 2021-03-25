@@ -21,7 +21,8 @@ export default {
 .v-text-field--outlined >>> fieldset {
   border-color: #E0E0E0;
   border-radius: 4px;
-  width: 100px;
-  font-size: 5px;
+  border-width: 3.8px;
+  width: 265px;
+  /* font-size: 5px; */
 }
 </style>

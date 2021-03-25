@@ -1,7 +1,7 @@
 <template>
   <div>
-    <v-btn rounded width="130px" height="50px" :color="btnColor">
-      <h3 :style="'color:' + btnNameColor">{{ btnName }}</h3>
+    <v-btn width="110px" height="40px" :color="btnColor">
+      <span :style="'color:' + btnNameColor">{{ btnName }}</span>
     </v-btn>
   </div>
 </template>
@@ -12,4 +12,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.v-btn {
+  border-radius: 7px!important;
+}
+</style>
