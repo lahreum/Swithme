@@ -1,5 +1,6 @@
 import time
 import os
+import numpy as np
 import hashlib
 
 from absl import app, flags, logging
@@ -8,18 +9,21 @@ import tensorflow as tf
 import lxml.etree
 import tqdm
 
-flags.DEFINE_string('data_dir', '../datasets/VOC2009',
-                    'path to raw PASCAL VOC dataset')
+flags.DEFINE_string('data_dir', '../datasets/WIDER_Face',
+                    'path to raw dataset')
 flags.DEFINE_enum('split', 'train', [
                   'train', 'val'], 'specify train or val spit')
-flags.DEFINE_string('output_file', '../data/voc_train.tfrecord', 'output dataset')
-flags.DEFINE_string('classes', '../data/voc2012.names', 'classes file')
+flags.DEFINE_string('output_file', '../data/wider_face_train.tfrecord', 'output dataset')
+flags.DEFINE_string('classes', '../data/wider_face.names', 'classes file')
+
+object_max_num = -1
 
 
 def build_example(annotation, class_map):
-    print(annotation)
+    global object_max_num
+
     img_path = os.path.join(
-        FLAGS.data_dir, 'JPEGImages', annotation['filename'])
+        FLAGS.data_dir, 'JPEGImages', annotation['path'][2:])
     img_raw = open(img_path, 'rb').read()
     key = hashlib.sha256(img_raw).hexdigest()
 
@@ -35,15 +39,47 @@ def build_example(annotation, class_map):
     truncated = []
     views = []
     difficult_obj = []
+
     if 'object' in annotation:
+        object_max_num = max(object_max_num, len(annotation['object']))
+
         for obj in annotation['object']:
             difficult = bool(int(obj['difficult']))
             difficult_obj.append(int(difficult))
 
-            xmin.append(float(obj['bndbox']['xmin']) / width)
-            ymin.append(float(obj['bndbox']['ymin']) / height)
-            xmax.append(float(obj['bndbox']['xmax']) / width)
-            ymax.append(float(obj['bndbox']['ymax']) / height)
+            xmin_value = float(obj['bndbox']['xmin']) / width
+            ymin_value = float(obj['bndbox']['ymin']) / height
+            xmax_value = float(obj['bndbox']['xmax']) / width
+            ymax_value = float(obj['bndbox']['ymax']) / height
+
+            if xmin_value < 0.0:
+                print(annotation['path'], float(obj['bndbox']['xmin']))
+                xmin_value = 0.0
+            elif xmin_value > 1.0:
+                xmin_value = 1.0
+
+            if ymin_value < 0.0:
+                print(annotation['path'], float(obj['bndbox']['ymin']))
+                ymin_value = 0.0
+            elif ymin_value > 1.0:
+                ymin_value = 1.0
+
+            if xmax_value < 0.0:
+                print(annotation['path'], float(obj['bndbox']['xmax']))
+                xmax_value = 0.0
+            elif xmax_value > 1.0:
+                xmax_value = 1.0
+
+            if ymax_value < 0.0:
+                print(annotation['path'], float(obj['bndbox']['ymax']))
+                ymax_value = 0.0
+            elif ymax_value > 1.0:
+                ymax_value = 1.0
+
+            xmin.append(xmin_value)
+            ymin.append(ymin_value)
+            xmax.append(xmax_value)
+            ymax.append(ymax_value)
             classes_text.append(obj['name'].encode('utf8'))
             classes.append(class_map[obj['name']])
             truncated.append(int(obj['truncated']))
@@ -93,17 +129,26 @@ def main(_argv):
     logging.info("Class mapping loaded: %s", class_map)
 
     writer = tf.io.TFRecordWriter(FLAGS.output_file)
-    image_list = open(os.path.join(
-        FLAGS.data_dir, 'ImageSets', 'Main', '%s.txt' % FLAGS.split)).read().splitlines()
+    image_path = os.walk(os.path.join(FLAGS.data_dir, 'JPEGImages', 'WIDER_%s' % FLAGS.split, 'images'))
+    image_list = []
+
+    for dirpath, dirnames, filenames in image_path:
+        for filename in filenames:
+            image_list.append(filename.split('.')[0])
+
     logging.info("Image list loaded: %d", len(image_list))
+
     for name in tqdm.tqdm(image_list):
         annotation_xml = os.path.join(
-            FLAGS.data_dir, 'Annotations', name + '.xml')
+            FLAGS.data_dir, 'Annotations', FLAGS.split, name + '.xml')
         annotation_xml = lxml.etree.fromstring(open(annotation_xml).read())
         annotation = parse_xml(annotation_xml)['annotation']
         tf_example = build_example(annotation, class_map)
         writer.write(tf_example.SerializeToString())
+
     writer.close()
+
+    logging.info("Object Max Num: %d", object_max_num)
     logging.info("Done")
 
 

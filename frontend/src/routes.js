@@ -42,4 +42,9 @@ export default [
     name: 'Community',
     component: Community,
   },
+  {
+    path: '/kakao',
+    name: 'Kakao',
+    component: Kakao,
+  },
 ];
