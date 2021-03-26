@@ -17,9 +17,9 @@
 </template>
 
 <script>
-import TodoInput from "@/components/common/TodoInput.vue";
-import Todo from "@/components/common/Todo.vue";
-import ProgressBar from "@/components/common/ProgressBar.vue";
+import TodoInput from '@/components/common/TodoInput.vue';
+import Todo from '@/components/common/Todo.vue';
+import ProgressBar from '@/components/common/ProgressBar.vue';
 export default {
   components: {
     TodoInput,
@@ -29,15 +29,12 @@ export default {
   data() {
     return {
       list: [],
-      progress: {
-        type: Number,
-      },
+      progress: 0,
     };
   },
   mounted() {
-    const list = JSON.parse(localStorage.getItem("list"));
+    const list = JSON.parse(localStorage.getItem('list'));
     this.list = list || [];
-    console.log(this.list);
     this.UpdateProgress();
   },
   methods: {
@@ -54,7 +51,7 @@ export default {
     doneTodo(id) {
       const todoIndex = this.list.findIndex((todo) => todo.id === id);
       const doneProp = this.list[todoIndex].done;
-      this.$set(this.list[todoIndex], "done", !doneProp);
+      this.$set(this.list[todoIndex], 'done', !doneProp);
       this.setLs();
       this.UpdateProgress();
     },
@@ -66,7 +63,7 @@ export default {
     },
     setLs() {
       const jsonList = JSON.stringify(this.list);
-      localStorage.setItem("list", jsonList);
+      localStorage.setItem('list', jsonList);
     },
     UpdateProgress() {
       const lengthList = this.list.length;
@@ -78,9 +75,7 @@ export default {
         }
       }
       this.progress = parseInt((100 * doneTodos) / lengthList);
-      console.log(doneTodos);
-      console.log(lengthList);
-      console.log(this.progress);
+      console.log(typeof this.progress);
     },
   },
 };
@@ -89,6 +84,7 @@ export default {
 <style>
 .todoList {
   padding: 0;
-  height: 500px;
+  height: 130px;
+  /* overflow: scroll; */
 }
 </style>

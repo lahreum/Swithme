@@ -1,5 +1,5 @@
 <template>
-  <img id="image" />
+  <img id="stream" />
 </template>
 
 <script>
@@ -15,7 +15,7 @@ export default {
   mounted() {
     // Element 생성
     let canvas = document.createElement('canvas');
-    let img = document.getElementById('image');
+    let img = document.getElementById('stream');
 
     // 제약 조건 정의
     let constaints = {
@@ -68,7 +68,6 @@ export default {
                     axios
                       .post('http://localhost:8000/predict', data)
                       .then((response) => {
-                        console.log(response.data);
                         // <img>에 출력하도록 Data URL 연결
                         img.src = 'data:image/png;base64,' + response.data;
                       })
@@ -90,3 +89,10 @@ export default {
   },
 };
 </script>
+<style>
+#stream {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+</style>
