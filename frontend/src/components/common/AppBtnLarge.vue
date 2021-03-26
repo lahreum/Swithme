@@ -8,12 +8,12 @@
 
 <script>
 export default {
-  props: ["btnColor", "btnName", "btnNameColor"],
+  props: ['btnColor', 'btnName', 'btnNameColor'],
 };
 </script>
 
-<style>
+<style scoped>
 .v-btn {
-  border-radius: 7px!important;
+  border-radius: 7px !important;
 }
 </style>
