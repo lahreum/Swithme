@@ -17,7 +17,6 @@ flags.DEFINE_string('classes', '../data/voc2012.names', 'classes file')
 
 
 def build_example(annotation, class_map):
-    print(annotation)
     img_path = os.path.join(
         FLAGS.data_dir, 'JPEGImages', annotation['filename'])
     img_raw = open(img_path, 'rb').read()

@@ -125,4 +125,5 @@ STATIC_URL = '/static/'
 # Custom
 APPEND_SLASH = False
 CORS_ALLOW_ALL_ORIGINS = True
-YOLO = None
+ORIGIN_YOLO = None
+FACE_YOLO = None
