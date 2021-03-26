@@ -6,8 +6,8 @@
           <!-- 왼쪽 스트리밍 화면 -->
           <image-stream />
           <!-- <v-img src="https://ifh.cc/g/GribTx.jpg" max-width="800" style="background-size: contain;"></v-img> -->
-          <!-- <v-img class="logo" src="@/assets/img/logo_wh.png"></v-img> -->
-          <!-- <time-bar class="timer"></time-bar> -->
+          <v-img class="logo" src="@/assets/img/logo_wh.png"></v-img>
+          <time-bar class="timer"></time-bar>
         </v-col>
 
         <v-col cols="6" md="4">
@@ -52,11 +52,11 @@
 </template>
 
 <script>
-import ImageStream from '../components/common/ImageStream.vue';
-import TodoList from '../components/common/TodoList.vue';
-import ProfileNormal from '../components/common/ProfileNormal.vue';
-import AppBtnLarge from '../components/common/AppBtnLarge.vue';
-// import TimeBar from '../components/common/TimeBar.vue';
+import ImageStream from '@/components/common/ImageStream.vue';
+import TodoList from '@/components/common/TodoList.vue';
+import ProfileNormal from '@/components/common/ProfileNormal.vue';
+import AppBtnLarge from '@/components/common/AppBtnLarge.vue';
+import TimeBar from '@/components/common/TimeBar.vue';
 
 export default {
   components: {
@@ -64,12 +64,11 @@ export default {
     'todo-list': TodoList,
     'profile-normal': ProfileNormal,
     'app-btn-large': AppBtnLarge,
-    // 'time-bar': TimeBar,
+    'time-bar': TimeBar,
   },
   methods: {
     goHome() {
-      // this.$router.push({name: 'Home'});
-      this.$router.push('/');
+      
     },
   },
 };
