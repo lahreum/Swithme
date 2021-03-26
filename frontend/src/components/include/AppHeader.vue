@@ -1,7 +1,7 @@
 <template>
   <header>
     <v-row no-gutters align="center" style="height: 100px;">
-      <v-col cols="2" class="logo">
+      <v-col cols="2" class="logo-header">
         <img
           src="../../assets/img/logo_bl.png"
           alt="swithme-logo"
@@ -90,7 +90,7 @@ export default {
   letter-spacing: -1px;
   font-size: 1rem;
 }
-.logo {
+.logo-header {
   display: flex;
   justify-content: center;
 }
