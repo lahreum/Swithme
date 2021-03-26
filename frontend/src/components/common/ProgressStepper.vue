@@ -2,10 +2,10 @@
   <!-- 뒤로가기에 따라서 isActive 변수 값들 처리해야 함 -->
   <v-row class="pg-container" no-gutters>
     <!-- 1 -->
-    <v-col class="pg-item pg-order-1" align-self="center" @click="activate1">
+    <v-col class="pg-item pg-order-1" align-self="center">
       <v-row no-gutters justify="center" class="pg-order-1">
-        <v-avatar size="60" :color="isActive1 == true ? '#673fb4' : '#d9d9d9'">
-          <span :class="{ 'active-num': isActive1, 'default-num': !isActive1 }">
+        <v-avatar size="60" :color="isActive == 1 ? '#673fb4' : '#d9d9d9'">
+          <span :class="{ 'active-num': (isActive == 1), 'default-num': !(isActive == 1) }">
             1
           </span>
         </v-avatar>
@@ -15,16 +15,16 @@
     <!-- dot -->
     <v-col class="pg-item pg-order-1" align-self="center">
       <v-row no-gutters justify="center">
-        <v-icon :color="isActive1 == true ? 'black' : '#d9d9d9'" size="50">
+        <v-icon :color="isActive == 1 ? 'black' : '#d9d9d9'" size="50">
           mdi-dots-horizontal
         </v-icon>
       </v-row>
     </v-col>
     <!-- 2 -->
-    <v-col class="pg-item pg-order-2" align-self="center" @click="activate2">
+    <v-col class="pg-item pg-order-2" align-self="center">
       <v-row no-gutters justify="center">
-        <v-avatar size="50" :color="isActive2 == true ? '#673fb4' : '#d9d9d9'">
-          <span :class="{ 'active-num': isActive2, 'default-num': !isActive2 }">
+        <v-avatar size="50" :color="isActive == 2 ? '#673fb4' : '#d9d9d9'">
+          <span :class="{ 'active-num': (isActive == 2), 'default-num': !(isActive == 2) }">
             2
           </span>
         </v-avatar>
@@ -34,16 +34,16 @@
     <!-- dot -->
     <v-col class="pg-item pg-order-2" align-self="center">
       <v-row no-gutters justify="center">
-        <v-icon :color="isActive2 == true ? 'black' : '#d9d9d9'" size="50">
+        <v-icon :color="isActive == 2 ? 'black' : '#d9d9d9'" size="50">
           mdi-dots-horizontal
         </v-icon>
       </v-row>
     </v-col>
     <!-- 3 -->
-    <v-col class="pg-item pg-order-3" align-self="center" @click="activate3">
+    <v-col class="pg-item pg-order-3" align-self="center">
       <v-row no-gutters justify="center">
-        <v-avatar size="50" :color="isActive3 == true ? '#673fb4' : '#d9d9d9'">
-          <span :class="{ 'active-num': isActive3, 'default-num': !isActive3 }">
+        <v-avatar size="50" :color="isActive == 3 ? '#673fb4' : '#d9d9d9'">
+          <span :class="{ 'active-num': (isActive == 3) , 'default-num': (isActive != 3) }">
             3
           </span>
         </v-avatar>
@@ -53,16 +53,16 @@
     <!-- dot -->
     <v-col class="pg-item pg-order-3" align-self="center">
       <v-row no-gutters justify="center">
-        <v-icon :color="isActive3 == true ? 'black' : '#d9d9d9'" size="50">
+        <v-icon :color="isActive == 3 ? 'black' : '#d9d9d9'" size="50">
           mdi-dots-horizontal
         </v-icon>
       </v-row>
     </v-col>
     <!-- 4 -->
-    <v-col class="pg-item pg-order-4" align-self="center" @click="activate4">
+    <v-col class="pg-item pg-order-4" align-self="center">
       <v-row no-gutters justify="center">
-        <v-avatar size="50" :color="isActive4 == true ? '#673fb4' : '#d9d9d9'">
-          <span :class="{ 'active-num': isActive4, 'default-num': !isActive4 }">
+        <v-avatar size="50" :color="isActive == 4 ? '#673fb4' : '#d9d9d9'">
+          <span :class="{ 'active-num': (isActive == 4) , 'default-num': (isActive != 4) }">
             4
           </span>
         </v-avatar>
@@ -76,45 +76,16 @@
 export default {
   data: function() {
     return {
-      isActive1: true,
-      isActive2: false,
-      isActive3: false,
-      isActive4: false,
+      isActive: 1,    // 1단계:1,  2단계:2, 3단계:3, 4단계:4
     };
   },
   methods: {
-    activate1: function() {
-      this.isActive1 = true;
-      this.isActive2 = false;
-      this.isActive3 = false;
-      this.isActive4 = false;
-      //   회원가입1 페이지로 보내야 함
-      //   this.$router.push('/');
+    moveForward() {
+      this.isActive = this.isActive + 1;
     },
-    activate2: function() {
-      this.isActive1 = false;
-      this.isActive2 = true;
-      this.isActive3 = false;
-      this.isActive4 = false;
-      //   회원가입2 페이지로 보내야 함
-      //   this.$router.push('/');
-    },
-    activate3: function() {
-      this.isActive1 = false;
-      this.isActive2 = false;
-      this.isActive3 = true;
-      this.isActive4 = false;
-      //   회원가입3 페이지로 보내야 함
-      //   this.$router.push('/');
-    },
-    activate4: function() {
-      this.isActive1 = false;
-      this.isActive2 = false;
-      this.isActive3 = false;
-      this.isActive4 = true;
-      //   회원가입4 페이지로 보내야 함
-      //   this.$router.push('/');
-    },
+    moveBackward() {
+      this.isActive = this.isActive - 1;
+    }
   },
 };
 </script>
@@ -123,6 +94,8 @@ export default {
 .pg-container {
   padding-left: 200px;
   padding-right: 200px;
+  padding-top:80px;
+  padding-bottom: 20px;
 }
 .pg-word {
   color: #b2b2b2;
