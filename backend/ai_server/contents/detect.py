@@ -7,8 +7,9 @@ from django.conf import settings
 # 파라미터 설정
 size = 416
 class_names = './contents/data/coco.names'
+# class_names = './contents/data/studywithme.names'
 class_names = [c.strip() for c in open(class_names).readlines()]
-cv2.dnn.DNN_TARGET_MYRIAD
+
 
 def detect(image):
     # 모델 불러오기
