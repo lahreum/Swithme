@@ -43,10 +43,10 @@
 
 <script>
 // import StreamTest from './StreamTest.vue';
-import TodoList from '../components/common/TodoList.vue';
-import ProfileNormal from '../components/common/ProfileNormal.vue';
-import AppBtnLarge from '../components/common/AppBtnLarge.vue';
-import TimeBar from '../components/common/TimeBar.vue';
+import TodoList from '@/components/common/TodoList.vue';
+import ProfileNormal from '@/components/common/ProfileNormal.vue';
+import AppBtnLarge from '@/components/common/AppBtnLarge.vue';
+import TimeBar from '@/components/common/TimeBar.vue';
 
 export default {
   components: {
@@ -58,6 +58,7 @@ export default {
   },
   methods: {
     goHome() {
+      // this.$router.push({name: 'Home'});
       this.$router.push('/');
     }
   }

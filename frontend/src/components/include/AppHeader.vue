@@ -33,7 +33,7 @@
         >
           <div class="login-item" @click="signIn">로그인</div>
           <div class="login-item">|</div>
-          <div class="login-item">회원가입</div>
+          <router-link to="/join"><div class="login-item">회원가입</div></router-link>
         </v-row>
         <v-row no-gutters v-else style="margin-left: 60px;">
           <!-- 이 위치에 프로필 사진 컴포넌트 넣어야 함 -->
@@ -89,6 +89,7 @@ export default {
   margin-right: 20px;
   letter-spacing: -1px;
   font-size: 1rem;
+  color: black !important;
 }
 .logo {
   display: flex;
