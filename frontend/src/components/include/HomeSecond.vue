@@ -48,6 +48,7 @@
         autoplay
         muted
         loop
+        data-keepplaying
       ></video>
     </div>
   </div>

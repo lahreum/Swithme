@@ -27,7 +27,12 @@ export default {
 <style scoped>
 .home-container {
   height: 100%;
-  background-image: url(../../assets/img/bg/home1.jpg);
+  background-image: linear-gradient(
+      to right,
+      rgba(17, 17, 17, 0.753),
+      rgba(255, 255, 255, 0)
+    ),
+    url(../../assets/img/bg/home1.jpg);
   background-position: top center;
 }
 .home-description-1 {
