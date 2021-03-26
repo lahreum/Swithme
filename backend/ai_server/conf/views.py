@@ -10,7 +10,9 @@ from django.views.decorators.csrf import csrf_exempt
 
 # 파라미터 설정
 num_classes = 80
+# num_classes = 1
 weights = './contents/checkpoints/yolov3.tf'
+# weights = './contents/checkpoints/yolov3_train.tf'
 
 # GPU 메모리 설정
 physical_devices = tf.config.experimental.list_physical_devices('GPU')
