@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-btn
-      class="studyBtn"
+      class="study-button-main"
       fab
       dark
       large
@@ -23,7 +23,4 @@
 export default {};
 </script>
 
-<style>
-.studyBtn {
-}
-</style>
+<style></style>

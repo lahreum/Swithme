@@ -54,12 +54,7 @@
 </template>
 
 <script>
-// import StudyBtn from '../common/StudyBtn.vue';
-export default {
-  components: {
-    // 'study-btn': StudyBtn,
-  },
-};
+export default {};
 </script>
 
 <style scoped>
