@@ -1,10 +1,11 @@
 <template>
   <div>
     <v-btn
-      class="studyBtn"
+      class="study-button-main"
       fab
       dark
       large
+      depressed
       width="200px"
       height="200px"
       color="#673fb4"
@@ -22,7 +23,4 @@
 export default {};
 </script>
 
-<style>
-.studyBtn {
-}
-</style>
+<style></style>
