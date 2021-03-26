@@ -1,15 +1,19 @@
 <template>
-    <v-app class="groupInfo">
-        <v-flex xs2>
-            <v-img :src="src" style="border-radius:10px;">
-                <div class="groupCnt"><v-icon dark>mdi-account</v-icon><span>{{ groupCnt }} / {{ groupTotalCnt}}</span></div>
-            </v-img>
-        </v-flex>
-        <div>
-            <span class="groupName">{{ groupName }}</span><br>
-            <span class="groupDesc">{{ groupDesc }}</span>
+  <div class="groupInfo">
+    <div>
+      <v-img :src="src" style="border-radius:10px;">
+        <div class="groupCnt">
+          <v-icon dark>mdi-account</v-icon
+          ><span>{{ groupCnt }} / {{ groupTotalCnt }}</span>
         </div>
-    </v-app>
+      </v-img>
+    </div>
+    <div>
+      <span class="groupName">{{ groupName }}</span
+      ><br />
+      <span class="groupDesc">{{ groupDesc }}</span>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -20,20 +24,17 @@ export default {
 
 <style>
 .groupCnt {
-    color:white;
-    padding-top:135px;
-    font-size: 15px;
-    font-weight: 500;
-    padding-left: 10px;
+  color: white;
+  padding-top: 85%;
+  font-size: 15px;
+  font-weight: 500;
+  padding-left: 5%;
 }
 .groupName {
-    font-weight: 600;
-    font-size: 20px;
+  font-weight: 600;
+  font-size: 20px;
 }
 .groupDesc {
-    color:#BDBDBD;
-}
-.groupInfo {
-    margin: 20px;
+  color: #bdbdbd;
 }
 </style>

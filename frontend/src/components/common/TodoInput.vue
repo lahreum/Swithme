@@ -2,10 +2,8 @@
   <v-text-field
     class="TodoInput"
     placeholder="+ add to do list"
-    outlined
     solo
     v-model="message"
-    append-icon="mdi-send"
     @keydown.enter="sendMessage"
     @click:append="sendMessage"
   >
@@ -35,5 +33,5 @@ export default {
 <style>
 .TodoInput {
   width: 100%;
-}
+};
 </style>

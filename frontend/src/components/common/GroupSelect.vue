@@ -1,14 +1,22 @@
 <template>
-  <div>
+  <div style="display:inline-block;">
     <v-menu left offset-y v-model="menu" :close-on-content-click="false">
       <template v-slot:activator="{ on, attrs }">
-        <v-btn fab color="primary" v-bind="attrs" v-on="on">
-          v
+        <v-btn
+          depressed
+          outlined
+          fab
+          width="20"
+          height="20"
+          v-bind="attrs"
+          v-on="on"
+        >
+          <v-icon>mdi-chevron-down</v-icon>
         </v-btn>
       </template>
       <v-row
         class="pa-5 ma-0"
-        style="width:500px; padding:5px; max-height:700px"
+        style="width:500px; padding:5px; background-color:white; opacity:0.8;max-height:700px"
       >
         <h1 style="width:100%;">나의 관심주제</h1>
         <h5 style="width:100%;">관심 주제 기반으로 그룹 목록을 제공합니다.</h5>

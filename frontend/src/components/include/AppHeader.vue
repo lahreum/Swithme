@@ -12,7 +12,7 @@
       <v-col cols="8">
         <v-row no-gutters align="center">
           <router-link class="menu-item" to="/tutorial"> 튜토리얼 </router-link>
-          <router-link class="menu-item" to="/study">
+          <router-link class="menu-item" to="/timer">
             공부하러가기
           </router-link>
           <router-link class="menu-item" to="/mystudy"> 나의학습 </router-link>

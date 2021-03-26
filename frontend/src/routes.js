@@ -1,11 +1,10 @@
-import StreamTest from '@/views/StreamTest.vue';
 import Tutorial from '@/views/HomeTutorial.vue';
-import Study from '@/views/Timer.vue';
 import MyStudy from '@/views/MyStudy.vue';
 import Ranking from '@/views/Ranking.vue';
 import GroupMain from '@/views/GroupMain.vue';
 import Community from '@/views/Community.vue';
 import Home from '@/views/Home.vue';
+import Timer from '@/views/Timer.vue';
 
 export default [
   {
@@ -19,9 +18,9 @@ export default [
     component: Tutorial,
   },
   {
-    path: '/study',
-    name: 'Study',
-    component: Study,
+    path: '/timer',
+    name: 'Timer',
+    component: Timer,
   },
   {
     path: '/mystudy',
@@ -42,10 +41,5 @@ export default [
     path: '/community',
     name: 'Community',
     component: Community,
-  },
-  {
-    path: '/stream',
-    name: 'StreamTest',
-    component: StreamTest,
   },
 ];
