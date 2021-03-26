@@ -117,11 +117,10 @@
             </v-row>
             
           </v-row>
-          <div style="height:150px;width:100%; border-bottom: 1px solid black" >
-              <AppBtnSmall :btnColor="black" :btnName="만들기" :btnNameColor="white"/>
-              <AppBtnSmall :btnColor="purple" :btnName="완료" :btnNameColor="white"/>
-     
-              </div>
+          <div style="text-align:center;">
+        <app-btn-middle class="oneBtn" :btnColor="'#FAFAFA'" :btnName="'취소'" :btnNameColor="'#424242'" ></app-btn-middle>
+        <app-btn-middle class="oneBtn" :btnColor="'#424242'" :btnName="'만들기'" :btnNameColor="'white'" ></app-btn-middle>
+      </div>
           </v-col>
           
         
@@ -132,13 +131,13 @@
 </template>
 
 <script>
-import AppBtnSmall from '../components/common/AppBtnSmall.vue';
+import AppBtnMiddle from '../components/common/AppBtnMiddle.vue';
 import MiddleNav from "../components/include/MiddleNav.vue";
 
 export default {
   components: {
     MiddleNav,
-    AppBtnSmall,
+    AppBtnMiddle,
 
   },
   data() {
