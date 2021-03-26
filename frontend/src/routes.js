@@ -10,6 +10,7 @@ import JoinAgree from '@/views/join/JoinAgree.vue';
 import JoinAuth from '@/views/join/JoinAuth.vue';
 import JoinCreate from '@/views/join/JoinCreate.vue';
 import JoinComplete from '@/views/join/JoinComplete.vue';
+import Kakao from '@/views/Kakao.vue';
 
 export default [
   {
@@ -30,7 +31,7 @@ export default [
       {
         path: 'join-auth',
         name: 'JoinAuth',
-        component: JoinAuth
+        component: JoinAuth,
       },
       {
         path: 'join-create',
@@ -41,7 +42,7 @@ export default [
         path: 'join-complete',
         name: 'JoinComplete',
         component: JoinComplete,
-      }
+      },
     ],
   },
   {
@@ -73,5 +74,10 @@ export default [
     path: '/community',
     name: 'Community',
     component: Community,
+  },
+  {
+    path: '/kakao',
+    name: 'Kakao',
+    component: Kakao,
   },
 ];
