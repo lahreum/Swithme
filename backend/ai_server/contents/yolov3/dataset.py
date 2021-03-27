@@ -76,8 +76,6 @@ def transform_images(x_train, size):
     return x_train
 
 
-# https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/using_your_own_dataset.md#conversion-script-outline-conversion-script-outline
-# Commented out fields are not required in our project
 IMAGE_FEATURE_MAP = {
     # 'image/width': tf.io.FixedLenFeature([], tf.int64),
     # 'image/height': tf.io.FixedLenFeature([], tf.int64),
@@ -96,26 +94,6 @@ IMAGE_FEATURE_MAP = {
     # 'image/object/truncated': tf.io.VarLenFeature(tf.int64),
     # 'image/object/view': tf.io.VarLenFeature(tf.string),
 }
-
-
-def parse_tfrecord(tfrecord, class_table, size, yolo_max_boxes):
-    x = tf.io.parse_single_example(tfrecord, IMAGE_FEATURE_MAP)
-    x_train = tf.image.decode_jpeg(x['image/encoded'], channels=3)
-    x_train = tf.image.resize(x_train, (size, size))
-
-    class_text = tf.sparse.to_dense(
-        x['image/object/class/text'], default_value='')
-    labels = tf.cast(class_table.lookup(class_text), tf.float32)
-    y_train = tf.stack([tf.sparse.to_dense(x['image/object/bbox/xmin']),
-                        tf.sparse.to_dense(x['image/object/bbox/ymin']),
-                        tf.sparse.to_dense(x['image/object/bbox/xmax']),
-                        tf.sparse.to_dense(x['image/object/bbox/ymax']),
-                        labels], axis=1)
-
-    paddings = [[0, yolo_max_boxes - tf.shape(y_train)[0]], [0, 0]]
-    y_train = tf.pad(y_train, paddings)
-
-    return x_train, y_train
 
 
 def parse_bbox_nums(tfrecord):
@@ -144,14 +122,18 @@ def parse_bbox(x, class_table, size, yolo_max_boxes):
 
 
 def load_tfrecord_dataset(file_pattern, class_file, size=416, yolo_max_boxes=100):
-    LINE_NUMBER = -1  # TODO: use tf.lookup.TextFileIndex.LINE_NUMBER
+    line_number = -1  # TODO: use tf.lookup.TextFileIndex.LINE_NUMBER
     class_table = tf.lookup.StaticHashTable(tf.lookup.TextFileInitializer(
-        class_file, tf.string, 0, tf.int64, LINE_NUMBER, delimiter="\n"), -1)
+        class_file, tf.string, 0, tf.int64, line_number, delimiter="\n"), -1)
 
     files = tf.data.Dataset.list_files(file_pattern)
+
     dataset = files.flat_map(tf.data.TFRecordDataset)
     dataset = dataset.map(parse_bbox_nums)
+    
+    # yolo_max_boxes 보다 얼굴 개수가 많은 이미지 제거
     dataset = dataset.filter(lambda nbbox, x: nbbox <= yolo_max_boxes)
+    
     return dataset.map(lambda _, x: parse_bbox(x, class_table, size, yolo_max_boxes))
 
 

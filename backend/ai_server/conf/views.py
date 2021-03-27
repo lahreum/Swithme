@@ -3,7 +3,7 @@ import base64
 import numpy as np
 import tensorflow as tf
 from contents.detect import detect
-from contents.yolov3_tf2.models import YoloV3
+from contents.yolov3.models import YoloV3
 from django.conf import settings
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
