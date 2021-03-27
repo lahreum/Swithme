@@ -14,15 +14,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ScoreDaily {
+public class TimeHourly {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int scoreDailyId;
+	private int timeHourlyId;
 	
-	private String scoreDailyUserNickname;
-	private String scoreDailyYearMonthDay;
-	private int scoreDailyTime;
-	private int scoreDailyAction;//0 : 집중, 1 : 비집중
-}								 //세분화시  0 : 집중, 1 : 폰,
-								 //2 : 자리비움, 3 : 멍때림
+	private String timeHourlyUserNickname;
+	private String timeHourlyYearMonthDayHour;
+	private int timeHourlyTime;
+}

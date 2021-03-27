@@ -1,5 +1,7 @@
 package com.studywithme.entity;
 
+import java.sql.Blob;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -20,4 +22,6 @@ public class User {
 	private String userName;
 	private String userNickname;
 	private String userPassword;
+	private String userMessage;
+	private Blob userProfileImg;
 }

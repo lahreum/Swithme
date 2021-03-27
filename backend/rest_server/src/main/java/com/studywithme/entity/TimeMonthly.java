@@ -14,13 +14,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ScoreMonthly {
+public class TimeMonthly {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int scoreMonthlyId;
+	private int timeMonthlyId;
 	
-	private String scoreMonthlyUserNickname;
-	private String scoreMonthlyYearMonth;
-	private int scoreMonthlyTime;
+	private String timeMonthlyUserNickname;
+	private String timeMonthlyYearMonth;
+	private int timeMonthlyTime;
 }

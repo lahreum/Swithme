@@ -22,4 +22,6 @@ public class GroupMember {
 	
 	private int groupMemberGroupId;
 	private String groupMemberUserNickname;
+	private boolean groupMemberIsMaster;
+	private boolean groupMemberIsStudying;
 }

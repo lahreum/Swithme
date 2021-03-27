@@ -24,5 +24,8 @@ public class Group {
 	private int groupCategory;
 	private int groupDailyGoal;
 	private String groupPassword;
-	
+	private String groupGoalDate;
+	private int groupMaxMemberCount;
+	private int groupCurMemberCount;
+	private String groupMasterNickname;
 }
