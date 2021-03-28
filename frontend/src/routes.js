@@ -2,6 +2,7 @@ import Tutorial from '@/views/HomeTutorial.vue';
 import MyStudy from '@/views/MyStudy.vue';
 import Ranking from '@/views/Ranking.vue';
 import GroupMain from '@/views/GroupMain.vue';
+import GroupCreate from '@/views/GroupCreate.vue';
 import Community from '@/views/Community.vue';
 import Home from '@/views/Home.vue';
 import Timer from '@/views/timer/Timer.vue';
@@ -69,6 +70,11 @@ export default [
     path: '/group',
     name: 'GroupMain',
     component: GroupMain,
+  },
+  {
+    path: '/group-create',
+    name: 'GroupCreate',
+    component: GroupCreate,
   },
   {
     path: '/community',
