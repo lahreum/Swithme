@@ -186,7 +186,7 @@ export default {
       this.imageUrl = URL.createObjectURL(file); // Create File URL
     },
     ToGroupMain(){
-      this.$router.push('/group');
+      this.$router.push('/');
     }
   },
 };
