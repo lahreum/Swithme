@@ -1,8 +1,8 @@
 <template>
   <v-app>
-    <app-header
+    <header-black
       v-show="$route.path === '/timer' || $route.path === '/' ? false : true"
-    ></app-header>
+    ></header-black>
     <home-page v-if="$route.path === '/'"></home-page>
     <router-view v-else />
     <app-footer
@@ -13,12 +13,12 @@
 
 <script>
 import AppFooter from './components/include/AppFooter.vue';
-import AppHeader from './components/include/AppHeader.vue';
+import HeaderBlack from './components/include/HeaderBlack.vue';
 import HomePage from './views/Home.vue';
 
 export default {
   components: {
-    'app-header': AppHeader,
+    'header-black': HeaderBlack,
     'app-footer': AppFooter,
     'home-page': HomePage,
   },
