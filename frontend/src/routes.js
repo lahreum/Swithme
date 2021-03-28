@@ -1,5 +1,7 @@
 import Tutorial from '@/views/HomeTutorial.vue';
 import MyStudy from '@/views/MyStudy.vue';
+import MyPageAccess from '@/views/MyPageAccess.vue';
+import MyPage from '@/views/MyPage.vue';
 import Ranking from '@/views/Ranking.vue';
 import GroupMain from '@/views/GroupMain.vue';
 import GroupCreate from '@/views/GroupCreate.vue';
@@ -86,6 +88,16 @@ export default [
     path: '/community',
     name: 'Community',
     component: Community,
+  },
+    {
+    path: '/my-page',
+    name: 'MyPage',
+    component: MyPage,
+  },
+  {
+    path: '/my-page-access',
+    name: 'MyPageAccess',
+    component: MyPageAccess,
   },
   {
     path: '/kakao',
