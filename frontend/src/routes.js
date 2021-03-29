@@ -1,6 +1,7 @@
 import Tutorial from '@/views/HomeTutorial.vue';
 import MyStudy from '@/views/MyStudy.vue';
 import MyPageAccess from '@/views/MyPageAccess.vue';
+import MyPageModify from '@/views/MyPageModify.vue';
 import MyPage from '@/views/MyPage.vue';
 import Ranking from '@/views/Ranking.vue';
 import GroupMain from '@/views/GroupMain.vue';
@@ -89,10 +90,15 @@ export default [
     name: 'Community',
     component: Community,
   },
-    {
+  {
     path: '/my-page',
     name: 'MyPage',
     component: MyPage,
+  },
+  {
+    path: '/my-page-modify',
+    name: 'MyPageModify',
+    component: MyPageModify,
   },
   {
     path: '/my-page-access',
