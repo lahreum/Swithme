@@ -15,5 +15,7 @@ export default {
 <style>
 .btnStyle {
   border-radius: 10px !important;
+  padding: 0;
+  margin:0;
 }
 </style>

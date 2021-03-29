@@ -1,5 +1,6 @@
 <template>
   <header>
+    
     <v-row no-gutters align="center" style="height: 100px;">
       <v-col cols="2" class="logo-header">
         <img
@@ -35,7 +36,7 @@
           justify="center"
           style="margin-left: 60px; color: white;"
         >
-          <div class="login-item-wh" @click="signIn">로그인</div>
+          <div class="login-item-wh" @click="openLogin">로그인</div>
           <div class="login-item-wh">|</div>
           <router-link to="/join">
             <div class="login-item-wh">회원가입</div>
@@ -71,15 +72,22 @@
         </v-row>
       </v-col>
     </v-row>
+    <Login v-if="dialog" style="z-index:101;"/>
   </header>
 </template>
 
 <script>
+import Login from '@/views/user/Login.vue';
+
 export default {
+  components: {
+    Login,
+  },
   data: function() {
     return {
       isLogin: false,
       username: 'default',
+      dialog: false,
     };
   },
   methods: {
@@ -96,6 +104,9 @@ export default {
     goMain: function() {
       this.$router.push('/');
     },
+    openLogin(){
+      this.dialog = true;
+    }
   },
 };
 </script>

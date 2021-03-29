@@ -8,6 +8,7 @@ import GroupCreate from '@/views/GroupCreate.vue';
 import GroupDetail from '@/views/GroupDetail.vue';
 import Community from '@/views/Community.vue';
 import Home from '@/views/Home.vue';
+import Login from '@/views/user/Login.vue';
 import Timer from '@/views/timer/Timer.vue';
 import Join from '@/views/user/Join.vue';
 import JoinAgree from '@/views/user/JoinAgree.vue';
@@ -21,6 +22,11 @@ export default [
     path: '/',
     name: 'Home',
     component: Home,
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login,
   },
   {
     path: '/join',
