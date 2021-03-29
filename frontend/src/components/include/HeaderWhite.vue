@@ -37,7 +37,9 @@
         >
           <div class="login-item-wh" @click="signIn">로그인</div>
           <div class="login-item-wh">|</div>
-          <div class="login-item-wh">회원가입</div>
+          <router-link to="/join">
+            <div class="login-item-wh">회원가입</div>
+          </router-link>
         </v-row>
         <v-row no-gutters v-else style="margin-left: 60px; color: white;">
           <v-menu

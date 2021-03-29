@@ -1,6 +1,5 @@
 <template>
-  <div>
-      <hr align="center" style="width:70%;border:solid 1px #BDBDBD;margin:auto;">
+  <div style="margin:0 auto;">
       <div>
             <p style="text-align:center;padding:20px;">
                 소중한 회원님의 정보는 동의 없이 공개 되지 않으며 개인정보보호 정책에 의거하여 보호하고 있습니다.<br>
@@ -89,38 +88,24 @@
                 회사는 아래의 고객관련 서비스 이용 시 부가적인 정보를 수집할 수 있으며, 이 경우 별도의 개인정보 수집 및 이용 동의를 받습니다.
             </div>        
       </div>
-      
+      <div style="text-align:center;">
+        <div class="oneBtn" @click="$router.push('/')"><app-btn-middle :btnColor="'#FAFAFA'" :btnName="'취소'" :btnNameColor="'#424242'" ></app-btn-middle></div>
+        <div class="oneBtn" @click="$router.push('/join/join-auth')"><app-btn-middle :btnColor="'#424242'" :btnName="'다음'" :btnNameColor="'white'"></app-btn-middle></div>
+      </div>
   </div>
 </template>
 
 <script>
-
+import "./user.css";
+import AppBtnMiddle from '@/components/common/AppBtnMiddle.vue';
 
 export default {
-    
-    methods: {
-        moveToHome() {
-
-        }
-    }
+    components: {
+        'app-btn-middle': AppBtnMiddle,
+    },
 }
 </script>
 
 <style>
-.agreeAll {
-    text-align: right;
-    padding-bottom: 20px;
-    padding-right:230px;
-}
-.contract1 {
-    margin-top:20px;
-    margin-left: 15%;
-}
-.contract2 {
-    border: 1px solid black;
-    margin-right: 17.5%;
-    max-height: 300px;
-    overflow: scroll;
-}
 
 </style>

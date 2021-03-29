@@ -1,6 +1,6 @@
 <template>
   <div style="display:inline-block">
-    <v-btn style="margin:0.4rem; " height="40px" :color="btnColor">
+    <v-btn class="btnStyle" style="margin:0.4rem; " height="40px" :color="btnColor">
       <span :style="'color:' + btnNameColor">{{ btnName }}</span>
     </v-btn>
   </div>
@@ -12,8 +12,8 @@ export default {
 };
 </script>
 
-<style scoped>
-.v-btn {
-  border-radius: 7px !important;
+<style>
+.btnStyle {
+  border-radius: 10px !important;
 }
 </style>

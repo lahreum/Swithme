@@ -35,13 +35,15 @@
               <p class="date">2021/03/25</p>
               <todo-list></todo-list>
               <!-- <router-link to="/"> -->
-              <app-btn-large
+              <div @click="$router.push('/')">
+                <app-btn-large
                 class="cancelBtn"
                 :btnColor="`#424242`"
                 :btnName="'그만하기'"
                 :btnNameColor="'white'"
-                @click="goHome()"
-              ></app-btn-large>
+                
+                ></app-btn-large>
+              </div>
               <!-- </router-link> -->
             </v-card>
           </div>
@@ -65,11 +67,6 @@ export default {
     'profile-normal': ProfileNormal,
     'app-btn-large': AppBtnLarge,
     'time-bar': TimeBar,
-  },
-  methods: {
-    goHome() {
-      
-    },
   },
 };
 </script>
