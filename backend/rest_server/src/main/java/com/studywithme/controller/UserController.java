@@ -1,0 +1,258 @@
+package com.studywithme.controller;
+
+import java.io.IOException;
+import java.sql.Blob;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Properties;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.sql.rowset.serial.SerialException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.studywithme.config.CommonMethods;
+import com.studywithme.config.JwtService;
+import com.studywithme.entity.User;
+import com.studywithme.repository.UserRepository;
+
+import io.swagger.annotations.ApiOperation;
+
+@RestController
+@RequestMapping("/user")
+public class UserController {
+	
+	@Autowired
+	UserRepository userRepository;
+	
+	@Autowired
+	private JwtService jwtService;
+	
+	@Autowired
+	CommonMethods commonMethods;
+	
+	@PostMapping("/signup")
+	@ApiOperation(value="회원가입",notes="User 정보를 body로 받아 db에 저장\n인터셉터에서 제외")
+	public Object createUser(@RequestBody User user) {
+		Map<String,Object> result=new HashMap<>();
+		
+		if(!userRepository.findByUserNickname(user.getUserNickname()).isPresent()) {
+			String hashed=commonMethods.getHashed(user.getUserPassword());
+			if(hashed!=null) {
+				user.setUserPassword(hashed);
+				userRepository.save(user);
+				result.put("success",true);
+			}
+			else
+				result.put("success",false);
+		}
+		else 
+			result.put("success",false);
+		
+		return result;
+	}
+	
+	@PostMapping("/login")
+	@ApiOperation(value="로그인",notes="id와 password를 파라미터로 받아 헤더에 jwt 반환\n인터셉터에서 제외")
+	public Object loginUser(@RequestParam String userId,
+			@RequestParam String userPassword, HttpServletResponse resp) {
+		Map<String,Object> result=new HashMap<>();
+		
+		String hashed=commonMethods.getHashed(userPassword);
+		Optional<User> user=userRepository.findByUserIdAndUserPassword(userId, hashed);
+		if(user.isPresent()) {
+			String token=jwtService.create(user.get());
+			resp.setHeader("jwt-auth-token",token);
+			result.put("success",true);
+		}
+		else
+			result.put("success",false);
+		
+		return result;
+	}
+	
+	@GetMapping("/id")
+	@ApiOperation(value="id 중복체크",notes="id를 파라미터로 받아 중복체크\n인터셉터에서 제외")
+	public Object checkIdDuplicated(@RequestParam String userId) {
+		Map<String,Object> result=new HashMap<>();
+		if(userRepository.findById(userId).isPresent())
+			result.put("isPresent",true);
+		else
+			result.put("isPresent",false);
+		
+		return result;
+	}
+	
+	@GetMapping("/nickname")
+	@ApiOperation(value="닉네임 중복체크",notes="닉네임을 파라미터로 받아 중복체크\n인터셉터에서 제외")
+	public Object checkNicknameDuplicated(@RequestParam String userNickname) {
+		Map<String,Object> result=new HashMap<>();
+		if(userRepository.findByUserNickname(userNickname).isPresent())
+			result.put("isPresent",true);
+		else
+			result.put("isPresent",false);
+		
+		return result;
+	}
+	
+	@PostMapping("/password")
+	@ApiOperation(value="비밀번호 분실",notes="이메일을 파라미터로 받아 메일로 링크 발송\n인터셉터에서 제외")
+	public Object sendEmail(@RequestParam String userEmail) throws AddressException, MessagingException {
+		Map<String,Object> result=new HashMap<>();
+		String host="smtp.naver.com";
+		final String username="swithmedev";
+		final String password="swithme103";
+		int port=465;
+		
+		Optional<User> user=userRepository.findById(userEmail);
+		if(user.isPresent()) {
+			String subject="비밀번호 변경 링크입니다.";
+					
+			String link="여기에 링크써줘";
+			String body="안녕하세요 "+user.get().getUserNickname()+"님!\n"+
+					"다음 링크로 이동하시면 비밀번호를 바꾸실 수 있습니다.\n"+
+					link;
+			
+			Properties props=System.getProperties();
+			props.put("mail.smtp.host", host);
+			props.put("mail.smtp.port",port);
+			props.put("mail.smtp.auth","true");
+			props.put("mail.smtp.ssl.enable","true");
+			props.put("mail.smtp.ssl.trust",host);
+			
+			Session session=Session.getDefaultInstance(props,new javax.mail.Authenticator() {
+				String un=username;
+				String pw=password;
+				protected javax.mail.PasswordAuthentication getPasswordAuthentication(){
+					return new javax.mail.PasswordAuthentication(un,pw);
+				}
+			});
+			session.setDebug(true);
+			Message mimeMessage=new MimeMessage(session);
+			mimeMessage.setFrom(new InternetAddress("swithmedev@naver.com"));
+			mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(userEmail));
+			
+			mimeMessage.setSubject(subject);
+			mimeMessage.setText(body);
+			Transport.send(mimeMessage);
+			
+			result.put("success",true);
+		}
+		else
+			result.put("success",false);
+		return result;
+	}
+	
+	/*@PutMapping("/password")//파라미터가 애매함 -> 링크로 들어간경우와 직접 들어간경우 나눠서 해야하나?
+	@ApiOperation(value="비밀번호 변경",notes="id와 바꿀 password를 파라미터로 받아 db 업데이트\n인터셉터에서 제외해야하나?")
+	public Object changePassword(@RequestParam String userId,@RequestParam String newPassword) {
+		Map<String,Object> result=new HashMap<>();
+		
+		
+		
+		return result;
+	}*/
+
+	@GetMapping("")
+	@ApiOperation(value="본인정보 받아오기",notes="헤더의 jwt를 기반으로 사용자 정보 반환")
+	public Object findUser(HttpServletRequest req) {
+		Map<String,Object> result=new HashMap<>();
+
+		String id=commonMethods.getUserId(req.getHeader("jwt-auth-token"));
+
+		Optional<User> user=userRepository.findById(id);
+		if(user.isPresent()) {
+			user.get().setUserPassword(null);
+			result.put("data",user.get());
+		}
+		else
+			result.put("data",null);
+		return result;
+	}
+	
+	@PostMapping("/mypage")
+	@ApiOperation(value="마이페이지에 접근하기 위해 비밀번호 입력",notes="비밀번호가 올바르다면 true 반환")
+	public Object showMypage(@RequestParam String userPassword,HttpServletRequest req) {
+		Map<String,Object> result=new HashMap<>();
+		
+		String id=commonMethods.getUserId(req.getHeader("jwt-auth-token"));
+		String password=commonMethods.getHashed(userPassword);
+		
+		Optional<User> user=userRepository.findByUserIdAndUserPassword(id, password);
+		if(user.isPresent()) 
+			result.put("isCorrect",true);
+		else
+			result.put("isCorrect",false);
+		
+		return result;
+	}
+	
+	@PutMapping("/profile-img")
+	@ApiOperation(value="프로필 이미지 변경",notes="프로필 이미지를 바꾸는 데 성공했다면 true 반환")
+	public Object changeProfileImg(@RequestParam("file") MultipartFile file,HttpServletRequest req) {
+		Map<String,Object> result=new HashMap<>();
+		String id=commonMethods.getUserId(req.getHeader("jwt-auth-token"));
+		
+		byte[] bytes;
+
+		result.put("result", false);
+		Optional<User> user = userRepository.findById(id);
+		if (user.isPresent()) {
+			try {
+				bytes = file.getBytes();
+				try {
+					Blob blob = new javax.sql.rowset.serial.SerialBlob(bytes);
+
+					user.get().setUserProfileImg(blob);
+					userRepository.save(user.get());
+					result.clear();
+					result.put("result", true);
+				} catch (SerialException e1) {
+					e1.printStackTrace();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			} catch (IOException e2) {
+				e2.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	@PutMapping("/message")
+	@ApiOperation(value="상태메세지 변경",notes="상태메세지를 바꾸는 데 성공했다면 true 반환")
+	public Object changeMessage(@RequestParam String message,HttpServletRequest req) {
+		Map<String,Object> result=new HashMap<>();
+		
+		String id=commonMethods.getUserId(req.getHeader("jwt-auth-token"));
+		Optional<User> user=userRepository.findById(id);
+		if(user.isPresent()) {
+			user.get().setUserMessage(message);
+			userRepository.save(user.get());
+			result.put("success",true);
+		}
+		else
+			result.put("success",false);
+		
+		return result;
+	}
+		
+}

@@ -7,20 +7,24 @@ import javax.persistence.Id;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ScoreHourly {
+public class TimeDaily {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int scoreHourlyId;
+	private int timeDailyId;
 	
-	private String scoreHourlyUserNickname;
-	private String scoreHourlyYearMonthDayHour;
-	private int scoreHourlyTime;
-}
+	private String timeDailyUserNickname;
+	private String timeDailyYearMonthDay;
+	private int timeDailyTime;
+	private int timeDailyAction;//0 : 집중, 1 : 비집중
+}								 //세분화시  0 : 집중, 1 : 폰,
+								 //2 : 자리비움, 3 : 멍때림
