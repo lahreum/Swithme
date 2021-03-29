@@ -1,14 +1,12 @@
 <template>
-  <div>
     <v-btn class="btnStyle" width="150px" height="50px" :color="btnColor">
       <h3 :style="'color:' + btnNameColor">{{ btnName }}</h3>
     </v-btn>
-  </div>
 </template>
 
 <script>
 export default {
-  props: ["btnColor", "btnName", "btnNameColor"],
+  props: ['btnColor', 'btnName', 'btnNameColor'],
 };
 </script>
 
