@@ -10,7 +10,7 @@ import JoinAgree from '@/views/join/JoinAgree.vue';
 import JoinAuth from '@/views/join/JoinAuth.vue';
 import JoinCreate from '@/views/join/JoinCreate.vue';
 import JoinComplete from '@/views/join/JoinComplete.vue';
-import Kakao from '@/views/Kakao.vue';
+import Google from '@/views/Google.vue';
 
 export default [
   {
@@ -76,8 +76,8 @@ export default [
     component: Community,
   },
   {
-    path: '/kakao',
-    name: 'Kakao',
-    component: Kakao,
+    path: '/google',
+    name: 'Google',
+    component: Google,
   },
 ];
