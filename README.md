@@ -137,7 +137,8 @@ Refac : 기능 변화 없이 코드 내부 구조 변경하는 경우
 
 ## 10. 개발일정
 
-![week1](deliverables/imgs/week2.png)
-![week1](deliverables/imgs/week2.png)
-
-
+![week2](deliverables/imgs/week2.PNG)
+![week3](deliverables/imgs/week3.PNG)
+![week4](deliverables/imgs/week4.PNG)
+![week5](deliverables/imgs/week5.PNG)
+![week6](deliverables/imgs/week6.PNG)
