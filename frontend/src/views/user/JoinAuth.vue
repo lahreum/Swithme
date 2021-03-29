@@ -8,16 +8,16 @@
             </p>
       </div>
       <v-container class="joinForm borderBox">
-        <v-row>
+        <v-row style="padding-top:40px;">
           <v-col class="formLetter">이메일</v-col>
           <v-col><input-bar></input-bar></v-col>
           <v-col><email-input></email-input></v-col>
           <v-col><app-btn-middle :btnColor="'#673fb4'" :btnName="'인증번호 받기'" :btnNameColor="'#ffffff'"></app-btn-middle></v-col>
         </v-row>
-        <v-row>
+        <v-row style="padding-bottom:40px;">
           <v-col class="formLetter" cols="3">인증번호</v-col>
           <v-col cols="6"><input-bar ></input-bar></v-col>
-          <v-col cols="3"><app-btn-middle :btnColor="'#673fb4'" :btnName="'학인'" :btnNameColor="'#ffffff'"></app-btn-middle></v-col>
+          <v-col cols="3"><app-btn-middle :btnColor="'#673fb4'" :btnName="'확인'" :btnNameColor="'#ffffff'"></app-btn-middle></v-col>
         </v-row>
       </v-container>
       <div style="text-align:center;">
