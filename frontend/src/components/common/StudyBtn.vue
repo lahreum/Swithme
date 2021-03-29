@@ -9,7 +9,7 @@
       width="200px"
       height="200px"
       :color="propsdata ? '#673FB4' : 'rgba(100, 100, 100, .6)'"
-      @click="goRouting()"
+      @click="goRouting"
     >
       <div style="color: white; font-size: 22px; letter-spacing: -1px;">
         <div>
@@ -30,8 +30,7 @@ export default {
   props: ['propsdata'],
   methods: {
     goRouting() {
-      console.log(this.propsdata);
-      // this.$router.push('/timer');
+      this.$router.push('/timer');
     },
   },
 };

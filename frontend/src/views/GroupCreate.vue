@@ -27,7 +27,7 @@
                 </v-col>
                 <v-col cols="9">
                     <v-text-field
-                        v-model="name"
+                       
                         :counter="10"
                         outlined
                         color="black"
@@ -61,7 +61,7 @@
                 </v-col>
                 <v-col cols="9">
                     <v-text-field
-                        v-model="name"
+                     
                         type="number"
                         outlined
                         label="최대그룹원수를 지정하세요"
@@ -73,6 +73,24 @@
             <v-row style="height:150px;width:100%;border-bottom: 1px solid black" align="center">
                 <v-col cols="3" style="font-size: 2rem;">
                     공개범위
+                     <v-menu offset-y>
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn
+          icon
+       
+          v-bind="attrs"
+          v-on="on"
+        >
+         <v-icon>mdi-help-circle-outline</v-icon>
+        </v-btn>
+      </template>
+      <v-card style="width:300px; height:170px; padding:20px">
+        <h3 style="margin-bottom:10px">공개범위란?</h3>
+        <p>기본적으로 그룹은 모두에게 공개됩니다. 
+          비공개 설정 후 비밀번호를 등록하면 
+          비밀번호를 입력해야 가입할 수 있습니다.</p>
+        </v-card>
+    </v-menu>
                 </v-col>
                 <v-col cols="3">
             
@@ -94,7 +112,7 @@
                    
                 </v-col>
                 <v-col cols="6"><v-text-field
-                        v-model="name"
+                     
                         v-if="radios==='비공개'"
                         :counter="10"
                         outlined
@@ -119,7 +137,7 @@
           </v-row>
           <div style="text-align:center;">
         <app-btn-middle class="oneBtn" :btnColor="'#FAFAFA'" :btnName="'취소'" :btnNameColor="'#424242'" ></app-btn-middle>
-        <app-btn-middle class="oneBtn" :btnColor="'#424242'" :btnName="'만들기'" :btnNameColor="'white'" ></app-btn-middle>
+        <app-btn-middle class="oneBtn" @click="ToGroupMain" :btnColor="'#424242'" :btnName="'만들기'" :btnNameColor="'white'" ></app-btn-middle>
       </div>
           </v-col>
           
@@ -167,6 +185,9 @@ export default {
       const file = e.target.files[0]; // Get first index in files
       this.imageUrl = URL.createObjectURL(file); // Create File URL
     },
+    ToGroupMain(){
+      this.$router.push('/');
+    }
   },
 };
 </script>

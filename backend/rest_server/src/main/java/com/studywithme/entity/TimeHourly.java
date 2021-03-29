@@ -7,20 +7,22 @@ import javax.persistence.Id;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ScoreMonthly {
+public class TimeHourly {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int scoreMonthlyId;
+	private int timeHourlyId;
 	
-	private String scoreMonthlyUserNickname;
-	private String scoreMonthlyYearMonth;
-	private int scoreMonthlyTime;
+	private String timeHourlyUserNickname;
+	private String timeHourlyYearMonthDayHour;
+	private int timeHourlyTime;
 }

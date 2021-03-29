@@ -1,15 +1,17 @@
 <template>
-  <div>
-    <v-btn rounded width="200px" height="50px" :color="btnColor">
+    <v-btn class="btnStyle" width="150px" height="50px" :color="btnColor">
       <h3 :style="'color:' + btnNameColor">{{ btnName }}</h3>
     </v-btn>
-  </div>
 </template>
 
 <script>
 export default {
-  props: ["btnColor", "btnName", "btnNameColor"],
+  props: ['btnColor', 'btnName', 'btnNameColor'],
 };
 </script>
 
-<style></style>
+<style>
+.btnStyle {
+  border-radius: 10px !important;
+}
+</style>

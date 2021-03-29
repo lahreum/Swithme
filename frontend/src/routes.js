@@ -1,9 +1,16 @@
 import Tutorial from '@/views/HomeTutorial.vue';
 import MyStudy from '@/views/MyStudy.vue';
+import MyPageAccess from '@/views/MyPageAccess.vue';
+import MyPage from '@/views/MyPage.vue';
 import Ranking from '@/views/Ranking.vue';
 import GroupMain from '@/views/GroupMain.vue';
+import GroupCreate from '@/views/GroupCreate.vue';
+import GroupDetail from '@/views/GroupDetail.vue';
+import GroupRanking from '@/views/GroupRanking.vue';
+import GroupAttendance from '@/views/GroupAttendance.vue';
 import Community from '@/views/Community.vue';
 import Home from '@/views/Home.vue';
+import Login from '@/views/user/Login.vue';
 import Timer from '@/views/timer/Timer.vue';
 import Join from '@/views/join/Join.vue';
 import JoinAgree from '@/views/join/JoinAgree.vue';
@@ -17,6 +24,11 @@ export default [
     path: '/',
     name: 'Home',
     component: Home,
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login,
   },
   {
     path: '/join',
@@ -71,9 +83,39 @@ export default [
     component: GroupMain,
   },
   {
+    path: '/group-create',
+    name: 'GroupCreate',
+    component: GroupCreate,
+  },
+  {
+    path: '/group-detail',
+    name: 'GroupDetail',
+    component: GroupDetail,
+  },
+  {
+    path: '/group-ranking',
+    name: 'GroupRanking',
+    component: GroupRanking,
+  },
+  {
+    path: '/group-attendance',
+    name: 'GroupAttendance',
+    component: GroupAttendance,
+  },
+  {
     path: '/community',
     name: 'Community',
     component: Community,
+  },
+    {
+    path: '/my-page',
+    name: 'MyPage',
+    component: MyPage,
+  },
+  {
+    path: '/my-page-access',
+    name: 'MyPageAccess',
+    component: MyPageAccess,
   },
   {
     path: '/google',

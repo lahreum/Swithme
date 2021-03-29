@@ -8,12 +8,14 @@ import javax.persistence.Id;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Board {
 	
@@ -27,6 +29,8 @@ public class Board {
 	private String boardContent;
 	@Column(insertable=false, updatable=false)
 	private String boardDate;
+	@Column(insertable=false)
 	private int boardView;
-	private int board_liked;
+	@Column(insertable=false)
+	private int boardLiked;
 }

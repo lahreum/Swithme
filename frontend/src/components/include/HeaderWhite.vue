@@ -1,5 +1,6 @@
 <template>
   <header>
+    
     <v-row no-gutters align="center" style="height: 100px;">
       <v-col cols="2" class="logo-header">
         <img
@@ -35,30 +36,58 @@
           justify="center"
           style="margin-left: 60px; color: white;"
         >
-          <div class="login-item-wh" @click="signIn">로그인</div>
+          <div class="login-item-wh" @click="openLogin">로그인</div>
           <div class="login-item-wh">|</div>
-          <div class="login-item-wh">회원가입</div>
+          <router-link to="/join">
+            <div class="login-item-wh">회원가입</div>
+          </router-link>
         </v-row>
         <v-row no-gutters v-else style="margin-left: 60px; color: white;">
-          <!-- 이 위치에 프로필 사진 컴포넌트 넣어야 함 -->
-          <v-col align="center" @click="showPop">
-            {{ username }}님, 안녕하세요!
-          </v-col>
-          <!-- 이 밑 코드는 로그아웃 보여주기 위한 임시 코드임 -->
-          <v-btn color="success" v-if="flag" @click="signOut">로그아웃</v-btn>
+          <v-menu
+            open-on-hover
+            close-on-click
+            offset-y
+            transition="slide-y-transition"
+            bottom
+          >
+            <template v-slot:activator="{ on }">
+              <!-- 이 위치에 프로필 사진 컴포넌트 넣어야 함 -->
+              <v-col align="center" v-on="on">
+                {{ username }}님, 안녕하세요!
+              </v-col>
+            </template>
+            <v-list>
+              <v-list-item>
+                <v-list-item-title @click="goMyPage">
+                  마이페이지
+                </v-list-item-title>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-title @click="signOut">
+                  로그아웃
+                </v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
         </v-row>
       </v-col>
     </v-row>
+    <Login v-if="dialog" style="z-index:101;"/>
   </header>
 </template>
 
 <script>
+import Login from '@/views/user/Login.vue';
+
 export default {
+  components: {
+    Login,
+  },
   data: function() {
     return {
       isLogin: false,
       username: 'default',
-      flag: false,
+      dialog: false,
     };
   },
   methods: {
@@ -66,15 +95,18 @@ export default {
       this.isLogin = true;
     },
     signOut: function() {
-      this.flag = false;
+      alert('로그아웃!!!!');
       this.isLogin = false;
     },
-    showPop: function() {
-      this.flag = !this.flag;
+    goMyPage: function() {
+      this.$router.push('/my-page-access');
     },
     goMain: function() {
       this.$router.push('/');
     },
+    openLogin(){
+      this.dialog = true;
+    }
   },
 };
 </script>
