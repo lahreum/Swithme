@@ -1,0 +1,139 @@
+.agreeAll {
+    text-align: right;
+    padding-bottom: 20px;
+    padding-right:230px;
+}
+.contract1 {
+    margin-top:20px;
+    margin-left: 15%;
+}
+.contract2 {
+    border: 1px solid black;
+    margin-right: 17.5%;
+    max-height: 300px;
+    overflow: scroll;
+}
+.oneBtn {
+    display: inline-block;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 50px;
+}
+.outBox {
+    margin: 0 auto;
+    text-align: center;
+}
+.inBox {
+    display: inline-block;
+    margin-left:7px;
+    margin-right:7px;
+}
+.borderBox {
+    border: 1.5px solid black;
+    padding: 20px;
+}
+.longInput {
+    width: 45%;
+}
+.joinForm {
+    width:70%;
+    margin:0 auto;
+}
+.formLetter {
+    padding-top: 30px;
+}
+.lineForm{
+    border:solid 1px #BDBDBD;
+}
+.btnOption {
+    margin:10px;
+}
+.bottomLine {
+    text-align: center;
+}
+.headLine {
+    color:#673fb4;
+    text-align: center;
+    font-size: 40px;
+    font-weight: 600;
+    margin: auto;
+    padding-top:30px;
+}
+.round {
+    border-radius: 30px;
+}
+
+.v-card {
+    border-radius: 25px!important;
+    position: relative;
+}
+.v-dialog {
+    border-radius: 25px!important;
+    position: relative;
+}
+
+/* .password {
+    position: absolute;
+    top:200px;
+} */
+.password {
+    font-weight: 800;
+    font-size: 20px;
+    float:left;
+    padding-top: 25px;
+    margin-right: 15px;
+}
+.email {
+    font-weight: 800;
+    font-size: 20px;
+    float:left;
+    padding-top: 25px;
+    margin-right: 35px;
+}
+
+div.container {
+    padding-bottom: 0px !important;
+}
+.passwordOut {
+    position: absolute;
+    top:200px;
+}
+.buttonGroup {
+    margin-top:50px;
+}
+.bottomOption {
+    color: #757575;
+    background-color: #f4f4f4;
+    text-align: center;
+    font-weight: 600;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    font-size: 17px;
+    height: 85px;
+    width: 430px;
+    border-radius: 25px;
+    position: absolute;
+    bottom: -10px;
+    left: -10px;
+}
+
+.cancelBtn {
+    position: absolute;
+    top:45px;
+    right: 535px;
+    /* top:-14px;
+    right: -14px; */
+    cursor: pointer;
+    z-index: 1000;
+    border-radius: 100% !important;
+}
+.purpleBigLetter {
+    color: #673fb4;
+    font-weight: 600;
+    font-size: 50px;
+}
+
+.letter {
+    font-weight: 500;
+    font-size: 15px;
+}
