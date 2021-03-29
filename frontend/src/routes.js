@@ -6,6 +6,7 @@ import Ranking from '@/views/Ranking.vue';
 import GroupMain from '@/views/GroupMain.vue';
 import GroupCreate from '@/views/GroupCreate.vue';
 import GroupDetail from '@/views/GroupDetail.vue';
+import GroupRanking from '@/views/GroupRanking.vue';
 import Community from '@/views/Community.vue';
 import Home from '@/views/Home.vue';
 import Timer from '@/views/timer/Timer.vue';
@@ -83,6 +84,11 @@ export default [
     path: '/group-detail',
     name: 'GroupDetail',
     component: GroupDetail,
+  },
+  {
+    path: '/group-ranking',
+    name: 'GroupRanking',
+    component: GroupRanking,
   },
   {
     path: '/community',
