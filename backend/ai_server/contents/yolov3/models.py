@@ -11,16 +11,15 @@ from tensorflow.keras.layers import (
     MaxPool2D,
     UpSampling2D,
     ZeroPadding2D,
-    BatchNormalization,
 )
 from tensorflow.keras.regularizers import l2
 from tensorflow.keras.losses import (
     binary_crossentropy,
     sparse_categorical_crossentropy
 )
+from .batch_norm import BatchNormalization
 from .utils import broadcast_iou
 
-yolo_max_boxes = 2000
 yolo_iou_threshold = 0.5
 yolo_score_threshold = 0.5
 
@@ -171,7 +170,7 @@ def yolo_boxes(pred, anchors, classes):
     return bbox, objectness, class_probs, pred_box
 
 
-def yolo_nms(outputs, anchors, masks, classes):
+def yolo_nms(outputs, anchors, masks, classes, yolo_max_boxes):
     # boxes, conf, type
     b, c, t = [], [], []
 
@@ -185,6 +184,7 @@ def yolo_nms(outputs, anchors, masks, classes):
     class_probs = tf.concat(t, axis=1)
 
     scores = confidence * class_probs
+
     boxes, scores, classes, valid_detections = tf.image.combined_non_max_suppression(
         boxes=tf.reshape(bbox, (tf.shape(bbox)[0], -1, 1, 4)),
         scores=tf.reshape(
@@ -199,7 +199,7 @@ def yolo_nms(outputs, anchors, masks, classes):
 
 
 def YoloV3(size=None, channels=3, anchors=yolo_anchors,
-           masks=yolo_anchor_masks, classes=80, training=False):
+           masks=yolo_anchor_masks, classes=80, training=False, yolo_max_boxes=100):
     x = inputs = Input([size, size, channels], name='input')
 
     x_36, x_61, x = Darknet(name='yolo_darknet')(x)
@@ -223,7 +223,7 @@ def YoloV3(size=None, channels=3, anchors=yolo_anchors,
     boxes_2 = Lambda(lambda x: yolo_boxes(x, anchors[masks[2]], classes),
                      name='yolo_boxes_2')(output_2)
 
-    outputs = Lambda(lambda x: yolo_nms(x, anchors, masks, classes),
+    outputs = Lambda(lambda x: yolo_nms(x, anchors, masks, classes, yolo_max_boxes),
                      name='yolo_nms')((boxes_0[:3], boxes_1[:3], boxes_2[:3]))
 
     return Model(inputs, outputs, name='yolov3')

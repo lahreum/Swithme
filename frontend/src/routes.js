@@ -1,7 +1,11 @@
 import Tutorial from '@/views/HomeTutorial.vue';
 import MyStudy from '@/views/MyStudy.vue';
+import MyPageAccess from '@/views/MyPageAccess.vue';
+import MyPage from '@/views/MyPage.vue';
 import Ranking from '@/views/Ranking.vue';
 import GroupMain from '@/views/GroupMain.vue';
+import GroupCreate from '@/views/GroupCreate.vue';
+import GroupDetail from '@/views/GroupDetail.vue';
 import Community from '@/views/Community.vue';
 import Home from '@/views/Home.vue';
 import Timer from '@/views/timer/Timer.vue';
@@ -10,6 +14,7 @@ import JoinAgree from '@/views/join/JoinAgree.vue';
 import JoinAuth from '@/views/join/JoinAuth.vue';
 import JoinCreate from '@/views/join/JoinCreate.vue';
 import JoinComplete from '@/views/join/JoinComplete.vue';
+import Kakao from '@/views/Kakao.vue';
 
 export default [
   {
@@ -30,7 +35,7 @@ export default [
       {
         path: 'join-auth',
         name: 'JoinAuth',
-        component: JoinAuth
+        component: JoinAuth,
       },
       {
         path: 'join-create',
@@ -41,7 +46,7 @@ export default [
         path: 'join-complete',
         name: 'JoinComplete',
         component: JoinComplete,
-      }
+      },
     ],
   },
   {
@@ -70,8 +75,33 @@ export default [
     component: GroupMain,
   },
   {
+    path: '/group-create',
+    name: 'GroupCreate',
+    component: GroupCreate,
+  },
+  {
+    path: '/group-detail',
+    name: 'GroupDetail',
+    component: GroupDetail,
+  },
+  {
     path: '/community',
     name: 'Community',
     component: Community,
+  },
+    {
+    path: '/my-page',
+    name: 'MyPage',
+    component: MyPage,
+  },
+  {
+    path: '/my-page-access',
+    name: 'MyPageAccess',
+    component: MyPageAccess,
+  },
+  {
+    path: '/kakao',
+    name: 'Kakao',
+    component: Kakao,
   },
 ];

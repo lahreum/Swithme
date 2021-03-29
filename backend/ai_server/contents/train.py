@@ -3,26 +3,25 @@ from absl.flags import FLAGS
 
 import tensorflow as tf
 import numpy as np
-import cv2
 from tensorflow.keras.callbacks import (
     ReduceLROnPlateau,
     EarlyStopping,
     ModelCheckpoint,
     TensorBoard
 )
-from yolov3_tf2.models import (
+from yolov3.models import (
     YoloV3, YoloLoss,
     yolo_anchors, yolo_anchor_masks,
 )
-from yolov3_tf2.utils import freeze_all
-import yolov3_tf2.dataset as dataset
+from yolov3.utils import freeze_all
+import yolov3.dataset as dataset
 
-flags.DEFINE_string('dataset', './data/wider_face_train.tfrecord', 'path to dataset')
-flags.DEFINE_string('val_dataset', './data/wider_face_val.tfrecord', 'path to validation dataset')
-flags.DEFINE_string('weights', './checkpoints/yolov3.tf',
+flags.DEFINE_string('dataset', './data/raw/wider_face_train.tfrecord', 'path to dataset')
+flags.DEFINE_string('val_dataset', './data/raw/wider_face_val.tfrecord', 'path to validation dataset')
+flags.DEFINE_string('weights', './checkpoints/origin.tf',
                     'path to weights file')
-flags.DEFINE_string('classes', './data/wider_face.names', 'path to classes file')
-flags.DEFINE_enum('mode', 'fit', ['fit', 'eager_fit', 'eager_tf'],
+flags.DEFINE_string('classes', './data/class_name/face.names', 'path to classes file')
+flags.DEFINE_enum('mode', 'eager_tf', ['fit', 'eager_fit', 'eager_tf'],
                   'fit: model.fit, '
                   'eager_fit: model.fit(run_eagerly=True), '
                   'eager_tf: custom GradientTape')
@@ -34,27 +33,26 @@ flags.DEFINE_enum('transfer', 'darknet',
                   'frozen: Transfer and freeze all, '
                   'fine_tune: Transfer all and freeze darknet only')
 flags.DEFINE_integer('size', 416, 'image size')
-flags.DEFINE_integer('epochs', 2, 'number of epochs')
-flags.DEFINE_integer('batch_size', 8, 'batch size')
+flags.DEFINE_integer('epochs', 10, 'number of epochs')
+flags.DEFINE_integer('batch_size', 4, 'batch size')
 flags.DEFINE_float('learning_rate', 1e-3, 'learning rate')
-flags.DEFINE_integer('num_classes', 1, 'number of classes in the model')
+flags.DEFINE_integer('num_classes', 2, 'number of classes in the model')
 flags.DEFINE_integer('weights_num_classes', 80, 'specify num class for `weights` file if different, '
                      'useful in transfer learning with different number of classes')
+flags.DEFINE_integer('yolo_max_boxes', 10, 'yolo_max_boxes')
 
 
 def main(_argv):
     physical_devices = tf.config.experimental.list_physical_devices('GPU')
+    tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
-    for physical_device in physical_devices:
-        tf.config.experimental.set_memory_growth(physical_device, True)
-
-    model = YoloV3(FLAGS.size, training=True, classes=FLAGS.num_classes)
+    model = YoloV3(FLAGS.size, training=True, classes=FLAGS.num_classes, yolo_max_boxes=FLAGS.yolo_max_boxes)
     anchors = yolo_anchors
     anchor_masks = yolo_anchor_masks
 
     # dataset(tf.Tensor(416, 416, 3) - 이미지, tf.Tensor(100, 5) - 앵커 박스 100개)
     train_dataset = dataset.load_tfrecord_dataset(
-        FLAGS.dataset, FLAGS.classes, FLAGS.size)
+        FLAGS.dataset, FLAGS.classes, FLAGS.size, FLAGS.yolo_max_boxes)
 
     # dataset(tf.Tensor(batch_size, 416, 416, 3) - 이미지 묶음, tf.Tensor(batch_size, 100, 5) - 앵커 박스 100개 묶음)
     train_dataset = train_dataset.shuffle(buffer_size=512)
@@ -76,7 +74,7 @@ def main(_argv):
 
     # 검증 데이터 불러오기
     val_dataset = dataset.load_tfrecord_dataset(
-        FLAGS.val_dataset, FLAGS.classes, FLAGS.size)
+        FLAGS.val_dataset, FLAGS.classes, FLAGS.size, FLAGS.yolo_max_boxes)
 
     # 검증 데이터 가공
     val_dataset = val_dataset.batch(FLAGS.batch_size)
@@ -93,7 +91,7 @@ def main(_argv):
 
         # reset top layers
         model_pretrained = YoloV3(
-            FLAGS.size, training=True, classes=FLAGS.weights_num_classes or FLAGS.num_classes)
+            FLAGS.size, training=True, classes=FLAGS.weights_num_classes or FLAGS.num_classes, yolo_max_boxes=FLAGS.yolo_max_boxes)
         model_pretrained.load_weights(FLAGS.weights)
 
         if FLAGS.transfer == 'darknet':

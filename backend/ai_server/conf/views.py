@@ -3,22 +3,28 @@ import base64
 import numpy as np
 import tensorflow as tf
 from contents.detect import detect
-from contents.yolov3_tf2.models import YoloV3
+from contents.yolov3.models import YoloV3
 from django.conf import settings
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
 # 파라미터 설정
-num_classes = 80
-weights = './contents/checkpoints/yolov3.tf'
+origin_yolo_max_boxes = 100
+face_yolo_max_boxes = 10
+origin_num_classes = 80
+face_num_classes = 2
+origin_weights = './contents/checkpoints/origin.tf'
+face_weights = './contents/checkpoints/face.tf'
 
 # GPU 메모리 설정
 physical_devices = tf.config.experimental.list_physical_devices('GPU')
 tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
 # 모델 생성
-settings.YOLO = YoloV3(classes=num_classes)
-settings.YOLO.load_weights(weights)
+settings.ORIGIN_YOLO = YoloV3(classes=origin_num_classes, yolo_max_boxes=100)
+settings.ORIGIN_YOLO.load_weights(origin_weights)
+settings.FACE_YOLO = YoloV3(classes=face_num_classes, yolo_max_boxes=10)
+settings.FACE_YOLO.load_weights(face_weights)
 
 
 @csrf_exempt

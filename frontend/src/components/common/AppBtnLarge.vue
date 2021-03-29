@@ -8,7 +8,7 @@
 
 <script>
 export default {
-  props: ["btnColor", "btnName", "btnNameColor"],
+  props: ['btnColor', 'btnName', 'btnNameColor'],
 };
 </script>
 

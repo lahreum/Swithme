@@ -1,12 +1,11 @@
-import time
 import os
 import hashlib
-
-from absl import app, flags, logging
-from absl.flags import FLAGS
 import tensorflow as tf
 import lxml.etree
 import tqdm
+
+from absl import app, flags, logging
+from absl.flags import FLAGS
 
 flags.DEFINE_string('data_dir', '../datasets/VOC2009',
                     'path to raw PASCAL VOC dataset')
@@ -17,7 +16,6 @@ flags.DEFINE_string('classes', '../data/voc2012.names', 'classes file')
 
 
 def build_example(annotation, class_map):
-    print(annotation)
     img_path = os.path.join(
         FLAGS.data_dir, 'JPEGImages', annotation['filename'])
     img_raw = open(img_path, 'rb').read()
@@ -35,6 +33,7 @@ def build_example(annotation, class_map):
     truncated = []
     views = []
     difficult_obj = []
+
     if 'object' in annotation:
         for obj in annotation['object']:
             difficult = bool(int(obj['difficult']))
@@ -69,33 +68,43 @@ def build_example(annotation, class_map):
         'image/object/truncated': tf.train.Feature(int64_list=tf.train.Int64List(value=truncated)),
         'image/object/view': tf.train.Feature(bytes_list=tf.train.BytesList(value=views)),
     }))
+
     return example
 
 
 def parse_xml(xml):
     if not len(xml):
         return {xml.tag: xml.text}
+
     result = {}
+
     for child in xml:
         child_result = parse_xml(child)
+
         if child.tag != 'object':
             result[child.tag] = child_result[child.tag]
         else:
             if child.tag not in result:
                 result[child.tag] = []
+
             result[child.tag].append(child_result[child.tag])
+
     return {xml.tag: result}
 
 
 def main(_argv):
     class_map = {name: idx for idx, name in enumerate(
         open(FLAGS.classes).read().splitlines())}
+
     logging.info("Class mapping loaded: %s", class_map)
 
     writer = tf.io.TFRecordWriter(FLAGS.output_file)
+
     image_list = open(os.path.join(
         FLAGS.data_dir, 'ImageSets', 'Main', '%s.txt' % FLAGS.split)).read().splitlines()
+
     logging.info("Image list loaded: %d", len(image_list))
+
     for name in tqdm.tqdm(image_list):
         annotation_xml = os.path.join(
             FLAGS.data_dir, 'Annotations', name + '.xml')
@@ -103,7 +112,9 @@ def main(_argv):
         annotation = parse_xml(annotation_xml)['annotation']
         tf_example = build_example(annotation, class_map)
         writer.write(tf_example.SerializeToString())
+
     writer.close()
+
     logging.info("Done")
 
 

@@ -1,18 +1,23 @@
 import cv2
 import tensorflow as tf
-from contents.yolov3_tf2.dataset import transform_images
-from contents.yolov3_tf2.utils import draw_outputs
+from contents.yolov3.dataset import transform_images
+from contents.yolov3.utils import draw_outputs
 from django.conf import settings
 
 # 파라미터 설정
 size = 416
-class_names = './contents/data/coco.names'
-class_names = [c.strip() for c in open(class_names).readlines()]
-cv2.dnn.DNN_TARGET_MYRIAD
+origin_class_names_path = './contents/data/class_name/origin.names'
+face_class_names_path = './contents/data/class_name/face.names'
+
+# 클래스 종류 불러오기
+origin_class_names = [c.strip() for c in open(origin_class_names_path).readlines()]
+face_class_names = [c.strip() for c in open(face_class_names_path).readlines()]
+
 
 def detect(image):
     # 모델 불러오기
-    yolo = settings.YOLO
+    origin_yolo = settings.ORIGIN_YOLO
+    face_yolo = settings.FACE_YOLO
 
     # 이미지 가공
     image_in = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -20,9 +25,11 @@ def detect(image):
     image_in = transform_images(image_in, size)
 
     # 집중 여부 판단
-    boxes, scores, classes, nums = yolo.predict(image_in)
+    origin_boxes, origin_scores, origin_classes, origin_nums = origin_yolo.predict(image_in)
+    face_boxes, face_scores, face_classes, face_nums = face_yolo.predict(image_in)
 
     # 이미지 시각화
-    image = draw_outputs(image, (boxes, scores, classes, nums), class_names)
+    image = draw_outputs(image, (origin_boxes, origin_scores, origin_classes, origin_nums), origin_class_names)
+    image = draw_outputs(image, (face_boxes, face_scores, face_classes, face_nums), face_class_names)
 
     return image
