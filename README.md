@@ -1,5 +1,5 @@
 # SWITHME
-#### Study With Me, AI 기술을 접목하여 공부 집중 시간만을 측정해주고 학습패턴을 분석해주는 웹 플랫폼입니다.
+#### Study With Me, AI가 사용자의 집중,비집중 여부를 파악하여 공부 집중 시간만을 측정해주고 학습패턴을 분석해주는 웹 플랫폼입니다.
 
 
 ---
@@ -137,6 +137,7 @@ Refac : 기능 변화 없이 코드 내부 구조 변경하는 경우
 
 ## 10. 개발일정
 
-![week2](deliverables/imgs/week2.png)
+![week1](deliverables/imgs/week2.png)
+![week1](deliverables/imgs/week2.png)
 
 
