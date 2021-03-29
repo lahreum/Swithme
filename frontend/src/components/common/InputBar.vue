@@ -18,7 +18,7 @@ export default {
   border-color: #e0e0e0;
   border-radius: 4px;
   border-width: 3.8px;
-  background-color: white;
+  width: 100%;
   /* font-size: 5px; */
 }
 </style>

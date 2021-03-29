@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-btn width="100%" height="55px" :color="btnColor">
+    <v-btn class="btnStyle" width="100%" height="55px" :color="btnColor">
       <h3 :style="'color:' + btnNameColor">{{ btnName }}</h3>
     </v-btn>
   </div>
@@ -12,8 +12,8 @@ export default {
 };
 </script>
 
-<style scoped>
-.v-btn {
-  border-radius: 7px !important;
+<style>
+.btnStyle {
+  border-radius: 10px !important;
 }
 </style>
