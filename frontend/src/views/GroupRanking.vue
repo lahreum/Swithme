@@ -144,9 +144,19 @@
 </template>
 
 <script>
+import MiddleNav from "../components/include/MiddleNav.vue";
 export default {
+  components: {
+    MiddleNav,
+  },
   data() {
     return {
+      navInfo: [
+        "sample2.png",
+        "그룹",
+        "목표가 같은 사람들끼리 모여 달려보세요.",
+        "목표로 가는 길이 덜 힘들고, 더욱 든든해질 거예요",
+      ],
       tabs: null,
       text:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
