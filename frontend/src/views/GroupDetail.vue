@@ -21,10 +21,10 @@
             <v-btn icon color="black" x-large @click="ToHome"
               ><v-icon>mdi-home</v-icon> 홈</v-btn
             >
-            <v-btn icon color="black" x-large
+            <v-btn icon color="black" x-large @click="ToGroupRanking"
               ><v-icon>mdi-poll</v-icon> 랭킹</v-btn
             >
-            <v-btn icon color="black" x-large
+            <v-btn icon color="black" x-large @click="ToGroupAttendance"
               ><v-icon>mdi-calendar-month</v-icon> 출석부</v-btn
             >
           </v-row>
@@ -101,8 +101,14 @@ export default {
     ProfileStudying,
   },
   methods: {
-    ToHome() {
+    ToGroupHome() {
       this.$router.push("/group-detail");
+    },
+    ToGroupRanking() {
+      this.$router.push("/group-ranking");
+    },
+    ToGroupAttendance() {
+      this.$router.push("/group-attendance");
     },
   },
 };

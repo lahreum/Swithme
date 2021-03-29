@@ -2,7 +2,7 @@
   <div class="joinForm">
     <div style="margin-top:80px; text-align:center;">
       <p class="purpleBigLetter">회원가입이 완료되었습니다!</p>
-      <p class="letter">SWITHME의 가족이 되신 것을 환영합니다</p>
+      <p class="smallLetter">SWITHME의 가족이 되신 것을 환영합니다</p>
     </div>
 
     <div style="text-align:center;">

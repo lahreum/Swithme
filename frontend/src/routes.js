@@ -7,21 +7,30 @@ import Ranking from '@/views/Ranking.vue';
 import GroupMain from '@/views/GroupMain.vue';
 import GroupCreate from '@/views/GroupCreate.vue';
 import GroupDetail from '@/views/GroupDetail.vue';
+import GroupRanking from '@/views/GroupRanking.vue';
+import GroupAttendance from '@/views/GroupAttendance.vue';
+import GroupModify from '@/views/GroupModify.vue';
 import Community from '@/views/Community.vue';
 import Home from '@/views/Home.vue';
+import Login from '@/views/user/Login.vue';
 import Timer from '@/views/timer/Timer.vue';
 import Join from '@/views/user/Join.vue';
 import JoinAgree from '@/views/user/JoinAgree.vue';
 import JoinAuth from '@/views/user/JoinAuth.vue';
 import JoinCreate from '@/views/user/JoinCreate.vue';
 import JoinComplete from '@/views/user/JoinComplete.vue';
-import Kakao from '@/views/Kakao.vue';
+import Google from '@/views/Google.vue';
 
 export default [
   {
     path: '/',
     name: 'Home',
     component: Home,
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login,
   },
   {
     path: '/join',
@@ -86,6 +95,21 @@ export default [
     component: GroupDetail,
   },
   {
+    path: '/group-ranking',
+    name: 'GroupRanking',
+    component: GroupRanking,
+  },
+  {
+    path: '/group-attendance',
+    name: 'GroupAttendance',
+    component: GroupAttendance,
+  },
+  {
+    path: '/group-modify',
+    name: 'GroupModify',
+    component: GroupModify,
+  },
+  {
     path: '/community',
     name: 'Community',
     component: Community,
@@ -106,8 +130,8 @@ export default [
     component: MyPageAccess,
   },
   {
-    path: '/kakao',
-    name: 'Kakao',
-    component: Kakao,
+    path: '/google',
+    name: 'Google',
+    component: Google,
   },
 ];
