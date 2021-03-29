@@ -87,6 +87,7 @@ div.container {
 }
 .buttonGroup {
     margin-top:10px;
+    text-align: center;
 }
 .bottomOption {
     color: #757575;
