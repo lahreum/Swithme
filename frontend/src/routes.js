@@ -8,6 +8,7 @@ import GroupCreate from '@/views/GroupCreate.vue';
 import GroupDetail from '@/views/GroupDetail.vue';
 import GroupRanking from '@/views/GroupRanking.vue';
 import GroupAttendance from '@/views/GroupAttendance.vue';
+import GroupModify from '@/views/GroupModify.vue';
 import Community from '@/views/Community.vue';
 import Home from '@/views/Home.vue';
 import Timer from '@/views/timer/Timer.vue';
@@ -95,6 +96,11 @@ export default [
     path: '/group-attendance',
     name: 'GroupAttendance',
     component: GroupAttendance,
+  },
+  {
+    path: '/group-modify',
+    name: 'GroupModify',
+    component: GroupModify,
   },
   {
     path: '/community',
