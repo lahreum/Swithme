@@ -2,13 +2,14 @@
   <div>
       <middle-nav v-bind:propsdata="navInfo"></middle-nav>
       <progress-stepper ref="progress"></progress-stepper>
+      <hr align="center" class="joinForm">
       <router-view></router-view>
       
   </div>
 </template>
 
 <script>
-
+import "./user.css";
 import ProgressStepper from '@/components/common/ProgressStepper.vue';
 import MiddleNav from '@/components/include/MiddleNav.vue';
 

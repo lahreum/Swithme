@@ -57,8 +57,9 @@
 </template>
 
 <script>
+import "./user.css";
 import AppBtnLarge from '@/components/common/AppBtnLarge.vue';
-import InputBar from '../components/common/InputBar.vue';
+import InputBar from '@/components/common/InputBar.vue';
 
   export default {
     name: "Login",
@@ -75,86 +76,5 @@ import InputBar from '../components/common/InputBar.vue';
 </script>
 
 <style>
-.btnOption {
-    margin:10px;
-}
-.bottomLine {
-    text-align: center;
-}
-.headLine {
-    color:#673fb4;
-    text-align: center;
-    font-size: 40px;
-    font-weight: 600;
-    margin: auto;
-    padding-top:30px;
-}
-.round {
-    border-radius: 30px;
-}
 
-.v-card {
-  border-radius: 25px!important;
-  position: relative;
-}
-.v-dialog {
-    border-radius: 25px!important;
-    position: relative;
-}
-
-/* .password {
-    position: absolute;
-    top:200px;
-} */
-.password {
-    font-weight: 800;
-    font-size: 20px;
-    float:left;
-    padding-top: 25px;
-    margin-right: 15px;
-}
-.email {
-    font-weight: 800;
-    font-size: 20px;
-    float:left;
-    padding-top: 25px;
-    margin-right: 35px;
-}
-
-div.container {
-    padding-bottom: 0px !important;
-}
-.passwordOut {
-    position: absolute;
-    top:200px;
-}
-.buttonGroup {
-    margin-top:50px;
-}
-.bottomOption {
-    color: #757575;
-    background-color: #f4f4f4;
-    text-align: center;
-    font-weight: 600;
-    margin-top: 30px;
-    margin-bottom: 10px;
-    font-size: 17px;
-    height: 85px;
-    width: 430px;
-    border-radius: 25px;
-    position: absolute;
-    bottom: -10px;
-    left: -10px;
-}
-
-.cancelBtn {
-    position: absolute;
-    top:45px;
-    right: 535px;
-    /* top:-14px;
-    right: -14px; */
-    cursor: pointer;
-    z-index: 1000;
-    border-radius: 100% !important;
-}
 </style>
