@@ -12,11 +12,11 @@ import Community from '@/views/Community.vue';
 import Home from '@/views/Home.vue';
 import Login from '@/views/user/Login.vue';
 import Timer from '@/views/timer/Timer.vue';
-import Join from '@/views/join/Join.vue';
-import JoinAgree from '@/views/join/JoinAgree.vue';
-import JoinAuth from '@/views/join/JoinAuth.vue';
-import JoinCreate from '@/views/join/JoinCreate.vue';
-import JoinComplete from '@/views/join/JoinComplete.vue';
+import Join from '@/views/user/Join.vue';
+import JoinAgree from '@/views/user/JoinAgree.vue';
+import JoinAuth from '@/views/user/JoinAuth.vue';
+import JoinCreate from '@/views/user/JoinCreate.vue';
+import JoinComplete from '@/views/user/JoinComplete.vue';
 import Google from '@/views/Google.vue';
 
 export default [
@@ -107,7 +107,7 @@ export default [
     name: 'Community',
     component: Community,
   },
-    {
+  {
     path: '/my-page',
     name: 'MyPage',
     component: MyPage,
