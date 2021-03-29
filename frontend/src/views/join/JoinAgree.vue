@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="margin:0 auto;">
       <hr align="center" style="width:70%;border:solid 1px #BDBDBD;margin:auto;">
       <div>
             <p style="text-align:center;padding:20px;">
@@ -89,20 +89,20 @@
                 회사는 아래의 고객관련 서비스 이용 시 부가적인 정보를 수집할 수 있으며, 이 경우 별도의 개인정보 수집 및 이용 동의를 받습니다.
             </div>        
       </div>
-      
+      <div style="text-align:center;">
+        <div class="oneBtn" @click="$router.push('/')"><app-btn-middle :btnColor="'#FAFAFA'" :btnName="'취소'" :btnNameColor="'#424242'" ></app-btn-middle></div>
+        <div class="oneBtn" @click="$router.push('/join/join-auth')"><app-btn-middle :btnColor="'#424242'" :btnName="'다음'" :btnNameColor="'white'" @click="moveForward"></app-btn-middle></div>
+      </div>
   </div>
 </template>
 
 <script>
-
+import AppBtnMiddle from '@/components/common/AppBtnMiddle.vue';
 
 export default {
-    
-    methods: {
-        moveToHome() {
-
-        }
-    }
+    components: {
+        'app-btn-middle': AppBtnMiddle,
+    },
 }
 </script>
 
@@ -122,5 +122,10 @@ export default {
     max-height: 300px;
     overflow: scroll;
 }
-
+.oneBtn {
+    display: inline-block;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 50px;
+}
 </style>
