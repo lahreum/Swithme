@@ -41,7 +41,7 @@
             <v-card-actions style="padding-bottom:0px;padding-top:0px;">
                 <div class="buttonGroup" >
                     <div @click="dialog = false"><app-btn-large class="btnOption" :btnColor="'#673fb4'" :btnName="'로그인'" :btnNameColor="'white'" ></app-btn-large></div>
-                    <v-img @click="dialog = false" src="@/assets/img/kakao_long.png" width="380"></v-img>
+                    <v-img @click="dialog = false" src="@/assets/img/kakao_long.png" width="380" style="margin-top:5px;"></v-img>
                     <v-img @click="dialog = false" src="@/assets/img/naver_long.png" width="380" style="margin-bottom:100px;"></v-img>
                     <div class="bottomOption">
                         <v-img src="@/assets/img/pattern.jpg" style="width:100%;"></v-img>

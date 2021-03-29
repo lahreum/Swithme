@@ -1,5 +1,5 @@
 <template>
-    <v-btn class="btnStyle" width="100%" height="55px" :color="btnColor">
+    <v-btn class="btnStyle" width="95%" height="55px" :color="btnColor">
       <h3 :style="'color:' + btnNameColor">{{ btnName }}</h3>
     </v-btn>
 </template>
