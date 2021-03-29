@@ -57,6 +57,7 @@
     font-size: 40px;
     font-weight: 600;
     margin: auto;
+    padding-left:30px;
     padding-top:30px;
 }
 .round {
@@ -76,20 +77,6 @@
     position: absolute;
     top:200px;
 } */
-.password {
-    font-weight: 800;
-    font-size: 20px;
-    float:left;
-    padding-top: 25px;
-    margin-right: 15px;
-}
-.email {
-    font-weight: 800;
-    font-size: 20px;
-    float:left;
-    padding-top: 25px;
-    margin-right: 35px;
-}
 
 div.container {
     padding-bottom: 0px !important;
@@ -99,7 +86,7 @@ div.container {
     top:200px;
 }
 .buttonGroup {
-    margin-top:50px;
+    margin-top:10px;
 }
 .bottomOption {
     color: #757575;
@@ -117,15 +104,17 @@ div.container {
     left: -10px;
 }
 
-.cancelBtn {
+/* .cancelBtn {
     position: absolute;
     top:45px;
     right: 535px;
-    /* top:-14px;
-    right: -14px; */
     cursor: pointer;
-    z-index: 1000;
+    z-index: 900;
     border-radius: 100% !important;
+} */
+.cancelBtn{
+    padding-right:5px;
+    padding-top:5px;
 }
 .purpleBigLetter {
     color: #673fb4;
@@ -133,7 +122,11 @@ div.container {
     font-size: 50px;
 }
 
-.letter {
+.smallLetter {
     font-weight: 500;
     font-size: 15px;
+}
+.middleLetter {
+    font-weight: 600;
+    font-size: 16px;
 }

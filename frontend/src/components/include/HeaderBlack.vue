@@ -31,7 +31,7 @@
           justify="center"
           style="margin-left: 60px;"
         >
-          <div class="login-item" @click="signIn">로그인</div>
+          <div class="login-item" @click="openLogin">로그인</div>
           <div class="login-item">|</div>
           <router-link to="/join">
             <div class="login-item">회원가입</div>
@@ -68,15 +68,22 @@
         </v-row>
       </v-col>
     </v-row>
+    <Login v-if="dialog" style="z-index:101;"/>
   </header>
 </template>
 
 <script>
+import Login from '@/views/user/Login.vue';
+
 export default {
+  components: {
+    Login,
+  },
   data: function() {
     return {
       isLogin: false,
       username: 'default',
+      dialog: false,
     };
   },
   methods: {
@@ -93,6 +100,9 @@ export default {
     goMain: function() {
       this.$router.push('/');
     },
+    openLogin(){
+      this.dialog = true;
+    }
   },
 };
 </script>

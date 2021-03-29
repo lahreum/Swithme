@@ -1,13 +1,13 @@
 <template>
   <div>
     <div
-      style="z-index: 1000; position:fixed; top: 0px; left: 0px; width: 100%;"
+      style="z-index: 100; position:fixed; top: 0px; left: 0px; width: 100%;"
     >
       <header-white v-if="isDarkmode"></header-white>
       <header-black v-if="!isDarkmode"></header-black>
     </div>
     <study-btn
-      style="position: fixed; z-index: 800; left: 25%; top: 55%;"
+      style="position: fixed; z-index: 100; left: 25%; top: 55%;"
       v-bind:propsdata="isTop"
     ></study-btn>
     <div
