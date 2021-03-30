@@ -1,9 +1,8 @@
 package com.studywithme.entity;
 
-import java.sql.Blob;
-
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -17,16 +16,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class User {
+public class TimeWeekly {
 
 	@Id
-	private String userId;
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int timeWeeklyId;
 	
-	private String userNickname;
-	private String userPassword;
-	private String userMessage;
-	private Blob userProfileImg;
-	private String userType;
-	@Column(insertable=false)
-	private boolean userIsStudying;
+	private String timeWeeklyUserNickname;
+	private String timeWeeklyYearMonthWeek;
+	private int timeWeeklyTime;
 }
