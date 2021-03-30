@@ -25,4 +25,5 @@ public class User {
 	private String userPassword;
 	private String userMessage;
 	private Blob userProfileImg;
+	private String userType;
 }

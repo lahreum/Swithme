@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.studywithme.oauth.GoogleOauth;
 import com.studywithme.oauth.Token;
+import com.studywithme.oauth.TokenInfo;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,7 +23,7 @@ public class OauthService {
 		
 		switch (type) {
 		case "google":
-			redirectUri = googleOauth.getOauthRedirectUri();
+			redirectUri = googleOauth.requestAuth();
 			break;
 		default:
 			throw new IllegalArgumentException("오류가 발생하였습니다.");
@@ -46,12 +47,30 @@ public class OauthService {
 		}
 	}
 	
-	public String getTokenInfo(String type, Token token) {
+	public TokenInfo getTokenInfo(String type, Token token) {
 		switch (type) {
 		case "google":
-			return googleOauth.getTokenInfo(type, token);
+			return googleOauth.getTokenInfo(token);
 		default:
 			throw new IllegalArgumentException("오류가 발생하였습니다.");
+		}
+	}
+	
+	public void checkUserAccount(String type, TokenInfo tokenInfo) {
+		String redirectUri;
+		
+		switch (type) {
+		case "google":
+			redirectUri = googleOauth.checkUserAccount(tokenInfo);
+			break;
+		default:
+			throw new IllegalArgumentException("오류가 발생하였습니다.");
+		}
+		
+		try {
+			response.sendRedirect(redirectUri);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }
