@@ -74,6 +74,8 @@ public class UserController {
 	@ApiOperation(value="로그인",notes="id와 password를 파라미터로 받아 헤더에 jwt 반환\n인터셉터에서 제외")
 	public Object loginUser(@RequestParam String userId,
 			@RequestParam String userPassword, HttpServletResponse resp) {
+		System.out.println(userId);
+		System.out.println(userPassword);
 		Map<String,Object> result=new HashMap<>();
 		
 		String hashed=commonMethods.getHashed(userPassword);

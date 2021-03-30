@@ -44,6 +44,8 @@ import HomeThird from '../components/include/HomeThird.vue';
 import HomeFourth from '../components/include/HomeFourth.vue';
 import StudyBtn from '../components/common/StudyBtn.vue';
 
+const storage = window.sessionStorage;
+
 export default {
   components: {
     'header-black': HeaderBlack,
@@ -62,6 +64,7 @@ export default {
       },
       isDarkmode: true,
       isTop: true,
+      token: storage.getItem('jwt-auth-token'),
     };
   },
   methods: {

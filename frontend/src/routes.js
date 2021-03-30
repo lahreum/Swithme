@@ -18,6 +18,7 @@ import JoinAuth from '@/views/user/JoinAuth.vue';
 import JoinCreate from '@/views/user/JoinCreate.vue';
 import JoinComplete from '@/views/user/JoinComplete.vue';
 import Google from '@/views/Google.vue';
+import Token from '@/views/Token.vue';
 
 export default [
   {
@@ -121,5 +122,10 @@ export default [
     path: '/google',
     name: 'Google',
     component: Google,
+  },
+  {
+    path: '/token',
+    name: 'Token',
+    component: Token,
   },
 ];
