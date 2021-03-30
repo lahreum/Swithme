@@ -1,7 +1,7 @@
 <template>
   <v-text-field
     :placeholder="placeholder"
-    outlined
+    outlined 
     color="#673fb4"
   ></v-text-field>
 </template>
