@@ -126,6 +126,31 @@
                 ></v-textarea>
               </v-col>
             </v-row>
+            <v-row
+              style="height:200px;width:100%; border-bottom: 1px solid black"
+              align="center"
+            >
+              <v-col cols="3" style="font-size: 2rem;">
+                D-DAY 설정
+              </v-col>
+              <v-col cols="9">
+                <v-text-field
+                  type="date"
+                  outlined
+                  label="날짜를 등록하세요"
+                  required
+                  :value="group.DdayDate"
+                ></v-text-field>
+                <v-text-field
+                  :counter="20"
+                  outlined
+                  color="black"
+                  label="D-Day제목을 등록하세요"
+                  :value="group.DdayName"
+                  required
+                ></v-text-field>
+              </v-col>
+            </v-row>
           </v-row>
           <div style="text-align:center;">
             <app-btn-middle
@@ -177,6 +202,8 @@ export default {
         total: 10,
         public: true,
         info: "정처기 원콤을 목표로 하는 스터디입니다.",
+        DdayDate: "2021-04-25",
+        DdayName: "정보처리기사",
       },
     };
   },
