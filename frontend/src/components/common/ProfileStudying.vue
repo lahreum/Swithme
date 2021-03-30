@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-avatar color="#673fb4" size="170px"
+    <v-avatar :color="IsStudying ? '#673fb4' : 'white'" size="170px"
       ><v-avatar size="150px"> <img :src="src" /> </v-avatar
     ></v-avatar>
   </div>
@@ -8,7 +8,7 @@
 
 <script>
 export default {
-  props: ["src"],
+  props: ["src", "IsStudying"],
 };
 </script>
 
