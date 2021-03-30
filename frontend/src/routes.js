@@ -1,6 +1,7 @@
 import Tutorial from '@/views/HomeTutorial.vue';
 import MyStudy from '@/views/MyStudy.vue';
 import MyPageAccess from '@/views/MyPageAccess.vue';
+import MyPageModify from '@/views/MyPageModify.vue';
 import MyPage from '@/views/MyPage.vue';
 import Ranking from '@/views/Ranking.vue';
 import GroupMain from '@/views/GroupMain.vue';
@@ -8,9 +9,9 @@ import GroupCreate from '@/views/GroupCreate.vue';
 import GroupDetail from '@/views/GroupDetail.vue';
 import GroupRanking from '@/views/GroupRanking.vue';
 import GroupAttendance from '@/views/GroupAttendance.vue';
+import GroupModify from '@/views/GroupModify.vue';
 import Community from '@/views/Community.vue';
 import Home from '@/views/Home.vue';
-import Login from '@/views/user/Login.vue';
 import Timer from '@/views/timer/Timer.vue';
 import Join from '@/views/user/Join.vue';
 import JoinAgree from '@/views/user/JoinAgree.vue';
@@ -21,6 +22,7 @@ import Google from '@/views/Google.vue';
 import Token from '@/views/Token.vue';
 import Nickname from '@/views/Nickname.vue';
 import NoAccess from '@/views/NoAccess.vue';
+import FindPw from '@/views/user/FindPw.vue';
 
 export default [
   {
@@ -29,9 +31,9 @@ export default [
     component: Home,
   },
   {
-    path: '/login',
-    name: 'Login',
-    component: Login,
+    path: '/find-pw',
+    name: 'FindPw',
+    component: FindPw,
   },
   {
     path: '/join',
@@ -106,6 +108,11 @@ export default [
     component: GroupAttendance,
   },
   {
+    path: '/group-modify',
+    name: 'GroupModify',
+    component: GroupModify,
+  },
+  {
     path: '/community',
     name: 'Community',
     component: Community,
@@ -114,6 +121,11 @@ export default [
     path: '/my-page',
     name: 'MyPage',
     component: MyPage,
+  },
+  {
+    path: '/my-page-modify',
+    name: 'MyPageModify',
+    component: MyPageModify,
   },
   {
     path: '/my-page-access',

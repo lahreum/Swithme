@@ -7,7 +7,7 @@
       <header-black v-if="!isDarkmode"></header-black>
     </div>
     <study-btn
-      style="position: fixed; z-index: 100; left: 25%; top: 55%;"
+      style="position: fixed; z-index: 100; left: 25%; top: 65%;"
       v-bind:propsdata="isTop"
     ></study-btn>
     <div

@@ -108,4 +108,7 @@ export default {
   left: 10px;
   max-width: 150px;
 }
+.container{
+ Max-width : 100vw !important;
+}
 </style>

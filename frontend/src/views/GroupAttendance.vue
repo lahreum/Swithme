@@ -5,15 +5,15 @@
       <v-row>
         <v-col cols="2"></v-col>
         <v-col>
-          <h1 style="margin:50px 0">정처기 합격가즈아</h1>
+          <h1 style="margin:50px 0">{{ groupInfo.groupName }}</h1>
           <v-row
             justify="space-between"
             style="font-size:1.5rem; margin-bottom:50px;"
           >
-            정처기 원콤을 목표로 하는 스터디입니다
+            {{ groupInfo.groupIntroduce }}
             <span
-              ><v-icon>mdi-account</v-icon>5
-              <v-icon>mdi-crown</v-icon>dldkfma</span
+              ><v-icon>mdi-account</v-icon>{{ groupers.length }}
+              <v-icon>mdi-crown</v-icon>{{ groupInfo.groupMaster }}</span
             >
           </v-row>
 
@@ -118,6 +118,11 @@ export default {
         "목표가 같은 사람들끼리 모여 달려보세요.",
         "목표로 가는 길이 덜 힘들고, 더욱 든든해질 거예요",
       ],
+      groupInfo: {
+        groupName: "정처기 합격가즈아",
+        groupIntroduce: "정처기 원콤을 목표로 하는 스터디입니다.",
+        groupMaster: "dldkfma",
+      },
       value: 80,
       week: {
         1: "가입순",

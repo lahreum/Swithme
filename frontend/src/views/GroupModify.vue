@@ -5,7 +5,7 @@
       <v-row>
         <v-col cols="2"></v-col>
         <v-col>
-          <h1 style="text-align:center">그룹 만들기</h1>
+          <h1 style="text-align:center">그룹 정보 수정</h1>
           <hr />
           <v-row align-content="center">
             <v-col style="margin-bottom:50px;" align="center">
@@ -17,7 +17,7 @@
               <v-img
                 class="groupImgUpload"
                 v-else
-                src="https://ifh.cc/g/3qRFoS.png"
+                :src="group.groupImg"
               ></v-img>
               <v-btn type="button" @click="onClickImageUpload"
                 >이미지 업로드</v-btn
@@ -36,14 +36,8 @@
               <v-col cols="3" style="font-size: 2rem;">
                 그룹이름
               </v-col>
-              <v-col cols="9">
-                <v-text-field
-                  :counter="10"
-                  outlined
-                  color="black"
-                  label="그룹이름을 입력하세요"
-                  required
-                ></v-text-field>
+              <v-col cols="9" style="font-size: 2rem;">
+                {{ group.name }}
               </v-col>
             </v-row>
 
@@ -54,17 +48,8 @@
               <v-col cols="3" style="font-size: 2rem;">
                 카테고리
               </v-col>
-              <v-col cols="9">
-                <v-select
-                  v-model="select"
-                  :items="items"
-                  :error-messages="errors"
-                  outlined
-                  color="black"
-                  label="스터디를 대표할수 있는 카테고리를 선택하세요."
-                  data-vv-name="select"
-                  required
-                ></v-select>
+              <v-col cols="9" style="font-size: 2rem;">
+                {{ group.category }}
               </v-col>
             </v-row>
 
@@ -81,6 +66,7 @@
                   outlined
                   label="최대그룹원수를 지정하세요"
                   required
+                  :value="group.total"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -136,10 +122,10 @@
                   outlined
                   :counter="50"
                   placeholder="이 그룹을 나타내는 소개글을 멋지게 써주세요."
+                  :value="group.info"
                 ></v-textarea>
               </v-col>
             </v-row>
-
             <v-row
               style="height:200px;width:100%; border-bottom: 1px solid black"
               align="center"
@@ -153,12 +139,14 @@
                   outlined
                   label="날짜를 등록하세요"
                   required
+                  :value="group.DdayDate"
                 ></v-text-field>
                 <v-text-field
                   :counter="20"
                   outlined
                   color="black"
                   label="D-Day제목을 등록하세요"
+                  :value="group.DdayName"
                   required
                 ></v-text-field>
               </v-col>
@@ -175,7 +163,7 @@
               style="margin:5%;"
               @click="ToGroupMain"
               :btnColor="'#424242'"
-              :btnName="'만들기'"
+              :btnName="'수정하기'"
               :btnNameColor="'white'"
             ></app-btn-middle>
           </div>
@@ -207,6 +195,16 @@ export default {
       imageUrl: null,
       items: ["정보처리기사", "토익", "임용고시", "공무원"],
       radios: null,
+      group: {
+        groupImg: "https://ifh.cc/g/yuecDg.jpg",
+        name: "정처기합격가즈아",
+        category: "자격증",
+        total: 10,
+        public: true,
+        info: "정처기 원콤을 목표로 하는 스터디입니다.",
+        DdayDate: "2021-04-25",
+        DdayName: "정보처리기사",
+      },
     };
   },
   methods: {
