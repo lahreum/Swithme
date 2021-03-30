@@ -72,12 +72,25 @@ public class GoogleOauth implements SocialOauth {
 	@Override
 	public String checkUserAccount(TokenInfo tokenInfo) {
 		Optional<User> optUserAccount = userRepository.findById(tokenInfo.getEmail());
+		String jwtToken, redirectUri;
 		
-		if(optUserAccount.isPresent() && optUserAccount.get().getUserType().equals("google")) {
-			String jwtToken = jwtService.create(optUserAccount.get());
-			return jwtToken;
+		if(optUserAccount.isPresent()) {	// 계정이 이미 존재할 경우
+			if(optUserAccount.get().getUserType().equals("google")) {	// Google로 가입한 계정일 경우
+				jwtToken = jwtService.create(optUserAccount.get());
+				redirectUri = "http://localhost:8080/token?is-user=true&jwt-auth-token=" + jwtToken;
+				return redirectUri;
+			}
+			else return "http://localhost:8080/no-access/invalid_account";	// Google로 가입한 계정이 아닐 경우
 		}
 		
-		return null;
+		// 계정이 존재하지 않을 경우
+		User user = new User();
+		user.setUserId(tokenInfo.getEmail());
+		user.setUserType("google");
+		
+		jwtToken = jwtService.create(user);
+		redirectUri = "http://localhost:8080/token?is-user=false&jwt-auth-token=" + jwtToken;
+		
+		return redirectUri;
 	}
 }

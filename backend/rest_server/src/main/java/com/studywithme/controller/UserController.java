@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.studywithme.config.CommonMethods;
 import com.studywithme.config.JwtService;
 import com.studywithme.entity.User;
@@ -66,6 +67,25 @@ public class UserController {
 		}
 		else 
 			result.put("success",false);
+		
+		return result;
+	}
+	
+	@PostMapping("/signup-social")
+	@ApiOperation(value="회원가입(소셜)", notes="소셜 로그인으로 처음 접속했을 때 자동 회원가입\n닉네임과 이메일을 담은 토큰 불러와 처리")
+	public Object createUserSocial(@RequestBody Map<String, String> map) {
+		Map<String, Object> result = new HashMap<>();
+		
+		String nickname = map.get("nickname");
+		String token = map.get("token");
+		
+		User user = new ObjectMapper().convertValue(jwtService.get(token).get("User"), User.class);
+		user.setUserNickname(nickname);
+		String jwtToken = jwtService.create(user);
+		
+		userRepository.save(user);
+		result.put("success", true);
+		result.put("token", jwtToken);
 		
 		return result;
 	}

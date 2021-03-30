@@ -1,5 +1,9 @@
 package com.studywithme.service;
 
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.stereotype.Service;
 
 import com.studywithme.oauth.GoogleOauth;
@@ -12,8 +16,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OauthService {
 	private final GoogleOauth googleOauth;
+	private final HttpServletResponse response;
 	
-	public String requestAuth(String type) {
+	public void requestAuth(String type) {
 		String redirectUri;
 		
 		switch (type) {
@@ -24,7 +29,11 @@ public class OauthService {
 			throw new IllegalArgumentException("오류가 발생하였습니다.");
 		}
 		
-		return redirectUri;
+		try {
+			response.sendRedirect(redirectUri);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public Token requestToken(String type, String code) {
@@ -47,12 +56,21 @@ public class OauthService {
 		}
 	}
 	
-	public String checkUserAccount(String type, TokenInfo tokenInfo) {
+	public void checkUserAccount(String type, TokenInfo tokenInfo) {
+		String redirectUri;
+		
 		switch (type) {
 		case "google":
-			return googleOauth.checkUserAccount(tokenInfo);
+			redirectUri = googleOauth.checkUserAccount(tokenInfo);
+			break;
 		default:
 			throw new IllegalArgumentException("오류가 발생하였습니다.");
+		}
+		
+		try {
+			response.sendRedirect(redirectUri);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }

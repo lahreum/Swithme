@@ -5,8 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.studywithme.config.SSHConnection;
 
-import lombok.RequiredArgsConstructor;
-
 @SpringBootApplication
 public class StudywithmeApplication {
 	private static SSHConnection sshConnection;
