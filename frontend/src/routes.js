@@ -18,9 +18,8 @@ import JoinAgree from '@/views/user/JoinAgree.vue';
 import JoinAuth from '@/views/user/JoinAuth.vue';
 import JoinCreate from '@/views/user/JoinCreate.vue';
 import JoinComplete from '@/views/user/JoinComplete.vue';
-import Google from '@/views/Google.vue';
-import Token from '@/views/Token.vue';
-import Nickname from '@/views/Nickname.vue';
+import Token from '@/views/social/Token.vue';
+import Nickname from '@/views/social/Nickname.vue';
 import NoAccess from '@/views/NoAccess.vue';
 import FindPw from '@/views/user/FindPw.vue';
 
@@ -131,11 +130,6 @@ export default [
     path: '/my-page-access',
     name: 'MyPageAccess',
     component: MyPageAccess,
-  },
-  {
-    path: '/google',
-    name: 'Google',
-    component: Google,
   },
   {
     path: '/token',
