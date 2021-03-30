@@ -26,7 +26,5 @@ export default {
 </script>
 
 <style>
-.container{
- Max-width : 100vw !important;
-}
+
 </style>
