@@ -119,7 +119,7 @@
                     <v-img @click="dialog = false" src="@/assets/img/naver_long.png" width="380" style="margin-bottom:100px;"></v-img>
                     <div class="bottomOption">
                         <v-img src="@/assets/img/pattern.jpg" style="width:100%;"></v-img>
-                        <router-link to="/join" style="text-decoration: none; color:#616161;"><span style="margin-right:40px;">비밀번호 찾기</span></router-link>   
+                        <router-link to="/find-pw" style="text-decoration: none; color:#616161;"><span style="margin-right:40px;">비밀번호 찾기</span></router-link>   
                         <span >|</span>
                         <router-link to="/join" style="text-decoration: none; color:#616161;"><span style="margin-left:40px;">회원가입</span></router-link>    
                     </div>
