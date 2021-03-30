@@ -27,11 +27,11 @@
                 <br>
 
                 <v-container>
-                    <v-row class="noPadding">
+                    <v-row>
                         <v-col class="middleLetter formLetter" cols="3">이메일</v-col>
                         <v-col cols="9"><input-bar placeholder="이메일"></input-bar></v-col>
                     </v-row>
-                    <v-row class="noPadding">
+                    <v-row>
                         <v-col class="middleLetter formLetter" cols="3">비밀번호</v-col>
                         <v-col cols="9"><input-bar placeholder="비밀번호"></input-bar></v-col>
                     </v-row>
@@ -77,9 +77,6 @@ import InputBar from '@/components/common/InputBar.vue';
 </script>
 
 <style>
-.noPadding{ 
-    padding-top: 0px;
-}
 .v-text-field.v-text-field--enclosed .v-text-field__details{
     display: none !important;
 }
