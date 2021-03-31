@@ -153,19 +153,23 @@
             </v-row>
           </v-row>
           <div style="text-align:center;">
-            <app-btn-middle
-              style="margin:5%;"
-              :btnColor="'#FAFAFA'"
-              :btnName="'취소'"
-              :btnNameColor="'#424242'"
-            ></app-btn-middle>
-            <app-btn-middle
-              style="margin:5%;"
-              @click="ToGroupMain"
-              :btnColor="'#424242'"
-              :btnName="'수정하기'"
-              :btnNameColor="'white'"
-            ></app-btn-middle>
+            <div
+              style="display:inline-block; margin:5%"
+              @click="$router.go(-1)"
+            >
+              <app-btn-middle
+                :btnColor="'#FAFAFA'"
+                :btnName="'취소'"
+                :btnNameColor="'#424242'"
+              ></app-btn-middle>
+            </div>
+            <div style="display:inline-block;margin:5%" @click="ToGroupMain">
+              <app-btn-middle
+                :btnColor="'#424242'"
+                :btnName="'수정하기'"
+                :btnNameColor="'white'"
+              ></app-btn-middle>
+            </div>
           </div>
         </v-col>
 
@@ -217,7 +221,7 @@ export default {
       this.imageUrl = URL.createObjectURL(file); // Create File URL
     },
     ToGroupMain() {
-      this.$router.push("/");
+      this.$router.push("/group");
     },
   },
 };
