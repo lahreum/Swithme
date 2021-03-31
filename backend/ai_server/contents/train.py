@@ -9,12 +9,12 @@ from tensorflow.keras.callbacks import (
     ModelCheckpoint,
     TensorBoard
 )
-from yolov3_tf2.models import (
+from yolov3.models import (
     YoloV3, YoloLoss,
     yolo_anchors, yolo_anchor_masks,
 )
-from yolov3_tf2.utils import freeze_all
-import yolov3_tf2.dataset as dataset
+from yolov3.utils import freeze_all
+import yolov3.dataset as dataset
 
 flags.DEFINE_string('dataset', './data/raw/wider_face_train.tfrecord', 'path to dataset')
 flags.DEFINE_string('val_dataset', './data/raw/wider_face_val.tfrecord', 'path to validation dataset')
@@ -34,7 +34,7 @@ flags.DEFINE_enum('transfer', 'darknet',
                   'fine_tune: Transfer all and freeze darknet only')
 flags.DEFINE_integer('size', 416, 'image size')
 flags.DEFINE_integer('epochs', 10, 'number of epochs')
-flags.DEFINE_integer('batch_size', 16, 'batch size')
+flags.DEFINE_integer('batch_size', 4, 'batch size')
 flags.DEFINE_float('learning_rate', 1e-3, 'learning rate')
 flags.DEFINE_integer('num_classes', 2, 'number of classes in the model')
 flags.DEFINE_integer('weights_num_classes', 80, 'specify num class for `weights` file if different, '

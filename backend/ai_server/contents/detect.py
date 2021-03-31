@@ -1,7 +1,7 @@
 import cv2
 import tensorflow as tf
-from contents.yolov3_tf2.dataset import transform_images
-from contents.yolov3_tf2.utils import draw_outputs
+from contents.yolov3.dataset import transform_images
+from contents.yolov3.utils import draw_outputs
 from django.conf import settings
 
 # 파라미터 설정
