@@ -1,20 +1,46 @@
 <template>
   <div>
-    <group-recommend-card
-      :groupImg="groupList[1].groupImg"
-      :groupName="groupList[1].groupName"
-      :groupDesc="groupList[1].groupDesc"
-      :groupMemberCnt="groupList[1].groupMemberCnt"
-      :groupMaster="groupList[1].groupMaster"
-    ></group-recommend-card>
+    <carousel-3d
+      :controls-visible="true"
+      :controls-width="50"
+      :controls-height="60"
+      :clickable="true"
+      :width="320"
+      :height="420"
+      :border="0"
+      :space="200"
+      :perspective="50"
+      :inverseScaling="450"
+    >
+      <slide
+        v-for="(group, i) in groupList"
+        :index="i"
+        :key="i"
+        :style="{ backgroundColor: 'transparent' }"
+      >
+        <figure>
+          <group-recommend-card
+            :groupImg="group.groupImg"
+            :groupName="group.groupName"
+            :groupDesc="group.groupDesc"
+            :groupMemberCnt="group.groupMemberCnt"
+            :groupMaster="group.groupMaster"
+          ></group-recommend-card>
+        </figure>
+      </slide>
+    </carousel-3d>
   </div>
 </template>
 
 <script>
 import GroupRecommendCard from '@/components/common/GroupRecommendCard.vue';
+import { Carousel3d, Slide } from 'vue-carousel-3d';
+
 export default {
   components: {
     'group-recommend-card': GroupRecommendCard,
+    'carousel-3d': Carousel3d,
+    slide: Slide,
   },
   data: function() {
     return {
