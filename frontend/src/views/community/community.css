@@ -1,0 +1,11 @@
+.letter {
+    font-weight: 600 !important;
+    margin-top: 30px;
+    padding-left: 20px;
+}
+.title {
+    font-size: 22px;
+}
+.subTitle {
+    font-size: 18px;
+}
