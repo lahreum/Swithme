@@ -1,5 +1,6 @@
 package com.studywithme.controller;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +55,7 @@ public class TimerController {
 	
 	@GetMapping("/today")
 	@ApiOperation(value="공부시간 불러오기",notes="파라미터로 받은 날짜(오늘)에 맞는 공부시간을 불러온다")
-	public Object getTodayStudyTime(@RequestParam String datetime,HttpServletRequest req) {
+	public Object getTodayStudyTime(@RequestParam("datetime") String datetime,HttpServletRequest req) {
 		Map<String,Object> result=new HashMap<>();
 		
 		result.put("todayStudyTime",null);
@@ -75,8 +76,8 @@ public class TimerController {
 	}
 	
 	@GetMapping("/hourly/{range}")//개인 통계에 필요한거
-	@ApiOperation(value="시간대별 공부시간 불러오기",notes="url에 day, week, month 중 어떤것이 오냐에 따라 각각의 시간대별 공부시간 반환")
-	public Object averageStudyTimeForEachHour(@PathVariable String range,@RequestParam String datetimeOrigin, HttpServletRequest req) {
+	@ApiOperation(value="시간대별 공부시간 불러오기",notes="url에 day, week, month 중 어떤것이 오냐에 따라 각각의 시간대별 평균 공부시간 반환")
+	public Object averageStudyTimeForEachHour(@PathVariable("range") String range,@RequestParam("datetimeOrigin") String datetimeOrigin, HttpServletRequest req) {
 		Map<String,Object> result=new HashMap<>();
 		
 		int[] sum=new int[24];
@@ -96,8 +97,25 @@ public class TimerController {
 				if(list!=null)
 					sum=sumOfTimes(sum,list);
 				break;
-			case "week":// 고민좀 해봐야할듯
+			case "week":// commonMethods에 있는거 써서 7일간 받기?
+				int daysLength=0;
+				String[] dates=null;
 				
+				try {
+					daysLength=commonMethods.whatDay(datetimeOrigin);
+					dates=commonMethods.getDays(datetimeOrigin);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				
+				for(String s:dates) {
+					Optional<List<TimeHourly>> thWeekly=timeHourlyRepository.findByTimeHourlyUserNicknameAndTimeHourlyYearMonthDayHourStartingWith(nickname, s);
+					if(thWeekly.isPresent()) {
+						sum=sumOfTimes(sum,thWeekly.get());
+						for(int i=0;i<24;i++)
+							sum[i]/=daysLength;
+					}
+				}
 				break;
 			case "month":
 				int days=Integer.parseInt(datetime.substring(datetime.length()-4,datetime.length()-2));
@@ -117,7 +135,7 @@ public class TimerController {
 	
 	@PostMapping("/study-time")
 	@ApiOperation(value="시간당 공부시간 저장",notes="파라미터로 datetime, 공부시간을 받아 매 시간당 공부 시간을 저장")
-	public Object addStudyTimeForEachHour(@RequestParam String datetime,@RequestParam int studyTime,HttpServletRequest req) {
+	public Object addStudyTimeForEachHour(@RequestParam("datetime") String datetime,@RequestParam("studyTime") int studyTime,HttpServletRequest req) {
 		Map<String,Object> result=new HashMap<>();
 		result.put("success",false);
 		
@@ -162,9 +180,6 @@ public class TimerController {
 					attendanceRepository.save(newAttendance);
 				}
 			}
-			///////////////////
-			//주간데이터 추가해야댐
-			//////////////
 			datetime=datetime.substring(0,datetime.length()-2);
 			Optional<TimeMonthly> timeMonthly=timeMonthlyRepository.findByTimeMonthlyUserNicknameAndTimeMonthlyYearMonth(nickname, datetime);
 			if(timeMonthly.isPresent()) {
@@ -187,7 +202,7 @@ public class TimerController {
 	
 	@PostMapping("/not-study-time")
 	@ApiOperation(value="방해요소별 시간 저장",notes="파라미터로 datetime,비집중한 시간, 행동번호를 받아 db에 저장 성공하면 true 반환")
-	public Object addNotStudyTime(@RequestParam String datetime,@RequestParam int notStudyTime,int action,HttpServletRequest req) {
+	public Object addNotStudyTime(@RequestParam("datetime") String datetime,@RequestParam("notStudyTime") int notStudyTime,@RequestParam("action") int action,HttpServletRequest req) {
 		Map<String,Object> result=new HashMap<>();
 		
 		result.put("success",false);
@@ -218,7 +233,7 @@ public class TimerController {
 	
 	@GetMapping("/hourly")//찬찬규용
 	@ApiOperation(value="현재시간의 공부시간 받아오기(hourly)",notes="파라미터로 넘어온 현재 시간을 기준으로 db에 저장된 정보가 있으면 반환\n찬찬규 공부 시작버튼 누를때 사용할용도")
-	public Object getNowHourlyStudyTime(@RequestParam String datetime,HttpServletRequest req) {
+	public Object getNowHourlyStudyTime(@RequestParam("datetime") String datetime,HttpServletRequest req) {
 		Map<String,Object> result=new HashMap<>();
 		
 		result.put("curStudyTime",null);
@@ -240,7 +255,7 @@ public class TimerController {
 	
 	@GetMapping("/not-study")
 	@ApiOperation(value="일간 방해용인 목록",notes="파라미터로 날짜를 받아 해당 날짜의 일간 방해요인 반환")
-	public Object getNotStudyTimeAndCause(@RequestParam String datetime,HttpServletRequest req) {
+	public Object getNotStudyTimeAndCause(@RequestParam("datetime") String datetime,HttpServletRequest req) {
 		Map<String,Object> result=new HashMap<>();
 		
 		result.put("disturbingCause",null);
