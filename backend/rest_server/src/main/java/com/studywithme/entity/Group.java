@@ -2,6 +2,7 @@ package com.studywithme.entity;
 
 import java.sql.Blob;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -30,7 +31,9 @@ public class Group {
 	private String groupPassword;
 	private String groupGoalDate;
 	private int groupMaxMemberCount;
+	@Column(insertable=false)
 	private int groupCurMemberCount;
 	private String groupMasterNickname;
 	private Blob groupProfileImg;
+	private String groupNotice;
 }

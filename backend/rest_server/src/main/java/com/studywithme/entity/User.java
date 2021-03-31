@@ -2,6 +2,7 @@ package com.studywithme.entity;
 
 import java.sql.Blob;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -26,4 +27,6 @@ public class User {
 	private String userMessage;
 	private Blob userProfileImg;
 	private String userType;
+	@Column(insertable=false)
+	private boolean userIsStudying;
 }

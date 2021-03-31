@@ -3,6 +3,10 @@ package com.studywithme.config;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,5 +54,31 @@ public class CommonMethods {
 			hexString.append(hex);
 		}
 		return hexString.toString();
+	}
+	
+	public int whatDay(String datetime) throws ParseException {
+		SimpleDateFormat fm=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date=fm.parse(datetime);
+		Calendar cal=Calendar.getInstance();
+		cal.setTime(date);
+		
+		return cal.get(Calendar.DAY_OF_WEEK);
+	}
+	
+	public String[] getDays(String datetime) throws ParseException {
+		SimpleDateFormat fm=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date=fm.parse(datetime);
+		Calendar cal=Calendar.getInstance();
+		cal.setTime(date);
+		String[] dates=new String[7];
+		int whatDay=cal.get(Calendar.DAY_OF_WEEK);
+		
+		cal.add(Calendar.DATE, 1-whatDay);
+		int year=cal.get(Calendar.YEAR)%100;
+		int month=cal.get(Calendar.MONTH)+1;
+		int day=cal.get(Calendar.DATE);
+		for(int i=0;i<7;i++)
+			dates[i]=Integer.toString(year)+Integer.toString(month)+Integer.toString(day);
+		return dates;
 	}
 }
