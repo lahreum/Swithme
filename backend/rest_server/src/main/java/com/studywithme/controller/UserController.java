@@ -3,7 +3,9 @@ package com.studywithme.controller;
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
@@ -20,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.sql.rowset.serial.SerialException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,9 +32,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+
+import com.studywithme.DtoOnlyReturn.UserDto;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.studywithme.config.CommonMethods;
 import com.studywithme.config.JwtService;
+import com.studywithme.entity.TimeMonthly;
 import com.studywithme.entity.User;
+import com.studywithme.repository.TimeMonthlyRepository;
 import com.studywithme.repository.UserRepository;
 
 import io.swagger.annotations.ApiOperation;
@@ -48,6 +58,9 @@ public class UserController {
 	
 	@Autowired
 	CommonMethods commonMethods;
+	
+	@Autowired
+	TimeMonthlyRepository timeMonthlyRepository;
 	
 	@PostMapping("/signup")
 	@ApiOperation(value="회원가입",notes="User 정보를 body로 받아 db에 저장\n인터셉터에서 제외")
@@ -70,10 +83,30 @@ public class UserController {
 		return result;
 	}
 	
+	@PostMapping("/signup-social")
+	@ApiOperation(value="회원가입(소셜)", notes="소셜 로그인으로 처음 접속했을 때 자동 회원가입\n닉네임과 이메일을 담은 토큰 불러와 처리")
+	public Object createUserSocial(@RequestBody Map<String, String> map) {
+		Map<String, Object> result = new HashMap<>();
+		
+		String nickname = map.get("nickname");
+		String token = map.get("token");
+		
+		User user = new ObjectMapper().convertValue(jwtService.get(token).get("User"), User.class);
+		user.setUserNickname(nickname);
+		String jwtToken = jwtService.create(user);
+		
+		userRepository.save(user);
+		result.put("success", true);
+		result.put("token", jwtToken);
+		
+		return result;
+	}
+	
 	@PostMapping("/login")
 	@ApiOperation(value="로그인",notes="id와 password를 파라미터로 받아 헤더에 jwt 반환\n인터셉터에서 제외")
-	public Object loginUser(@RequestParam String userId,
-			@RequestParam String userPassword, HttpServletResponse resp) {
+	public Object loginUser(@RequestParam("userId") String userId,
+			@RequestParam("userPassword") String userPassword, HttpServletResponse resp) {
+
 		Map<String,Object> result=new HashMap<>();
 		
 		String hashed=commonMethods.getHashed(userPassword);
@@ -91,7 +124,7 @@ public class UserController {
 	
 	@GetMapping("/id")
 	@ApiOperation(value="id 중복체크",notes="id를 파라미터로 받아 중복체크\n인터셉터에서 제외")
-	public Object checkIdDuplicated(@RequestParam String userId) {
+	public Object checkIdDuplicated(@RequestParam("userId") String userId) {
 		Map<String,Object> result=new HashMap<>();
 		if(userRepository.findById(userId).isPresent())
 			result.put("isPresent",true);
@@ -103,7 +136,7 @@ public class UserController {
 	
 	@GetMapping("/nickname")
 	@ApiOperation(value="닉네임 중복체크",notes="닉네임을 파라미터로 받아 중복체크\n인터셉터에서 제외")
-	public Object checkNicknameDuplicated(@RequestParam String userNickname) {
+	public Object checkNicknameDuplicated(@RequestParam("nickname") String userNickname) {
 		Map<String,Object> result=new HashMap<>();
 		if(userRepository.findByUserNickname(userNickname).isPresent())
 			result.put("isPresent",true);
@@ -115,7 +148,7 @@ public class UserController {
 	
 	@PostMapping("/password")
 	@ApiOperation(value="비밀번호 분실",notes="이메일을 파라미터로 받아 메일로 링크 발송\n인터셉터에서 제외")
-	public Object sendEmail(@RequestParam String userEmail) throws AddressException, MessagingException {
+	public Object sendEmail(@RequestParam("userEmail") String userEmail) throws AddressException, MessagingException {
 		Map<String,Object> result=new HashMap<>();
 		String host="smtp.naver.com";
 		final String username="swithmedev";
@@ -161,15 +194,24 @@ public class UserController {
 		return result;
 	}
 	
-	/*@PutMapping("/password")//파라미터가 애매함 -> 링크로 들어간경우와 직접 들어간경우 나눠서 해야하나?
+	@PutMapping("/password")//파라미터가 애매함 -> 링크로 들어간경우와 직접 들어간경우 나눠서 해야하나?
 	@ApiOperation(value="비밀번호 변경",notes="id와 바꿀 password를 파라미터로 받아 db 업데이트\n인터셉터에서 제외해야하나?")
-	public Object changePassword(@RequestParam String userId,@RequestParam String newPassword) {
+	public Object changePassword(@RequestParam("userId") String userId,@RequestParam("newPassword") String newPassword) {
 		Map<String,Object> result=new HashMap<>();
 		
+		result.put("success",false);
 		
+		Optional<User> user=userRepository.findById(userId);
+		if(user.isPresent()) {
+			user.get().setUserPassword(commonMethods.getHashed(newPassword));
+			userRepository.save(user.get());
+			
+			result.clear();
+			result.put("success",true);
+		}
 		
 		return result;
-	}*/
+	}
 
 	@GetMapping("")
 	@ApiOperation(value="본인정보 받아오기",notes="헤더의 jwt를 기반으로 사용자 정보 반환")
@@ -190,7 +232,7 @@ public class UserController {
 	
 	@PostMapping("/mypage")
 	@ApiOperation(value="마이페이지에 접근하기 위해 비밀번호 입력",notes="비밀번호가 올바르다면 true 반환")
-	public Object showMypage(@RequestParam String userPassword,HttpServletRequest req) {
+	public Object showMypage(@RequestParam("userPassword") String userPassword,HttpServletRequest req) {
 		Map<String,Object> result=new HashMap<>();
 		
 		String id=commonMethods.getUserId(req.getHeader("jwt-auth-token"));
@@ -239,7 +281,7 @@ public class UserController {
 	
 	@PutMapping("/message")
 	@ApiOperation(value="상태메세지 변경",notes="상태메세지를 바꾸는 데 성공했다면 true 반환")
-	public Object changeMessage(@RequestParam String message,HttpServletRequest req) {
+	public Object changeMessage(@RequestParam("message") String message,HttpServletRequest req) {
 		Map<String,Object> result=new HashMap<>();
 		
 		String id=commonMethods.getUserId(req.getHeader("jwt-auth-token"));
@@ -254,5 +296,74 @@ public class UserController {
 		
 		return result;
 	}
+	
+	@PutMapping("/start")
+	@ApiOperation(value="공부시작 설정",notes="사용자의 상태를 공부중으로 바꿈")
+	public Object startStudy(HttpServletRequest req) {
+		Map<String,Object> result=new HashMap<>();
 		
+		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
+		
+		result.put("success",false);
+		
+		Optional<User> user=userRepository.findByUserNickname(nickname);
+		if(user.isPresent()) {
+			user.get().setUserIsStudying(true);
+			userRepository.save(user.get());
+			
+			result.clear();
+			result.put("success",true);
+		}
+		return result;
+	}
+	
+	@PutMapping("/end")
+	@ApiOperation(value="공부종료 설정",notes="사용자의 상태를 공부중이 아님으로 바꿈")
+	public Object endStudy(HttpServletRequest req) {
+		Map<String,Object> result=new HashMap<>();
+		
+		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
+		
+		result.put("success",false);
+		
+		Optional<User> user=userRepository.findByUserNickname(nickname);
+		if(user.isPresent()) {
+			user.get().setUserIsStudying(false);
+			userRepository.save(user.get());
+			
+			result.clear();
+			result.put("success",true);
+		}
+		return result;
+	}
+		
+	@GetMapping("/ranking")
+	@ApiOperation(value="랭킹 리스트",notes="파라미터로 받은 datetime의 해당 월의 월간 순위 반환")
+	public Object getAllRanking(@RequestParam("datetime") String datetime) {
+		Map<String,Object> result=new HashMap<>();
+		
+		result.put("allRankingList",null);
+		
+		datetime=datetime.substring(2,7);
+		datetime=datetime.replaceAll("-", "");
+		
+		Optional<List<TimeMonthly>> timeMonthlyList=timeMonthlyRepository.findByTimeMonthlyYearMonth(datetime, Sort.by("timeMonthlyTime").descending());
+		if(timeMonthlyList.isPresent()) {
+			List<UserDto> userList=new ArrayList<>();
+			for(TimeMonthly tm:timeMonthlyList.get()) {
+				Optional<User> user=userRepository.findByUserNickname(tm.getTimeMonthlyUserNickname());
+				if(user.isPresent()) {
+					UserDto userDto=new UserDto();
+					userDto.setNickname(user.get().getUserNickname());
+					userDto.setProfileImg(user.get().getUserProfileImg());
+					userDto.setTodayStudyTime(tm.getTimeMonthlyTime());
+					
+					userList.add(userDto);
+				}
+			}
+			result.clear();
+			result.put("allRankingList",userList);
+		}
+		return result;
+	}
 }

@@ -16,9 +16,10 @@ public class JwtInterceptorConfig implements WebMvcConfigurer{
 	
 	@Override
 	public void addInterceptors (InterceptorRegistry registry) {
-		registry.addInterceptor(jwtInterceptor).addPathPatterns("/api/**")
-			.excludePathPatterns(Arrays.asList("/user/signup","/user/login","/user/id",
-					"/user/nickname","/user/password","/swagger-ui.html"));
+		registry.addInterceptor(jwtInterceptor).addPathPatterns("/**")
+			.excludePathPatterns(Arrays.asList("/user/signup","/user/signup-social","/user/login","/user/id",
+					"/user/nickname","/user/password","/oauth/**","/swagger-ui.html",
+					"/v2/api-docs","/configuration/ui","/swagger-resources/**","/configuration/**","/webjars/**","/csrf","/"));
 	}
 	
 	@Override
@@ -29,5 +30,4 @@ public class JwtInterceptorConfig implements WebMvcConfigurer{
 			.allowedHeaders("*")
 			.exposedHeaders("jwt-auth-token");
 	}
-	
 }

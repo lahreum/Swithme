@@ -7,19 +7,29 @@
     </div>
     <div class="info-right">
       <v-row no-gutters style=" font-size: 1.2rem;">
-        <strong> {{ user.username }} </strong> 님, 오늘도 화이팅입니다!
+        <span>
+          <strong>{{ user.username }}</strong>
+          님의 총 공부시간은 <strong>{{ user.studyTime }}</strong
+          >로
+        </span>
       </v-row>
       <v-row
         no-gutters
-        style="font-size: 4rem; font-weight: bold; margin-top: -10px; "
+        align="end"
+        style="font-size: 2rem; font-weight: bold; margin-top: -10px; "
       >
-        {{ user.studyTime }}
+        <span>
+          현재 <span style="font-size: 4rem;">{{ rank }}</span>
+          위 (상위
+          <span style="color: #673fb4;">{{ rankPercentage }}%</span>)</span
+        >
       </v-row>
-      <div>
-        <progress-bar :progressValue="30"></progress-bar>
-      </div>
-      <v-row no-gutters style="font-size: 1.2rem; margin-top: 10px;">
-        "{{ user.myGoal }}"
+      <v-row no-gutters style="font-size: 1.2rem; ">
+        <span
+          >(소근소근, <strong>{{ rank - 1 }}위</strong>와 겨우
+          <span style="color: #673fb4; font-weight: bold;">{{ timeDiff }}</span>
+          차이네요.)</span
+        >
       </v-row>
     </div>
   </v-row>
@@ -27,12 +37,10 @@
 
 <script>
 import ProfileLarge from '@/components/common/ProfileLarge.vue';
-import ProgressBar from '@/components/common/ProgressBar.vue';
 
 export default {
   components: {
     'profile-large': ProfileLarge,
-    'progress-bar': ProgressBar,
   },
   data: function() {
     return {
@@ -40,8 +48,10 @@ export default {
         profile: '프로필 사진',
         username: 'default',
         studyTime: '9:36:33',
-        myGoal: '오늘 걷지 않으면, 내일 뛰어야 한다.',
       },
+      rank: 516,
+      rankPercentage: 29,
+      timeDiff: '3분 33초',
     };
   },
 };

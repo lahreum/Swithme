@@ -8,10 +8,8 @@
           <h1 style="text-align:center">3월의 추천 그룹</h1>
           <hr />
 
-          <div
-            style="height:500px; margin:5% 0; font-size:100px; background-color:blue"
-          >
-            추천그룹 컴포넌트 자리...
+          <div style="height:430px; margin:5% 0;">
+            <group-recommend></group-recommend>
           </div>
 
           <div>
@@ -136,15 +134,17 @@
 </template>
 
 <script>
-import GroupInfo from "../components/common/GroupInfo.vue";
-import MiddleNav from "../components/include/MiddleNav.vue";
-import GroupSelect from "../components/common/GroupSelect.vue";
-import SearchBar from "../components/common/SearchBar.vue";
-import AppBtnSmall from "../components/common/AppBtnSmall.vue";
-// const storage = window.sessionStorage;
+import GroupInfo from '../components/common/GroupInfo.vue';
+import MiddleNav from '../components/include/MiddleNav.vue';
+import GroupSelect from '../components/common/GroupSelect.vue';
+import SearchBar from '../components/common/SearchBar.vue';
+import AppBtnSmall from '../components/common/AppBtnSmall.vue';
+import GroupRecommend from '@/components/common/GroupRecommend.vue';
+
 export default {
   components: {
-    "middle-nav": MiddleNav,
+    'group-recommend': GroupRecommend,
+    'middle-nav': MiddleNav,
     GroupInfo,
     GroupSelect,
     SearchBar,
@@ -162,17 +162,17 @@ export default {
       ActiveGroup: [],
 
       navInfo: [
-        "sample2.png",
-        "그룹",
-        "목표가 같은 사람들끼리 모여 달려보세요.",
-        "목표로 가는 길이 덜 힘들고, 더욱 든든해질 거예요",
+        'sample2.png',
+        '그룹',
+        '목표가 같은 사람들끼리 모여 달려보세요.',
+        '목표로 가는 길이 덜 힘들고, 더욱 든든해질 거예요',
       ],
       groups: [
         {
-          src: "https://ifh.cc/g/wyakuA.jpg",
-          groupName: "자면 안돼",
+          src: 'https://ifh.cc/g/wyakuA.jpg',
+          groupName: '자면 안돼',
           groupDesc:
-            "잠을 자는 사람은 꿈을 꾸지만, 잠을 자지 않는 사람은 꿈을 이룬다",
+            '잠을 자는 사람은 꿈을 꾸지만, 잠을 자지 않는 사람은 꿈을 이룬다',
           groupCnt: 7,
           groupTotalCnt: 13,
           grouper: [
@@ -185,9 +185,9 @@ export default {
           date: "2021-03-22 14:21:46",
         },
         {
-          src: "https://ifh.cc/g/qJkaF3.png",
-          groupName: "싸피모임",
-          groupDesc: "싸피 1~4기 아무나 모여~!",
+          src: 'https://ifh.cc/g/qJkaF3.png',
+          groupName: '싸피모임',
+          groupDesc: '싸피 1~4기 아무나 모여~!',
           groupCnt: 17,
           groupTotalCnt: 26,
           grouper: [
@@ -200,9 +200,9 @@ export default {
           date: "2021-03-22 14:21:46",
         },
         {
-          src: "https://ifh.cc/g/GAyQK3.jpg",
-          groupName: "피자레인저",
-          groupDesc: "일주일목표를 다이루면 피자를사먹는그룹입니다",
+          src: 'https://ifh.cc/g/GAyQK3.jpg',
+          groupName: '피자레인저',
+          groupDesc: '일주일목표를 다이루면 피자를사먹는그룹입니다',
           groupCnt: 8,
           groupTotalCnt: 12,
           grouper: [
@@ -216,9 +216,9 @@ export default {
         },
 
         {
-          src: "https://ifh.cc/g/Zp0ZYA.jpg",
-          groupName: "합격할거야!",
-          groupDesc: "정처기 같이 공부하실분!!",
+          src: 'https://ifh.cc/g/Zp0ZYA.jpg',
+          groupName: '합격할거야!',
+          groupDesc: '정처기 같이 공부하실분!!',
           groupCnt: 5,
           groupTotalCnt: 12,
           grouper: [
@@ -231,9 +231,9 @@ export default {
           date: "2021-03-23 14:21:46",
         },
         {
-          src: "https://ifh.cc/g/Zp0ZYA.jpg",
-          groupName: "공무원 자율스터디",
-          groupDesc: "공무원, 자율스터디",
+          src: 'https://ifh.cc/g/Zp0ZYA.jpg',
+          groupName: '공무원 자율스터디',
+          groupDesc: '공무원, 자율스터디',
           groupCnt: 7,
           groupTotalCnt: 13,
           grouper: [
@@ -246,9 +246,9 @@ export default {
           date: "2021-03-24 14:21:46",
         },
         {
-          src: "https://ifh.cc/g/ojNXEJ.jpg",
-          groupName: "예비 선생님들 스터디~",
-          groupDesc: "임용고시 같이 준비해요~",
+          src: 'https://ifh.cc/g/ojNXEJ.jpg',
+          groupName: '예비 선생님들 스터디~',
+          groupDesc: '임용고시 같이 준비해요~',
           groupCnt: 6,
           groupTotalCnt: 18,
           grouper: [
@@ -261,9 +261,9 @@ export default {
           date: "2021-03-25 14:21:46",
         },
         {
-          src: "https://ifh.cc/g/JPassm.jpg",
-          groupName: "토익 가즈아",
-          groupDesc: "토익 스터디 환영합니다",
+          src: 'https://ifh.cc/g/JPassm.jpg',
+          groupName: '토익 가즈아',
+          groupDesc: '토익 스터디 환영합니다',
           groupCnt: 5,
           groupTotalCnt: 11,
           grouper: [
@@ -276,9 +276,9 @@ export default {
           date: "2021-03-26 14:21:46",
         },
         {
-          src: "https://ifh.cc/g/Zp0ZYA.jpg",
-          groupName: "온라인 스터디룸",
-          groupDesc: "누구나 환영~~~",
+          src: 'https://ifh.cc/g/Zp0ZYA.jpg',
+          groupName: '온라인 스터디룸',
+          groupDesc: '누구나 환영~~~',
           groupCnt: 3,
           groupTotalCnt: 10,
           grouper: [
@@ -291,9 +291,9 @@ export default {
           date: "2021-03-29 14:21:46",
         },
         {
-          src: "https://ifh.cc/g/Zp0ZYA.jpg",
-          groupName: "어서오세요",
-          groupDesc: "자율 스터디 방입니다!",
+          src: 'https://ifh.cc/g/Zp0ZYA.jpg',
+          groupName: '어서오세요',
+          groupDesc: '자율 스터디 방입니다!',
           groupCnt: 7,
           groupTotalCnt: 13,
           grouper: [

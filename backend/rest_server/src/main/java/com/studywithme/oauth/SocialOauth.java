@@ -1,7 +1,8 @@
 package com.studywithme.oauth;
 
 public interface SocialOauth {
-	public String getOauthRedirectUri();
+	public String requestAuth();
 	public Token requestToken(String code);
-	public String getTokenInfo(String type, Token token);
+	public TokenInfo getTokenInfo(Token token);
+	public String checkUserAccount(TokenInfo tokenInfo);
 }

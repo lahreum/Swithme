@@ -39,7 +39,7 @@ public class TodoController {
 
 	@PostMapping("")
 	@ApiOperation(value="투두리스트 추가",notes="파라미터로 받은 내용을 db에 저장하는 데 성공했다면 true 반환")
-	public Object writeTodo(@RequestParam String content,HttpServletRequest req) {
+	public Object writeTodo(@RequestParam("content") String content,HttpServletRequest req) {
 		Map<String,Object> result=new HashMap<>();
 		
 		result.put("success",false);
@@ -62,7 +62,7 @@ public class TodoController {
 	
 	@DeleteMapping("")
 	@ApiOperation(value="투두리스트 삭제",notes="파라미터로 받은 투두리스트 id로 삭제하는 데 성공했다면 true 반환")
-	public Object deleteTodo(@RequestParam int todoId,HttpServletRequest req) {
+	public Object deleteTodo(@RequestParam("todoId") int todoId,HttpServletRequest req) {
 		Map<String,Object> result=new HashMap<>();
 		
 		result.put("success",false);
@@ -82,7 +82,7 @@ public class TodoController {
 	
 	@PutMapping("")
 	@ApiOperation(value="투두리스트 수정",notes="파라미터로 받은 투두리스트 id로 완료 상태를 수정하는 데 성공했다면 true 반환")
-	public Object modifyTodo(@RequestParam int todoId,HttpServletRequest req) {
+	public Object modifyTodo(@RequestParam("todoId") int todoId,HttpServletRequest req) {
 		Map<String,Object> result=new HashMap<>();
 		
 		result.put("success",false);
@@ -101,7 +101,7 @@ public class TodoController {
 	
 	@GetMapping("")
 	@ApiOperation(value="투두리스트 목록",notes="파라미터로 받은 날짜에 맞는 투두리스트를 불러온다")
-	public Object getTodoList(String datetime,HttpServletRequest req) {
+	public Object getTodoList(@RequestParam("datetime") String datetime,HttpServletRequest req) {
 		Map<String,Object> result=new HashMap<>();
 		datetime=datetime.substring(0, 10);
 		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
