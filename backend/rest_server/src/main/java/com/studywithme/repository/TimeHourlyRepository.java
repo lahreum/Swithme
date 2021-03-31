@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.studywithme.entity.TimeHourly;
 
 public interface TimeHourlyRepository extends JpaRepository<TimeHourly,Integer> {
-	Optional<List<TimeHourly>> findByTimeHourlyYearMonthDayHourAndTimeHourlyUserNickname(String timeHourlyYearMonthDayHour,String timeHourlyUserNickname);
-	
+	Optional<List<TimeHourly>> findByTimeHourlyUserNicknameAndTimeHourlyYearMonthDayHourStartingWith(String timeHourlyUserNickname,String timeHourlyYearMonthDay);
+	Optional<TimeHourly> findByTimeHourlyUserNicknameAndTimeHourlyYearMonthDayHour(String timeHourlyUserNickname,String timeHourlyYearMonthDayHour);
 }

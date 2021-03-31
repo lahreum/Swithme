@@ -56,7 +56,7 @@ public class CommunityController {
 	
 	@GetMapping("/board")
 	@ApiOperation(value="게시글 목록",notes="파라미터로 받은 카테고리 번호에 맞는 게시글들의 목록 반환")
-	public Object getBoardList(@RequestParam int categoryId) {
+	public Object getBoardList(@RequestParam("categoryId") int categoryId) {
 		Map<String,Object> result=new HashMap<>();
 		
 		Optional<List<Board>> list=boardRepository.findByBoardCategory(categoryId);
@@ -69,8 +69,8 @@ public class CommunityController {
 	}
 	
 	@GetMapping("/board/{boardId}")
-	@ApiOperation(value="게시글 상세",notes="파라미터로 받은 게시글 번호에 따라 게시글 상세와 사용자의 좋아요 표시 여부, 해당 사용자가 글쓴이인지 반환")
-	public Object getBoardDetail(@PathVariable Integer boardId,HttpServletRequest req) {
+	@ApiOperation(value="게시글 상세",notes="url로 받은 게시글 번호에 따라 게시글 상세와 사용자의 좋아요 표시 여부, 해당 사용자가 글쓴이인지 반환")
+	public Object getBoardDetail(@PathVariable("boardId") Integer boardId,HttpServletRequest req) {
 		Map<String,Object> result=new HashMap<>();
 		
 		Optional<Board> board=boardRepository.findById(boardId);
@@ -102,7 +102,7 @@ public class CommunityController {
 	
 	@GetMapping("/reply")
 	@ApiOperation(value="댓글 목록",notes="파라미터로 받은 게시글 번호에 달린 댓글들의 리스트 반환")
-	public Object getReplyList(@RequestParam int boardId) {
+	public Object getReplyList(@RequestParam("boardId") int boardId) {
 		Map<String,Object> result=new HashMap<>();
 		
 		Optional<List<Reply>> list=replyRepository.findByReplyBoardId(boardId);
@@ -156,7 +156,7 @@ public class CommunityController {
 	
 	@DeleteMapping("/board/{boardId}")
 	@ApiOperation(value="게시글 삭제",notes="파라미터로 받은 게시글 번호로 삭제에 성공하면 true 반환")
-	public Object deleteBoard(@PathVariable Integer boardId,HttpServletRequest req) {
+	public Object deleteBoard(@PathVariable("boardId") Integer boardId,HttpServletRequest req) {
 		Map<String,Object> result=new HashMap<>();
 		
 		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
@@ -177,7 +177,7 @@ public class CommunityController {
 	
 	@PostMapping("/reply")
 	@ApiOperation(value="댓글 작성",notes="바디로 받은 reply를 저장하는 데 성공했다면 true 반환")
-	public Object writeReply(@RequestParam int boardId,@RequestParam String content,HttpServletRequest req) {
+	public Object writeReply(@RequestParam("boardId") int boardId,@RequestParam("content") String content,HttpServletRequest req) {
 		Map<String,Object> result=new HashMap<>();
 		
 		result.put("success",false);
@@ -198,7 +198,7 @@ public class CommunityController {
 	
 	@PutMapping("/reply")
 	@ApiOperation(value="댓글 수정",notes="파라미터로 받은 댓글 번호와 내용을 통해 수정에 성공하면 true 반환")
-	public Object modifyReply(@RequestParam int replyId,@RequestParam String content,HttpServletRequest req) {
+	public Object modifyReply(@RequestParam("replyId") int replyId,@RequestParam("content") String content,HttpServletRequest req) {
 		Map<String,Object> result=new HashMap<>();
 		
 		result.put("success",false);
@@ -219,7 +219,7 @@ public class CommunityController {
 	
 	@DeleteMapping("/reply")
 	@ApiOperation(value="댓글 삭제",notes="파라미터로 받은 댓글 번호를 통해 삭제에 성공하면 true 반환")
-	public Object deleteReply(@RequestParam int replyId,HttpServletRequest req) {
+	public Object deleteReply(@RequestParam("replyId") int replyId,HttpServletRequest req) {
 		Map<String,Object> result=new HashMap<>();
 		
 		result.put("success",false);
@@ -239,7 +239,7 @@ public class CommunityController {
 	
 	@PostMapping("/liked")
 	@ApiOperation(value="게시글 좋아요",notes="파라미터로 받은 게시글 번호의 게시글 좋아요를 누르는 데에 성공하면 true 반환")
-	public Object likeBoard(@RequestParam int boardId,HttpServletRequest req) {
+	public Object likeBoard(@RequestParam("boardId") int boardId,HttpServletRequest req) {
 		Map<String,Object> result=new HashMap<>();
 		
 		result.put("success",false);
@@ -268,7 +268,7 @@ public class CommunityController {
 	
 	@DeleteMapping("/liked")
 	@ApiOperation(value="게시글 좋아요취소",notes="파라미터로 받은 게시글 번호의 게시글 좋아요를 취소하는 데에 성공하면 true 반환")
-	public Object unLikeBoard(@RequestParam int boardId,HttpServletRequest req) {
+	public Object unLikeBoard(@RequestParam("boardId") int boardId,HttpServletRequest req) {
 		Map<String,Object> result=new HashMap<>();
 		
 		result.put("success",false);

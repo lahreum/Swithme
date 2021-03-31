@@ -2,13 +2,28 @@ package com.studywithme.oauth;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.studywithme.config.JwtService;
+import com.studywithme.entity.User;
+import com.studywithme.repository.UserRepository;
+
+import lombok.RequiredArgsConstructor;
+
 @Component
+@RequiredArgsConstructor
 public class GoogleOauth implements SocialOauth {
+	@Autowired
+	private UserRepository userRepository;
+	
+	@Autowired
+	private JwtService jwtService;
+	
 	private final String clientId = "454862811715-f1k2ft42rkh2r02idn4q3mqdd8jmi6j9.apps.googleusercontent.com";
 	private final String clientSecret = "EQxkCbPjG_8TM4guXxgIsX6G";
 	private final String authUri = "https://accounts.google.com/o/oauth2/v2/auth";
@@ -17,7 +32,7 @@ public class GoogleOauth implements SocialOauth {
 	private final String tokenInfoUri = "https://oauth2.googleapis.com/tokeninfo";
 	
 	@Override
-	public String getOauthRedirectUri() {
+	public String requestAuth() {
 		UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(authUri)
 				.queryParam("client_id", clientId)
 				.queryParam("redirect_uri", redirectUri)
@@ -38,19 +53,44 @@ public class GoogleOauth implements SocialOauth {
 		params.put("redirect_uri", redirectUri);
 		
 		RestTemplate restTemplate = new RestTemplate();
-		Token response = restTemplate.postForObject(tokenUri, params, Token.class);
+		Token token = restTemplate.postForObject(tokenUri, params, Token.class);
 		
-		return response;
+		return token;
 	}
 
 	@Override
-	public String getTokenInfo(String type, Token token) {
+	public TokenInfo getTokenInfo(Token token) {
 		Map<String, String> params = new HashMap<>();
 		params.put("id_token", token.getIdToken());
 		
 		RestTemplate restTemplate = new RestTemplate();
-		String response = restTemplate.postForObject(tokenInfoUri, params, String.class);
+		TokenInfo tokenInfo = restTemplate.postForObject(tokenInfoUri, params, TokenInfo.class);
 				
-		return response;
+		return tokenInfo;
+	}
+
+	@Override
+	public String checkUserAccount(TokenInfo tokenInfo) {
+		Optional<User> optUserAccount = userRepository.findById(tokenInfo.getEmail());
+		String jwtToken, redirectUri;
+		
+		if(optUserAccount.isPresent()) {	// 계정이 이미 존재할 경우
+			if(optUserAccount.get().getUserType().equals("google")) {	// Google로 가입한 계정일 경우
+				jwtToken = jwtService.create(optUserAccount.get());
+				redirectUri = "http://localhost:8080/token?is-user=true&jwt-auth-token=" + jwtToken;
+				return redirectUri;
+			}
+			else return "http://localhost:8080/no-access/invalid_account";	// Google로 가입한 계정이 아닐 경우
+		}
+		
+		// 계정이 존재하지 않을 경우
+		User user = new User();
+		user.setUserId(tokenInfo.getEmail());
+		user.setUserType("google");
+		
+		jwtToken = jwtService.create(user);
+		redirectUri = "http://localhost:8080/token?is-user=false&jwt-auth-token=" + jwtToken;
+		
+		return redirectUri;
 	}
 }

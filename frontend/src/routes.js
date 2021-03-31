@@ -1,6 +1,7 @@
 import Tutorial from '@/views/HomeTutorial.vue';
 import MyStudy from '@/views/MyStudy.vue';
 import MyPageAccess from '@/views/MyPageAccess.vue';
+import MyPageModify from '@/views/MyPageModify.vue';
 import MyPage from '@/views/MyPage.vue';
 import Ranking from '@/views/Ranking.vue';
 import GroupMain from '@/views/GroupMain.vue';
@@ -17,7 +18,9 @@ import JoinAgree from '@/views/user/JoinAgree.vue';
 import JoinAuth from '@/views/user/JoinAuth.vue';
 import JoinCreate from '@/views/user/JoinCreate.vue';
 import JoinComplete from '@/views/user/JoinComplete.vue';
-import Google from '@/views/Google.vue';
+import Token from '@/views/social/Token.vue';
+import Nickname from '@/views/social/Nickname.vue';
+import NoAccess from '@/views/NoAccess.vue';
 import FindPw from '@/views/user/FindPw.vue';
 
 export default [
@@ -113,10 +116,15 @@ export default [
     name: 'Community',
     component: Community,
   },
-    {
+  {
     path: '/my-page',
     name: 'MyPage',
     component: MyPage,
+  },
+  {
+    path: '/my-page-modify',
+    name: 'MyPageModify',
+    component: MyPageModify,
   },
   {
     path: '/my-page-access',
@@ -124,8 +132,24 @@ export default [
     component: MyPageAccess,
   },
   {
-    path: '/google',
-    name: 'Google',
-    component: Google,
+    path: '/token',
+    name: 'Token',
+    component: Token,
+    beforeEnter: (to, from, next) => {
+      if (from.name == null) next();
+    },
+  },
+  {
+    path: '/nickname',
+    name: 'Nickname',
+    component: Nickname,
+    beforeEnter: (to, from, next) => {
+      if (to.params.tmpToken != null) next();
+    },
+  },
+  {
+    path: '/no-access/:error',
+    name: 'NoAccess',
+    component: NoAccess,
   },
 ];
