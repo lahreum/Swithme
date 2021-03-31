@@ -18,7 +18,11 @@
             <v-row align="end">
               <v-col cols="3"><h1>그룹 목록</h1></v-col>
               <v-col cols="5" style="font-size: 1rem;">
-                지금 1,351 개의 그룹이 활동중
+                지금
+                <span style="font-size:1.2rem;color:#673fb4">{{
+                  ActiveGroup.length
+                }}</span>
+                개의 그룹이 활동중
               </v-col>
               <v-col cols="4" style="font-size: 1rem;" align="end">
                 관심카테고리설정
@@ -26,34 +30,94 @@
               </v-col>
             </v-row>
             <hr />
-            <v-row align="center" style="margin:10px 0;">
-              <v-col cols="8"
-                ><AppBtnSmall
-                  :btnColor="'#673fb4'"
-                  :btnName="'전체'"
-                  :btnNameColor="'white'"/>
 
+            <v-row align="center" style="margin:10px 0;">
+              <v-col cols="8">
                 <AppBtnSmall
-                  :btnColor="'white'"
+                  :btnColor="caseNum === 1 ? '#673fb4' : 'white'"
+                  :btnName="'전체'"
+                  :btnNameColor="caseNum === 1 ? 'white' : 'black'"
+                  @realClick="caseNum = 1"/>
+                <AppBtnSmall
+                  :btnColor="caseNum === 2 ? '#673fb4' : 'white'"
                   :btnName="'내가 있는 그룹'"
-                  :btnNameColor="'black'"/>
+                  :btnNameColor="caseNum === 2 ? 'white' : 'black'"
+                  @realClick="MakeMyGroup"/>
                 <AppBtnSmall
-                  :btnColor="'white'"
+                  :btnColor="caseNum === 3 ? '#673fb4' : 'white'"
                   :btnName="'뜨거운 그룹'"
-                  :btnNameColor="'black'"/>
+                  :btnNameColor="caseNum === 3 ? 'white' : 'black'"
+                  @realClick="MakeHotGroup"/>
                 <AppBtnSmall
-                  :btnColor="'white'"
+                  :btnColor="caseNum === 4 ? '#673fb4' : 'white'"
                   :btnName="'신규 그룹'"
-                  :btnNameColor="'black'"
+                  :btnNameColor="caseNum === 4 ? 'white' : 'black'"
+                  @realClick="MakeNewGroup"
               /></v-col>
-              <v-col cols="4"><SearchBar /></v-col>
+              <v-col cols="4"><SearchBar @searchThing="search"/></v-col>
             </v-row>
           </div>
-          <v-row>
+          <v-row v-if="caseNum === 1">
             <v-col
               cols="12"
               sm="3"
               v-for="(group, index) in groups"
+              :key="index"
+              ><GroupInfo
+                :src="group.src"
+                :groupName="group.groupName"
+                :groupDesc="group.groupDesc"
+                :groupCnt="group.groupCnt"
+                :groupTotalCnt="group.groupTotalCnt"
+            /></v-col>
+          </v-row>
+          <v-row v-else-if="caseNum === 2">
+            <v-col
+              cols="12"
+              sm="3"
+              v-for="(group, index) in MyGroup"
+              :key="index"
+              ><GroupInfo
+                :src="group.src"
+                :groupName="group.groupName"
+                :groupDesc="group.groupDesc"
+                :groupCnt="group.groupCnt"
+                :groupTotalCnt="group.groupTotalCnt"
+            /></v-col>
+          </v-row>
+          <v-row v-else-if="caseNum === 3">
+            <v-col
+              cols="12"
+              sm="3"
+              v-for="(group, index) in HotGroup"
+              :key="index"
+              ><GroupInfo
+                :src="group.src"
+                :groupName="group.groupName"
+                :groupDesc="group.groupDesc"
+                :groupCnt="group.groupCnt"
+                :groupTotalCnt="group.groupTotalCnt"
+            /></v-col>
+          </v-row>
+          <v-row v-else-if="caseNum === 4">
+            <v-col
+              cols="12"
+              sm="3"
+              v-for="(group, index) in NewGroup"
+              :key="index"
+              ><GroupInfo
+                :src="group.src"
+                :groupName="group.groupName"
+                :groupDesc="group.groupDesc"
+                :groupCnt="group.groupCnt"
+                :groupTotalCnt="group.groupTotalCnt"
+            /></v-col>
+          </v-row>
+          <v-row v-else-if="caseNum === 5">
+            <v-col
+              cols="12"
+              sm="3"
+              v-for="(group, index) in SearchedGroup"
               :key="index"
               ><GroupInfo
                 :src="group.src"
@@ -77,7 +141,7 @@ import MiddleNav from "../components/include/MiddleNav.vue";
 import GroupSelect from "../components/common/GroupSelect.vue";
 import SearchBar from "../components/common/SearchBar.vue";
 import AppBtnSmall from "../components/common/AppBtnSmall.vue";
-
+// const storage = window.sessionStorage;
 export default {
   components: {
     "middle-nav": MiddleNav,
@@ -88,6 +152,15 @@ export default {
   },
   data: function() {
     return {
+      caseNum: 1,
+      nickName: "dldkfma",
+      AllGroup: [],
+      MyGroup: [],
+      HotGroup: [],
+      NewGroup: [],
+      SearchedGroup: [],
+      ActiveGroup: [],
+
       navInfo: [
         "sample2.png",
         "그룹",
@@ -102,6 +175,14 @@ export default {
             "잠을 자는 사람은 꿈을 꾸지만, 잠을 자지 않는 사람은 꿈을 이룬다",
           groupCnt: 7,
           groupTotalCnt: 13,
+          grouper: [
+            "zasdfasdf",
+            "빛봉현",
+            "별빛지현",
+            "정처기out",
+            "녹용파는사슴",
+          ],
+          date: "2021-03-22 14:21:46",
         },
         {
           src: "https://ifh.cc/g/qJkaF3.png",
@@ -109,6 +190,14 @@ export default {
           groupDesc: "싸피 1~4기 아무나 모여~!",
           groupCnt: 17,
           groupTotalCnt: 26,
+          grouper: [
+            "ffdfdw",
+            "빛봉현",
+            "별빛지현",
+            "정처기out",
+            "녹용파는사슴",
+          ],
+          date: "2021-03-22 14:21:46",
         },
         {
           src: "https://ifh.cc/g/GAyQK3.jpg",
@@ -116,6 +205,14 @@ export default {
           groupDesc: "일주일목표를 다이루면 피자를사먹는그룹입니다",
           groupCnt: 8,
           groupTotalCnt: 12,
+          grouper: [
+            "dldkfma",
+            "빛봉현",
+            "별빛지현",
+            "정처기out",
+            "녹용파는사슴",
+          ],
+          date: "2021-03-22 14:21:46",
         },
 
         {
@@ -124,6 +221,14 @@ export default {
           groupDesc: "정처기 같이 공부하실분!!",
           groupCnt: 5,
           groupTotalCnt: 12,
+          grouper: [
+            "dldkfma",
+            "빛봉현",
+            "별빛지현",
+            "정처기out",
+            "녹용파는사슴",
+          ],
+          date: "2021-03-23 14:21:46",
         },
         {
           src: "https://ifh.cc/g/Zp0ZYA.jpg",
@@ -131,6 +236,14 @@ export default {
           groupDesc: "공무원, 자율스터디",
           groupCnt: 7,
           groupTotalCnt: 13,
+          grouper: [
+            "dldkfma",
+            "빛봉현",
+            "별빛지현",
+            "정처기out",
+            "녹용파는사슴",
+          ],
+          date: "2021-03-24 14:21:46",
         },
         {
           src: "https://ifh.cc/g/ojNXEJ.jpg",
@@ -138,6 +251,14 @@ export default {
           groupDesc: "임용고시 같이 준비해요~",
           groupCnt: 6,
           groupTotalCnt: 18,
+          grouper: [
+            "dldkfma",
+            "빛봉현",
+            "별빛지현",
+            "정처기out",
+            "녹용파는사슴",
+          ],
+          date: "2021-03-25 14:21:46",
         },
         {
           src: "https://ifh.cc/g/JPassm.jpg",
@@ -145,6 +266,14 @@ export default {
           groupDesc: "토익 스터디 환영합니다",
           groupCnt: 5,
           groupTotalCnt: 11,
+          grouper: [
+            "dldkfma",
+            "빛봉현",
+            "별빛지현",
+            "정처기out",
+            "녹용파는사슴",
+          ],
+          date: "2021-03-26 14:21:46",
         },
         {
           src: "https://ifh.cc/g/Zp0ZYA.jpg",
@@ -152,6 +281,14 @@ export default {
           groupDesc: "누구나 환영~~~",
           groupCnt: 3,
           groupTotalCnt: 10,
+          grouper: [
+            "dldkfma",
+            "빛봉현",
+            "별빛지현",
+            "정처기out",
+            "녹용파는사슴",
+          ],
+          date: "2021-03-29 14:21:46",
         },
         {
           src: "https://ifh.cc/g/Zp0ZYA.jpg",
@@ -159,9 +296,98 @@ export default {
           groupDesc: "자율 스터디 방입니다!",
           groupCnt: 7,
           groupTotalCnt: 13,
+          grouper: [
+            "dldkfma",
+            "빛봉현",
+            "별빛지현",
+            "정처기out",
+            "녹용파는사슴",
+          ],
+          date: "2021-03-30 14:21:46",
+        },
+        {
+          src: "https://ifh.cc/g/Zp0ZYA.jpg",
+          groupName: "하이하이요",
+          groupDesc: "자율 스터디 방입니다람쥐!",
+          groupCnt: 0,
+          groupTotalCnt: 13,
+          grouper: [
+            "dldkfma",
+            "빛봉현",
+            "별빛지현",
+            "정처기out",
+            "녹용파는사슴",
+          ],
+          date: "2021-03-30 14:21:46",
         },
       ],
     };
+  },
+  methods: {
+    MakeMyGroup() {
+      this.caseNum = 2;
+      this.MyGroup = [];
+      for (var i = 0; i < this.groups.length; i++) {
+        for (var j = 0; j < this.groups[i].grouper.length; j++) {
+          if (this.groups[i].grouper[j] === this.nickName) {
+            this.MyGroup.push(this.groups[i]);
+          }
+        }
+      }
+      console.log(this.MyGroup);
+      console.log(this.caseNum);
+    },
+    MakeHotGroup() {
+      this.caseNum = 3;
+      this.HotGroup = this.groups.slice(); //배열 복사
+      this.HotGroup.sort(function(a, b) {
+        return b.groupTotalCnt - a.groupTotalCnt;
+      });
+      console.log(this.HotGroup);
+    },
+    MakeNewGroup() {
+      this.caseNum = 4;
+      this.NewGroup = [];
+      var Today = new Date();
+      console.log(Today);
+      // var year = date.getFullYear();
+      // var month = ("0" + (1 + date.getMonth())).slice(-2);
+      // var day = ("0" + date.getDate()).slice(-2);
+      for (var i = 0; i < this.groups.length; i++) {
+        var groupMadeDate = this.groups[i].date;
+        var groupDate = new Date(groupMadeDate.substring(0, 10));
+        console.log("그룹만들어진날짜==", groupDate);
+        console.log(
+          "오늘날짜 빼기 그룹만들어진날짜",
+          (Today.getTime() - groupDate.getTime()) / 1000 / 60 / 60 / 24
+        );
+        if ((Today.getTime() - groupDate.getTime()) / 1000 / 60 / 60 / 24 < 3) {
+          this.NewGroup.push(this.groups[i]);
+        }
+        console.log("=============================");
+      }
+    },
+    search(s) {
+      console.log("넘어온거", s);
+      this.caseNum = 5;
+      this.SearchedGroup = [];
+      for (var i = 0; i < this.groups.length; i++) {
+        if (this.groups[i].groupName.includes(s)) {
+          this.SearchedGroup.push(this.groups[i]);
+        }
+      }
+    },
+  },
+  created() {
+    // const nickName = storage.getItem('nickName')
+
+    for (var i = 0; i < this.groups.length; i++) {
+      console.log(this.groups[i].groupcnt);
+      if (this.groups[i].groupCnt > 0) {
+        this.ActiveGroup.push(this.groups[i]);
+      }
+    }
+    console.log("활동중인거", this.ActiveGroup);
   },
 };
 </script>
