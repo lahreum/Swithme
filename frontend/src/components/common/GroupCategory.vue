@@ -1,10 +1,9 @@
 <template>
   <div style="border:1px solid black; width:110px; height:110px">
-    <v-btn @click="selectLike" icon style="float:right; "
-      ><v-icon v-if="selectedLike === false" color="red" size="20"
-        >mdi-heart</v-icon
-      >
-      <v-icon v-else size="20">mdi-heart-outline</v-icon>
+    <v-btn @click="selectLike" icon style="float:right; ">
+      <v-icon color="red" size="20">{{
+        selectedLike ? "mdi-heart" : "mdi-heart-outline"
+      }}</v-icon>
     </v-btn>
 
     <div
@@ -24,12 +23,17 @@
 <script>
 export default {
   data() {
-    return { selectedLike: "false" };
+    return { selectedLike: false };
   },
   props: ["CategoryIcon", "CategoryName"],
   methods: {
     selectLike() {
       this.selectedLike = !this.selectedLike;
+      if (this.selectedLike) {
+        this.$emit("selectLike", this.CategoryName, true);
+      } else {
+        this.$emit("selectLike", this.CategoryName, false);
+      }
     },
   },
 };
