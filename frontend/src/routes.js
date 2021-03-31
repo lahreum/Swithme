@@ -9,7 +9,6 @@ import GroupDetail from '@/views/GroupDetail.vue';
 import GroupRanking from '@/views/GroupRanking.vue';
 import GroupAttendance from '@/views/GroupAttendance.vue';
 import GroupModify from '@/views/GroupModify.vue';
-import Community from '@/views/Community.vue';
 import Home from '@/views/Home.vue';
 import Timer from '@/views/timer/Timer.vue';
 import Join from '@/views/user/Join.vue';
@@ -19,6 +18,10 @@ import JoinCreate from '@/views/user/JoinCreate.vue';
 import JoinComplete from '@/views/user/JoinComplete.vue';
 import Google from '@/views/Google.vue';
 import FindPw from '@/views/user/FindPw.vue';
+import Community from '@/views/community/Community.vue';
+import CommunityCreate from '@/views/community/CommunityCreate.vue';
+import CommunityDetail from '@/views/community/CommunityDetail.vue';
+import CommunityModify from '@/views/community/CommunityModify.vue';
 
 export default [
   {
@@ -30,6 +33,28 @@ export default [
     path: '/find-pw',
     name: 'FindPw',
     component: FindPw,
+  },
+  {
+    path: '/community',
+    name: 'Community',
+    component: Community,
+    children: [
+      {
+        path: 'community-create',
+        name: 'CommunityCreate',
+        component: CommunityCreate,
+      },
+      {
+        path: 'community-detail',
+        name: 'CommunityDetail',
+        component: CommunityDetail,
+      },
+      {
+        path: 'community-modify',
+        name: 'CommunityModify',
+        component: CommunityModify,
+      },
+    ]
   },
   {
     path: '/join',

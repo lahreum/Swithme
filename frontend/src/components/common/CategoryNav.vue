@@ -1,5 +1,5 @@
 <template>
-  <v-sheet class="mx-auto" max-width="700">
+  <v-sheet class="mx-auto" max-width="100%">
     <v-slide-group show-arrows>
       <v-slide-item
         v-for="i in items"

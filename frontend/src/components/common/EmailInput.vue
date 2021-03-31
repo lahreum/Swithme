@@ -11,7 +11,7 @@
 <script>
   export default {
     data: () => ({
-      items: ['@naver.com', '@google.com', '@daum.net', '@nate.com', '@hanmail.net','사용자 입력'],
+      items: ['직접 입력','gmail.com','hanmail.net','hotmail.com','korea.com', 'nate.com','naver.com', 'yahoo.com'],
     }),
   }
 </script>
