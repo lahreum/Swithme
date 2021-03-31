@@ -30,10 +30,11 @@
           <GroupCategory
             :CategoryIcon="category.icon"
             :CategoryName="category.title"
+            @selectLike="saveCategoryIdx"
           />
         </v-col>
         <v-btn
-          @click="menu = false"
+          @click="sendCategoryIdx"
           color="#673fb4"
           style="margin-left:5%; width:90%"
           ><h3 style="color:white">완료</h3></v-btn
@@ -50,17 +51,37 @@ export default {
     return {
       menu: false,
       category: [
-        { title: "정보처리기사", icon: "mdi-desktop-tower-monitor" },
-        { title: "정보처리기사", icon: "mdi-desktop-tower-monitor" },
-        { title: "정보처리기사", icon: "mdi-desktop-tower-monitor" },
-        { title: "정보처리기사", icon: "mdi-desktop-tower-monitor" },
-        { title: "정보처리기사", icon: "mdi-desktop-tower-monitor" },
-        { title: "정보처리기사", icon: "mdi-desktop-tower-monitor" },
-        { title: "정보처리기사", icon: "mdi-desktop-tower-monitor" },
-        { title: "정보처리기사", icon: "mdi-desktop-tower-monitor" },
-        { title: "정보처리기사", icon: "mdi-desktop-tower-monitor" },
+        { title: "초중고", icon: "mdi-baby-face-outline" },
+        { title: "수능", icon: "mdi-pen" },
+        { title: "대학교", icon: "mdi-school-outline" },
+        { title: "대학원", icon: "mdi-school" },
+        { title: "취업", icon: "mdi-domain" },
+        { title: "공무원시험", icon: "mdi-briefcase" },
+        { title: "자격증", icon: "mdi-medal-outline" },
+        { title: "어학", icon: "mdi-alphabetical" },
+        { title: "기타", icon: "mdi-guitar-acoustic" },
       ],
+      categoryIdxList: [],
     };
+  },
+  methods: {
+    saveCategoryIdx(s1, s2) {
+      for (var i = 0; i < 9; i++) {
+        if (this.category[i].title === s1) {
+          if (s2 === true) {
+            this.categoryIdxList.push(i);
+          } else {
+            var j = this.categoryIdxList.indexOf(i);
+            this.categoryIdxList.splice(j);
+          }
+        }
+      }
+      console.log(this.categoryIdxList);
+    },
+    sendCategoryIdx() {
+      console.log(this.categoryIdxList);
+      this.menu = false;
+    },
   },
   components: {
     GroupCategory,
