@@ -82,8 +82,8 @@
 </template>
 
 <script>
-import ProfileStudying from "../components/common/ProfileStudying.vue";
-import MiddleNav from "../components/include/MiddleNav.vue";
+import ProfileStudying from "@/components/common/ProfileStudying.vue";
+import MiddleNav from "@/components/include/MiddleNav.vue";
 export default {
   data() {
     return {

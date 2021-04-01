@@ -219,7 +219,7 @@
 </template>
 
 <script>
-import MiddleNav from "../components/include/MiddleNav.vue";
+import MiddleNav from "@/components/include/MiddleNav.vue";
 export default {
   components: {
     MiddleNav,
