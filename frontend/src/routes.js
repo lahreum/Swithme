@@ -22,6 +22,7 @@ import Nickname from '@/views/social/Nickname.vue';
 import NoAccess from '@/views/NoAccess.vue';
 import FindPw from '@/views/user/FindPw.vue';
 import Community from '@/views/community/Community.vue';
+import CommunityList from '@/views/community/CommunityList.vue';
 import CommunityCreate from '@/views/community/CommunityCreate.vue';
 import CommunityDetail from '@/views/community/CommunityDetail.vue';
 import CommunityModify from '@/views/community/CommunityModify.vue';
@@ -42,6 +43,11 @@ export default [
     name: 'Community',
     component: Community,
     children: [
+      {
+        path: '/',
+        name: 'CommunityList',
+        component: CommunityList,
+      },
       {
         path: 'community-create',
         name: 'CommunityCreate',

@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import "./community.css";
+
 export default {
 
 }
