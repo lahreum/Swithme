@@ -28,12 +28,12 @@ def detect(image):
     image_in = transform_images(image_in, size)
 
     # 집중 여부 판단
-    # origin_boxes, origin_scores, origin_classes, origin_nums = origin_yolo.predict(image_in)
+    origin_boxes, origin_scores, origin_classes, origin_nums = origin_yolo.predict(image_in)
     # face_boxes, face_scores, face_classes, face_nums = face_yolo.predict(image_in)
     hand_boxes, hand_scores, hand_classes, hand_nums = hand_yolo.predict(image_in)
 
     # 이미지 시각화
-    # image = draw_outputs(image, (origin_boxes, origin_scores, origin_classes, origin_nums), origin_class_names)
+    image = draw_outputs(image, (origin_boxes, origin_scores, origin_classes, origin_nums), origin_class_names)
     # image = draw_outputs(image, (face_boxes, face_scores, face_classes, face_nums), face_class_names)
     image = draw_outputs(image, (hand_boxes, hand_scores, hand_classes, hand_nums), hand_class_names)
 
