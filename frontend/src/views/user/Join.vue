@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <div>
     <middle-nav v-bind:propsdata="navInfo"></middle-nav>
     <v-row justify="center">
       <v-col cols="8">
@@ -8,7 +8,7 @@
     </v-row>
     <hr align="center" class="joinForm" />
     <router-view></router-view>
-  </v-container>
+  </div>
 </template>
 
 <script>
