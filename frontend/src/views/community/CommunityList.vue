@@ -6,7 +6,7 @@
     <v-container>
       <v-row>
         <v-col cols="10"><p class="letter subTitle">취업 <v-icon>mdi-arrow-down-drop-circle-outline</v-icon></p></v-col>
-        <v-col cols="2" ><SelectBox/></v-col>
+        <v-col cols="2"><SelectBox style="padding-top:10px;"/></v-col>
       </v-row>
     </v-container>
     <hr class="lineStyle">
