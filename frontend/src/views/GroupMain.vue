@@ -698,6 +698,7 @@ export default {
   methods: {
     toCreateGroup() {
       this.$router.push("/group-create");
+      window.scrollTo(0, 0);
     },
     moreSee() {
       this.moreSeeIdx += 8;

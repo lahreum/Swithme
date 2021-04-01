@@ -1,5 +1,4 @@
 <template>
-  <!-- <canvas></canvas> -->
   <img id="stream" />
 </template>
 
@@ -63,14 +62,14 @@ export default {
                   // canvas에 이미지 등록
                   ctx.drawImage(imageBitmap, 0, 0);
 
-                  // 이미지 출력
-                  img.src = canvas.toDataURL();
-
-                  // 0.005초씩 카운트
-                  cnt += period;
-
                   // 카운트가 1초가 되었을 경우 서버 요청
-                  if (cnt == 1000) {
+                  if (cnt != 1000) {
+                    // 이미지 출력
+                    img.src = canvas.toDataURL();
+
+                    // 0.005초씩 카운트
+                    cnt += period;
+                  } else {
                     cnt = 0;
 
                     // canvas에서 이미지를 데이터로 변환
@@ -84,6 +83,12 @@ export default {
                         .then((response) => {
                           // 집중 여부 판단 결과
                           console.log(response);
+
+                          // 이미지 출력
+                          img.src = canvas.toDataURL();
+
+                          // 0.005초씩 카운트
+                          cnt += period;
                         })
                         .catch((error) => {
                           console.log(error);

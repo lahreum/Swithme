@@ -136,7 +136,7 @@ public class UserController {
 	
 	@GetMapping("/nickname")
 	@ApiOperation(value="닉네임 중복체크",notes="닉네임을 파라미터로 받아 중복체크\n인터셉터에서 제외")
-	public Object checkNicknameDuplicated(@RequestParam("nickname") String userNickname) {
+	public Object checkNicknameDuplicated(String userNickname) {
 		Map<String,Object> result=new HashMap<>();
 		if(userRepository.findByUserNickname(userNickname).isPresent())
 			result.put("isPresent",true);
