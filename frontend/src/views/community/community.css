@@ -1,11 +1,27 @@
 .letter {
     font-weight: 600 !important;
-    margin-top: 30px;
+    margin-top: 20px;
     padding-left: 20px;
+    font-size: 18px;
 }
-.title {
-    font-size: 22px;
+.mainTitle {
+    font-size: 25px;
 }
 .subTitle {
-    font-size: 18px;
+    font-size: 20px;
+}
+.community {
+    width:65%;
+    margin:0 auto;
+    adding-top:20px;
+}
+.lineStyle {
+    border: solid 2px #424242;
+    background-color:#424242;
+}
+.selectBox {
+    padding-top:20px;
+}
+.writeText {
+    padding: 10px;
 }
