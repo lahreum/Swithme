@@ -3,22 +3,58 @@
     <v-row no-gutters align="center" style="height: 100px;">
       <v-col cols="2" class="logo-header">
         <img
-          src="../../assets/img/logo_bl.png"
-          alt="swithme-logo"
+          :src="
+            darkmode
+              ? require('@/assets/img/logo_wh.png')
+              : require('@/assets/img/logo_bl.png')
+          "
           style="width: 75%; height: auto;"
+          alt="swithme-logo"
           @click="goMain"
         />
       </v-col>
       <v-col cols="8">
         <v-row no-gutters align="center">
-          <router-link class="menu-item" to="/tutorial"> 튜토리얼 </router-link>
-          <router-link class="menu-item" to="/timer">
+          <router-link
+            class="menu-item"
+            to="/tutorial"
+            :class="{ 'white-text': darkmode, 'black-text': !darkmode }"
+          >
+            튜토리얼
+          </router-link>
+          <router-link
+            class="menu-item"
+            to="/timer"
+            :class="{ 'white-text': darkmode, 'black-text': !darkmode }"
+          >
             공부하러가기
           </router-link>
-          <router-link class="menu-item" to="/my-study"> 나의학습 </router-link>
-          <router-link class="menu-item" to="/ranking"> 랭킹 </router-link>
-          <router-link class="menu-item" to="/group"> 그룹 </router-link>
-          <router-link class="menu-item" to="/community">
+          <router-link
+            class="menu-item"
+            to="/my-study"
+            :class="{ 'white-text': darkmode, 'black-text': !darkmode }"
+          >
+            나의학습
+          </router-link>
+          <router-link
+            class="menu-item"
+            to="/ranking"
+            :class="{ 'white-text': darkmode, 'black-text': !darkmode }"
+          >
+            랭킹
+          </router-link>
+          <router-link
+            class="menu-item"
+            to="/group"
+            :class="{ 'white-text': darkmode, 'black-text': !darkmode }"
+          >
+            그룹
+          </router-link>
+          <router-link
+            class="menu-item"
+            to="/community"
+            :class="{ 'white-text': darkmode, 'black-text': !darkmode }"
+          >
             커뮤니티
           </router-link>
         </v-row>
@@ -31,10 +67,26 @@
           justify="center"
           style="margin-left: 60px;"
         >
-          <div class="login-item" @click="openLogin">로그인</div>
-          <div class="login-item">|</div>
+          <div
+            class="login-item"
+            @click="openLogin"
+            :class="{ 'white-text': darkmode, 'black-text': !darkmode }"
+          >
+            로그인
+          </div>
+          <div
+            class="login-item"
+            :class="{ 'white-text': darkmode, 'black-text': !darkmode }"
+          >
+            |
+          </div>
           <router-link to="/join">
-            <div class="login-item">회원가입</div>
+            <div
+              class="login-item"
+              :class="{ 'white-text': darkmode, 'black-text': !darkmode }"
+            >
+              회원가입
+            </div>
           </router-link>
         </v-row>
 
@@ -166,6 +218,7 @@ import InputBar from '@/components/common/InputBar.vue';
 import GoogleBtn from '@/components/common/GoogleBtn.vue';
 
 export default {
+  props: ['darkmode'],
   components: {
     'app-btn-large': AppBtnLarge,
     'input-bar': InputBar,
@@ -204,16 +257,20 @@ export default {
   margin-left: 40px;
   letter-spacing: -1px;
   font-size: 1.2rem;
-  color: black !important;
   /* display: inline-block; */
   text-decoration: none;
+}
+.black-text {
+  color: black !important;
+}
+.white-text {
+  color: white !important;
 }
 .login-item {
   float: right;
   margin-right: 20px;
   letter-spacing: -1px;
   font-size: 1rem;
-  color: black !important;
 }
 .logo-header {
   display: flex;

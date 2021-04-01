@@ -3,8 +3,7 @@
     <div
       style="z-index: 100; position:fixed; top: 0px; left: 0px; width: 100%;"
     >
-      <header-white v-if="isDarkmode"></header-white>
-      <header-black v-if="!isDarkmode"></header-black>
+      <app-header :darkmode="isDarkmode"></app-header>
     </div>
     <study-btn
       style="position: fixed; z-index: 100; left: 25%; top: 65%;"
@@ -36,8 +35,7 @@
 </template>
 
 <script>
-import HeaderBlack from '../components/include/HeaderBlack.vue';
-import HeaderWhite from '../components/include/HeaderWhite.vue';
+import AppHeader from '../components/include/AppHeader.vue';
 import HomeFirst from '../components/include/HomeFirst.vue';
 import HomeSecond from '../components/include/HomeSecond.vue';
 import HomeThird from '../components/include/HomeThird.vue';
@@ -46,8 +44,7 @@ import StudyBtn from '../components/common/StudyBtn.vue';
 
 export default {
   components: {
-    'header-black': HeaderBlack,
-    'header-white': HeaderWhite,
+    'app-header': AppHeader,
     'home-first': HomeFirst,
     'home-second': HomeSecond,
     'home-third': HomeThird,
