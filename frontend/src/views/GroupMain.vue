@@ -144,6 +144,15 @@
             ></v-col
           >
         </v-col>
+        <v-btn
+          class="createGroupBtn"
+          fab
+          width="100"
+          height="100"
+          color="#673fb4"
+          @click="toCreateGroup"
+          ><v-icon color="white" size="50">mdi-plus</v-icon></v-btn
+        >
 
         <v-col cols="2"></v-col>
       </v-row>
@@ -687,6 +696,9 @@ export default {
     };
   },
   methods: {
+    toCreateGroup() {
+      this.$router.push("/group-create");
+    },
     moreSee() {
       this.moreSeeIdx += 8;
       this.AllGroup = this.groups.slice(0, this.moreSeeIdx);
@@ -753,4 +765,10 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.createGroupBtn {
+  position: fixed;
+  bottom: 5%;
+  right: 5%;
+}
+</style>
