@@ -28,6 +28,7 @@
               ><v-icon>mdi-calendar-month</v-icon> 출석부</v-btn
             >
           </v-row>
+
           <v-card>
             <v-toolbar>
               <template>
@@ -47,6 +48,17 @@
             <v-tabs-items v-model="tabs">
               <v-tab-item>
                 <v-card>
+                  <div style="padding:30px; text-align:center">
+                    <v-btn x-large @click="dayMinus" icon
+                      ><v-icon>mdi-chevron-left</v-icon></v-btn
+                    ><span style="font-size:1.5rem; margin:0 30px;"
+                      >{{ daily.getFullYear() }}년 {{ daily.getMonth() + 1 }} 월
+                      {{ daily.getDate() }}일</span
+                    >
+                    <v-btn x-large @click="dayPlus" icon
+                      ><v-icon>mdi-chevron-right</v-icon></v-btn
+                    >
+                  </div>
                   <v-row style="height:600px" justify="center" align="end">
                     <v-col
                       cols="3"
@@ -83,6 +95,21 @@
               </v-tab-item>
               <v-tab-item>
                 <v-card>
+                  <div style="padding:30px; text-align:center">
+                    <v-btn x-large @click="weekMinus" icon
+                      ><v-icon>mdi-chevron-left</v-icon></v-btn
+                    >
+                    <span style="font-size:1.5rem; margin:0 30px"
+                      >{{ weekly1.getFullYear() }}년
+                      {{ weekly1.getMonth() + 1 }}월 {{ weekly1.getDate() }}일 ~
+                      {{ weekly2.getFullYear() }}년
+                      {{ weekly2.getMonth() + 1 }}월
+                      {{ weekly2.getDate() }}일</span
+                    >
+                    <v-btn x-large @click="weekPlus" icon
+                      ><v-icon>mdi-chevron-right</v-icon></v-btn
+                    >
+                  </div>
                   <v-row style="height:600px" justify="center" align="end">
                     <v-col
                       cols="3"
@@ -118,6 +145,17 @@
                 </v-card> </v-tab-item
               ><v-tab-item>
                 <v-card>
+                  <div style="padding:30px; text-align:center">
+                    <v-btn x-large @click="monthMinus" icon
+                      ><v-icon>mdi-chevron-left</v-icon></v-btn
+                    ><span style="font-size:1.5rem; margin:0 30px">
+                      {{ monthly.getFullYear() }} 년
+                      {{ monthly.getMonth() + 1 }}월</span
+                    >
+                    <v-btn x-large @click="monthPlus" icon
+                      ><v-icon>mdi-chevron-right</v-icon></v-btn
+                    >
+                  </div>
                   <v-row style="height:600px" justify="center" align="end">
                     <v-col
                       cols="3"
@@ -169,6 +207,12 @@ export default {
   },
   data() {
     return {
+      today: new Date(),
+      daily: new Date(),
+      weekly1: new Date(),
+      weekly2: new Date(),
+      monthly: new Date(),
+      tmp: "",
       navInfo: [
         "sample2.png",
         "그룹",
@@ -273,6 +317,65 @@ export default {
     ToGroupAttendance() {
       this.$router.push("/group-attendance");
     },
+    dayMinus() {
+      this.tmp = new Date(this.daily);
+      this.daily = new Date(this.tmp.setDate(this.tmp.getDate() - 1));
+    },
+    dayPlus() {
+      this.tmp = new Date(this.daily);
+      this.daily = new Date(this.tmp.setDate(this.tmp.getDate() + 1));
+    },
+    getWeekly1() {
+      this.weekly1 = new Date(
+        this.today.setDate(this.today.getDate() - this.today.getDay() + 1)
+      );
+      console.log("weekly1", this.weekly1);
+      this.tmp = new Date(this.weekly1);
+      this.weekly2 = new Date(this.tmp.setDate(this.tmp.getDate() + 6));
+    },
+    getWeekly2() {
+      this.tmp = new Date(this.weekly1);
+      this.weekly2 = new Date(this.tmp.setDate(this.tmp.getDate() + 6));
+    },
+
+    weekMinus() {
+      this.tmp = new Date(this.weekly1);
+      this.weekly1 = new Date(
+        this.tmp.setDate(this.tmp.getDate() - 6 - this.tmp.getDay())
+      );
+      this.getWeekly2();
+    },
+    weekPlus() {
+      this.tmp = new Date(this.weekly1);
+      this.weekly1 = new Date(
+        this.tmp.setDate(this.tmp.getDate() + 8 - this.tmp.getDay())
+      );
+      this.getWeekly2();
+    },
+    monthMinus() {
+      this.monthly = new Date(
+        this.monthly.getFullYear(),
+        this.monthly.getMonth(),
+        1
+      );
+      this.monthly = new Date(this.monthly.setDate(this.monthly.getDate() - 1));
+      console.log(this.monthly);
+    },
+    monthPlus() {
+      this.monthly = new Date(
+        this.monthly.getFullYear(),
+        this.monthly.getMonth(),
+        31
+      );
+      this.monthly = new Date(this.monthly.setDate(this.monthly.getDate() + 1));
+      console.log(this.monthly);
+    },
+  },
+  created() {
+    // let month = this.daily.getMonth() + 1;
+    // let date = this.daily.getDate();
+    // this.daily = `${month}월 ${date}일`;
+    this.getWeekly1();
   },
 };
 </script>
