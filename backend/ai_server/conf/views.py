@@ -1,3 +1,4 @@
+import os
 import cv2
 import base64
 import numpy as np
@@ -7,6 +8,8 @@ from contents.yolov3.models import YoloV3
 from django.conf import settings
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+
+os.environ['TF_XLA_FLAGS'] = '--tf_xla_enable_xla_devices'
 
 # 파라미터 설정
 origin_yolo_max_boxes = 100
