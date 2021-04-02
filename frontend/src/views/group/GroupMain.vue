@@ -125,6 +125,16 @@
                 :groupTotalCnt="group.groupTotalCnt"
             /></v-col>
           </v-row>
+          <v-row justify="center" v-else-if="caseNum === 6">
+            <v-col align-self="center" align="end" cols="5"
+              ><span style="font-size:2rem">...이런</span
+              ><span>검색어와 일치하는 결과가 없네요</span>
+              <h2>다른검색어로 검색해보시겠어요?</h2></v-col
+            >
+            <v-col cols="5"
+              ><v-img src="https://ifh.cc/g/yLHO83.png"></v-img
+            ></v-col>
+          </v-row>
           <v-col
             v-if="
               groups.length > 12 &&
@@ -756,6 +766,9 @@ export default {
         if (this.groups[i].groupName.includes(s)) {
           this.SearchedGroup.push(this.groups[i]);
         }
+      }
+      if (this.SearchedGroup.length === 0) {
+        this.caseNum = 6;
       }
     },
   },
