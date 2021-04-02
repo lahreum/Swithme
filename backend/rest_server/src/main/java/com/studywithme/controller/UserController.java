@@ -40,7 +40,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.studywithme.config.CommonMethods;
 import com.studywithme.config.JwtService;
 import com.studywithme.entity.TimeMonthly;
-import com.studywithme.entity.User;
+import com.studywithme.entity.UserInfo;
 import com.studywithme.repository.TimeMonthlyRepository;
 import com.studywithme.repository.UserRepository;
 
@@ -64,7 +64,7 @@ public class UserController {
 	
 	@PostMapping("/signup")
 	@ApiOperation(value="회원가입",notes="User 정보를 body로 받아 db에 저장\n인터셉터에서 제외")
-	public Object createUser(@RequestBody User user) {
+	public Object createUser(@RequestBody UserInfo user) {
 		Map<String,Object> result=new HashMap<>();
 		
 		if(!userRepository.findByUserNickname(user.getUserNickname()).isPresent()) {
@@ -91,7 +91,7 @@ public class UserController {
 		String nickname = map.get("nickname");
 		String token = map.get("token");
 		
-		User user = new ObjectMapper().convertValue(jwtService.get(token).get("User"), User.class);
+		UserInfo user = new ObjectMapper().convertValue(jwtService.get(token).get("User"), UserInfo.class);
 		user.setUserNickname(nickname);
 		String jwtToken = jwtService.create(user);
 		
@@ -110,7 +110,7 @@ public class UserController {
 		Map<String,Object> result=new HashMap<>();
 		
 		String hashed=commonMethods.getHashed(userPassword);
-		Optional<User> user=userRepository.findByUserIdAndUserPassword(userId, hashed);
+		Optional<UserInfo> user=userRepository.findByUserIdAndUserPassword(userId, hashed);
 		if(user.isPresent()) {
 			String token=jwtService.create(user.get());
 			resp.setHeader("jwt-auth-token",token);
@@ -155,7 +155,7 @@ public class UserController {
 		final String password="swithme103";
 		int port=465;
 		
-		Optional<User> user=userRepository.findById(userEmail);
+		Optional<UserInfo> user=userRepository.findById(userEmail);
 		if(user.isPresent()) {
 			String subject="비밀번호 변경 링크입니다.";
 					
@@ -201,7 +201,7 @@ public class UserController {
 		
 		result.put("success",false);
 		
-		Optional<User> user=userRepository.findById(userId);
+		Optional<UserInfo> user=userRepository.findById(userId);
 		if(user.isPresent()) {
 			user.get().setUserPassword(commonMethods.getHashed(newPassword));
 			userRepository.save(user.get());
@@ -220,7 +220,7 @@ public class UserController {
 
 		String id=commonMethods.getUserId(req.getHeader("jwt-auth-token"));
 
-		Optional<User> user=userRepository.findById(id);
+		Optional<UserInfo> user=userRepository.findById(id);
 		if(user.isPresent()) {
 			user.get().setUserPassword(null);
 			result.put("data",user.get());
@@ -238,7 +238,7 @@ public class UserController {
 		String id=commonMethods.getUserId(req.getHeader("jwt-auth-token"));
 		String password=commonMethods.getHashed(userPassword);
 		
-		Optional<User> user=userRepository.findByUserIdAndUserPassword(id, password);
+		Optional<UserInfo> user=userRepository.findByUserIdAndUserPassword(id, password);
 		if(user.isPresent()) 
 			result.put("isCorrect",true);
 		else
@@ -256,7 +256,7 @@ public class UserController {
 		byte[] bytes;
 
 		result.put("result", false);
-		Optional<User> user = userRepository.findById(id);
+		Optional<UserInfo> user = userRepository.findById(id);
 		if (user.isPresent()) {
 			try {
 				bytes = file.getBytes();
@@ -285,7 +285,7 @@ public class UserController {
 		Map<String,Object> result=new HashMap<>();
 		
 		String id=commonMethods.getUserId(req.getHeader("jwt-auth-token"));
-		Optional<User> user=userRepository.findById(id);
+		Optional<UserInfo> user=userRepository.findById(id);
 		if(user.isPresent()) {
 			user.get().setUserMessage(message);
 			userRepository.save(user.get());
@@ -306,7 +306,7 @@ public class UserController {
 		
 		result.put("success",false);
 		
-		Optional<User> user=userRepository.findByUserNickname(nickname);
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(user.isPresent()) {
 			user.get().setUserIsStudying(true);
 			userRepository.save(user.get());
@@ -326,7 +326,7 @@ public class UserController {
 		
 		result.put("success",false);
 		
-		Optional<User> user=userRepository.findByUserNickname(nickname);
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(user.isPresent()) {
 			user.get().setUserIsStudying(false);
 			userRepository.save(user.get());
@@ -351,7 +351,7 @@ public class UserController {
 		if(timeMonthlyList.isPresent()) {
 			List<UserDto> userList=new ArrayList<>();
 			for(TimeMonthly tm:timeMonthlyList.get()) {
-				Optional<User> user=userRepository.findByUserNickname(tm.getTimeMonthlyUserNickname());
+				Optional<UserInfo> user=userRepository.findByUserNickname(tm.getTimeMonthlyUserNickname());
 				if(user.isPresent()) {
 					UserDto userDto=new UserDto();
 					userDto.setNickname(user.get().getUserNickname());

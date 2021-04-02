@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.studywithme.config.JwtService;
-import com.studywithme.entity.User;
+import com.studywithme.entity.UserInfo;
 import com.studywithme.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -71,7 +71,7 @@ public class GoogleOauth implements SocialOauth {
 
 	@Override
 	public String checkUserAccount(TokenInfo tokenInfo) {
-		Optional<User> optUserAccount = userRepository.findById(tokenInfo.getEmail());
+		Optional<UserInfo> optUserAccount = userRepository.findById(tokenInfo.getEmail());
 		String jwtToken, redirectUri;
 		
 		if(optUserAccount.isPresent()) {	// 계정이 이미 존재할 경우
@@ -84,7 +84,7 @@ public class GoogleOauth implements SocialOauth {
 		}
 		
 		// 계정이 존재하지 않을 경우
-		User user = new User();
+		UserInfo user = new UserInfo();
 		user.setUserId(tokenInfo.getEmail());
 		user.setUserType("google");
 		
