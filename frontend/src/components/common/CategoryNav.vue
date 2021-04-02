@@ -26,18 +26,12 @@ export default {
         '초중고',
         '수능',
         '대학교',
-        '편입',
-        'PEET',
-        'MEET',
-        'LEET',
         '대학원',
-        '공무원',
-        '임용',
-        '자격증',
-        '전문자격시험',
         '취업',
-        '이직',
+        '공무원시험',
+        '자격증',
         '어학',
+        '기타',
       ],
     };
   },
@@ -59,7 +53,7 @@ export default {
   margin-left: 10px;
   margin-right: 10px;
   padding: 10px;
-  font-size: 1.2rem;
+  font-size: 0.9rem;
   letter-spacing: -1px;
   font-weight: bold;
 }

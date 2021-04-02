@@ -22,7 +22,7 @@ import com.studywithme.config.CommonMethods;
 import com.studywithme.entity.Board;
 import com.studywithme.entity.Liked;
 import com.studywithme.entity.Reply;
-import com.studywithme.entity.User;
+import com.studywithme.entity.UserInfo;
 import com.studywithme.repository.BoardRepository;
 import com.studywithme.repository.LikedRepository;
 import com.studywithme.repository.ReplyRepository;
@@ -76,7 +76,7 @@ public class CommunityController {
 		Optional<Board> board=boardRepository.findById(boardId);
 		if(board.isPresent()) {
 			String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
-			Optional<User> user=userRepository.findByUserNickname(nickname);
+			Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 			if(user.isPresent()) {
 				board.get().setBoardView(board.get().getBoardView()+1);
 				boardRepository.save(board.get());
@@ -121,7 +121,7 @@ public class CommunityController {
 		
 		result.put("success",false);
 		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
-		Optional<User> user=userRepository.findByUserNickname(nickname);
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(user.isPresent()) {
 			board.setBoardWriter(nickname);
 			boardRepository.save(board);
@@ -142,7 +142,7 @@ public class CommunityController {
 		Optional<Board> boardBefore=boardRepository.findById(boardAfter.getBoardId());
 		if(boardBefore.isPresent()) {
 			String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
-			Optional<User> user=userRepository.findByUserNickname(nickname);
+			Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 			if(user.isPresent()&&boardBefore.get().getBoardWriter().equals(nickname)) {
 				boardAfter.setBoardWriter(nickname);
 				boardRepository.save(boardAfter);
@@ -164,7 +164,7 @@ public class CommunityController {
 		Optional<Board> board=boardRepository.findById(boardId);
 		result.put("success",false);
 		
-		Optional<User> user=userRepository.findByUserNickname(nickname);
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(board.isPresent()&&user.isPresent()&&board.get().getBoardWriter().equals(nickname)) {
 			boardRepository.delete(board.get());
 			
@@ -183,7 +183,7 @@ public class CommunityController {
 		result.put("success",false);
 		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
 		
-		Optional<User> user=userRepository.findByUserNickname(nickname);
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(user.isPresent()) {
 			Reply reply=new Reply();
 			reply.setReplyBoardId(boardId);
@@ -206,7 +206,7 @@ public class CommunityController {
 		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-writer"));
 		
 		Optional<Reply> reply=replyRepository.findById(replyId);
-		Optional<User> user=userRepository.findByUserNickname(nickname);
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(reply.isPresent()&&user.isPresent()&&reply.get().getReplyWriter().equals(nickname)) {
 			reply.get().setReplyContent(content);
 			replyRepository.save(reply.get());
@@ -227,7 +227,7 @@ public class CommunityController {
 		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
 		
 		Optional<Reply> reply=replyRepository.findById(replyId);
-		Optional<User> user=userRepository.findByUserNickname(nickname);
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(reply.isPresent()&&user.isPresent()&&reply.get().getReplyWriter().equals(nickname)) {
 			replyRepository.delete(reply.get());
 			
@@ -247,7 +247,7 @@ public class CommunityController {
 		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
 		
 		Optional<Liked> liked=likedRepository.findByLikedBoardIdAndLikedUserNickname(boardId, nickname);
-		Optional<User> user=userRepository.findByUserNickname(nickname);
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(!liked.isPresent()&&user.isPresent()) {
 			Optional<Board> board=boardRepository.findById(boardId);
 			if(board.isPresent()) {
@@ -276,7 +276,7 @@ public class CommunityController {
 		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
 		
 		Optional<Liked> liked=likedRepository.findByLikedBoardIdAndLikedUserNickname(boardId, nickname);
-		Optional<User> user=userRepository.findByUserNickname(nickname);
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(liked.isPresent()&&user.isPresent()) {
 			Optional<Board> board=boardRepository.findById(boardId);
 			if(board.isPresent()) {

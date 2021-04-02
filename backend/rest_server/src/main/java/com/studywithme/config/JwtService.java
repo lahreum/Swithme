@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
-import com.studywithme.entity.User;
+import com.studywithme.entity.UserInfo;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -18,7 +18,7 @@ public class JwtService {
 	private String salt="SWITHME";
 	private Long expireTime=24*60*60*1000L;
 
-	public String create(final User user) {
+	public String create(final UserInfo user) {
 		final JwtBuilder builder=Jwts.builder();
 		builder.setHeaderParam("typ", "JWT");
 
