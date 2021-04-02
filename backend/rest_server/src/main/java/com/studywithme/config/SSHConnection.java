@@ -11,6 +11,7 @@ public class SSHConnection {
 	private final static Integer PORT = 22;
 	private final static String SSH_USER = "ubuntu";
 	private final static String S_PATH_FILE_PRIVATE_KEY = "/home/ubuntu/PrivateKey/J4B103T.ppk";
+//	private final static String S_PATH_FILE_PRIVATE_KEY = "/var/jenkins_home/PrivateKey/J4B103T.ppk";
 	
 	private Session session;
 	
