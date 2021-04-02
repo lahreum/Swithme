@@ -7,10 +7,10 @@ import com.studywithme.config.SSHConnection;
 
 @SpringBootApplication
 public class StudywithmeApplication {
-//	private static SSHConnection sshConnection;
+	private static SSHConnection sshConnection;
 	
 	public static void main(String[] args) {
-//		sshConnection = new SSHConnection();
+		sshConnection = new SSHConnection();
 		SpringApplication.run(StudywithmeApplication.class, args);
 	}
 
