@@ -27,7 +27,7 @@ public class GoogleOauth implements SocialOauth {
 	private final String clientId = "454862811715-f1k2ft42rkh2r02idn4q3mqdd8jmi6j9.apps.googleusercontent.com";
 	private final String clientSecret = "EQxkCbPjG_8TM4guXxgIsX6G";
 	private final String authUri = "https://accounts.google.com/o/oauth2/v2/auth";
-	private final String redirectUri = "http://localhost:9999/oauth/google/callback";
+	private final String redirectUri = "http://j4b103.p.ssafy.io/api/oauth/google/callback";
 	private final String tokenUri = "https://oauth2.googleapis.com/token";
 	private final String tokenInfoUri = "https://oauth2.googleapis.com/tokeninfo";
 	
@@ -77,10 +77,10 @@ public class GoogleOauth implements SocialOauth {
 		if(optUserAccount.isPresent()) {	// 계정이 이미 존재할 경우
 			if(optUserAccount.get().getUserType().equals("google")) {	// Google로 가입한 계정일 경우
 				jwtToken = jwtService.create(optUserAccount.get());
-				redirectUri = "http://localhost:8080/token?is-user=true&jwt-auth-token=" + jwtToken;
+				redirectUri = "http://j4b103.p.ssafy.io/token?is-user=true&jwt-auth-token=" + jwtToken;
 				return redirectUri;
 			}
-			else return "http://localhost:8080/no-access/invalid_account";	// Google로 가입한 계정이 아닐 경우
+			else return "http://j4b103.p.ssafy.io/no-access/invalid_account";	// Google로 가입한 계정이 아닐 경우
 		}
 		
 		// 계정이 존재하지 않을 경우
@@ -89,7 +89,7 @@ public class GoogleOauth implements SocialOauth {
 		user.setUserType("google");
 		
 		jwtToken = jwtService.create(user);
-		redirectUri = "http://localhost:8080/token?is-user=false&jwt-auth-token=" + jwtToken;
+		redirectUri = "http://j4b103.p.ssafy.io/token?is-user=false&jwt-auth-token=" + jwtToken;
 		
 		return redirectUri;
 	}
