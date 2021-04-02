@@ -1,0 +1,52 @@
+.letter {
+    font-weight: 600 !important;
+    margin-top: 20px;
+    padding-left: 20px;
+    font-size: 18px;
+}
+.mainTitle {
+    font-size: 25px;
+}
+.subTitle {
+    font-size: 20px;
+}
+.community {
+    width:65%;
+    margin:0 auto;
+    adding-top:20px;
+}
+.lineStyle {
+    border: solid 2px #424242;
+    background-color:#424242;
+}
+.selectBox {
+    padding-top:20px;
+}
+.writeText {
+    padding: 10px;
+}
+.section {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 16px;
+}
+.boardTitle {
+    padding-top: 10px;
+    font-size: 20px;
+    font-weight: 600;
+}
+.boardInfo {
+    padding-right: 20px;
+}
+.boardContent {
+    height:200px;
+    padding-top: 20px;
+}
+.heart {
+    padding-top: 100px;
+    float:right;
+    color:#757575;
+}
+.commentInfo {
+    font-size: 20px;
+}
