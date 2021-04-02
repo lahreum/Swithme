@@ -177,7 +177,7 @@
                   :btnNameColor="'white'"
                 ></app-btn-large>
               </div>
-              <a href="http://j4b103.p.ssafy.io/oauth/google"
+              <a href="http://j4b103.p.ssafy.io/api/oauth/google"
                 ><v-img
                   @click="dialog = false"
                   src="@/assets/img/google_long.png"
