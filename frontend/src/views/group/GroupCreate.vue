@@ -192,8 +192,8 @@
 </template>
 
 <script>
-import AppBtnMiddle from "../components/common/AppBtnMiddle.vue";
-import MiddleNav from "../components/include/MiddleNav.vue";
+import AppBtnMiddle from "@/components/common/AppBtnMiddle.vue";
+import MiddleNav from "@/components/include/MiddleNav.vue";
 
 export default {
   components: {

@@ -161,11 +161,11 @@
 </template>
 
 <script>
-import GroupInfo from "../components/common/GroupInfo.vue";
-import MiddleNav from "../components/include/MiddleNav.vue";
-import GroupSelect from "../components/common/GroupSelect.vue";
-import SearchBar from "../components/common/SearchBar.vue";
-import AppBtnSmall from "../components/common/AppBtnSmall.vue";
+import GroupInfo from "@/components/common/GroupInfo.vue";
+import MiddleNav from "@/components/include/MiddleNav.vue";
+import GroupSelect from "@/components/common/GroupSelect.vue";
+import SearchBar from "@/components/common/SearchBar.vue";
+import AppBtnSmall from "@/components/common/AppBtnSmall.vue";
 import GroupRecommend from "@/components/common/GroupRecommend.vue";
 
 export default {
@@ -698,6 +698,7 @@ export default {
   methods: {
     toCreateGroup() {
       this.$router.push("/group-create");
+      window.scrollTo(0, 0);
     },
     moreSee() {
       this.moreSeeIdx += 8;

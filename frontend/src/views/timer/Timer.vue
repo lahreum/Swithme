@@ -2,50 +2,50 @@
   <div style="width:100%;">
     <v-container class="outbox">
       <v-row no-gutters>
-          <!-- 왼쪽 스트리밍 화면 -->
-          <v-col cols="9">
-            <image-stream/>
-            <!-- <v-img src="https://ifh.cc/g/GribTx.jpg" max-width="800" style="background-size: contain;"></v-img> -->
-            <v-img class="timerLogo" src="@/assets/img/logo_bl.png"></v-img>
-            <time-bar class="timer"></time-bar>
-          </v-col>
+        <!-- 왼쪽 스트리밍 화면 -->
+        <v-col cols="9">
+          <image-stream />
+          <!-- <v-img src="https://ifh.cc/g/GribTx.jpg" max-width="800" style="background-size: contain;"></v-img> -->
+          <v-img class="timerLogo" src="@/assets/img/logo_bl.png"></v-img>
+          <time-bar class="timer"></time-bar>
+        </v-col>
 
-            <!-- 오른쪽 투두리스트 화면 -->
-          <v-col cols="3">
-            <div style="background-color: #EEEEEE;">
-              <!-- 회원정보 -->
-              <div>
-                <div class="user">
-                  <profile-normal
-                    class="profile"
-                    :src="require(`@/assets/img/avatars/iu.jpg`)"
-                  ></profile-normal>
-                </div>
-                <div class="user">
-                  <span><strong>dlwlrma</strong></span
-                  ><br />
-                  <span>한국대학교 23학번:)</span>
-                </div>
+        <!-- 오른쪽 투두리스트 화면 -->
+        <v-col cols="3">
+          <div style="background-color: #EEEEEE;">
+            <!-- 회원정보 -->
+            <div>
+              <div class="user">
+                <profile-normal
+                  class="profile"
+                  :src="require(`@/assets/img/avatars/iu.jpg`)"
+                ></profile-normal>
               </div>
-              <!-- 투두리스트 -->
-              <div>
-                <p class="todolist">TO DO LIST</p>
+              <div class="user">
+                <span><strong>dlwlrma</strong></span
+                ><br />
+                <span>한국대학교 23학번:)</span>
               </div>
-              <v-card style="border-radius:60%;">
-                <p class="date">2021/03/25</p>
-                <todo-list></todo-list>
-                <br>
-                <div @click="$router.push('/')" style="text-align:center;">
-                  <app-btn-large
+            </div>
+            <!-- 투두리스트 -->
+            <div>
+              <p class="todolist">TO DO LIST</p>
+            </div>
+            <v-card style="border-radius:60%;">
+              <p class="date">2021/03/25</p>
+              <todo-list></todo-list>
+              <br />
+              <div @click="$router.push('/')" style="text-align:center;">
+                <app-btn-large
                   :btnColor="`#424242`"
                   :btnName="'그만하기'"
                   :btnNameColor="'white'"
-                  ></app-btn-large>
-                </div>
-                <br>
-              </v-card>
-            </div>
-          </v-col>
+                ></app-btn-large>
+              </div>
+              <br />
+            </v-card>
+          </div>
+        </v-col>
       </v-row>
     </v-container>
   </div>
@@ -108,7 +108,7 @@ export default {
   left: 10px;
   max-width: 150px;
 }
-.container{
- Max-width : 100vw !important;
+.container {
+  max-width: 100vw !important;
 }
 </style>
