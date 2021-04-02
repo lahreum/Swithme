@@ -7,19 +7,19 @@ from django.conf import settings
 # 파라미터 설정
 size = 416
 origin_class_names_path = './contents/data/class_name/origin.names'
-face_class_names_path = './contents/data/class_name/face.names'
+# face_class_names_path = './contents/data/class_name/face.names'
 # hand_class_names_path = './contents/data/class_name/hand.names'
 
 # 클래스 종류 불러오기
 origin_class_names = [c.strip() for c in open(origin_class_names_path).readlines()]
-face_class_names = [c.strip() for c in open(face_class_names_path).readlines()]
+# face_class_names = [c.strip() for c in open(face_class_names_path).readlines()]
 # hand_class_names = [c.strip() for c in open(hand_class_names_path).readlines()]
 
 
 def detect(image):
     # 모델 불러오기
     origin_yolo = settings.ORIGIN_YOLO
-    face_yolo = settings.FACE_YOLO
+    # face_yolo = settings.FACE_YOLO
     # hand_yolo = settings.HAND_YOLO
 
     # 이미지 가공

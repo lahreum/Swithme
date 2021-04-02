@@ -19,9 +19,9 @@ origin_weights = './contents/checkpoints/origin.tf'
 face_weights = './contents/checkpoints/face.tf'
 hand_weights = './contents/checkpoints/hand.tf'
 
-# GPU 메모리 설정
-physical_devices = tf.config.experimental.list_physical_devices('GPU')
-tf.config.experimental.set_memory_growth(physical_devices[0], True)
+# # GPU 메모리 설정
+# physical_devices = tf.config.experimental.list_physical_devices('GPU')
+# tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
 # 모델 생성
 settings.ORIGIN_YOLO = YoloV3(classes=origin_num_classes, yolo_max_boxes=origin_yolo_max_boxes)
