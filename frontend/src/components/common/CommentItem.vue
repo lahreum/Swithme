@@ -1,8 +1,8 @@
 <template>
   <div class="talk">
     <!-- 댓글 갯수 -->
-    <span class="countNumber"> 5 </span> 개의 댓글
-    <v-divider></v-divider>
+    <p class="commentInfo"><span class="countNumber" style="padding-bottom:20px;"> 5 </span> 개의 댓글</p>
+    <v-divider></v-divider><br>
     <!-- 댓글리스트 -->
     <div class="box">
       <article class="media">
