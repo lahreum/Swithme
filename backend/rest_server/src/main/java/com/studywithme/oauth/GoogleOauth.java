@@ -27,7 +27,7 @@ public class GoogleOauth implements SocialOauth {
 	private final String clientId = "454862811715-f1k2ft42rkh2r02idn4q3mqdd8jmi6j9.apps.googleusercontent.com";
 	private final String clientSecret = "EQxkCbPjG_8TM4guXxgIsX6G";
 	private final String authUri = "https://accounts.google.com/o/oauth2/v2/auth";
-	private final String redirectUri = "http://j4b103.p.ssafy.io/service/oauth/google/callback";
+	private final String redirectUri = "http://j4b103.p.ssafy.io/api/oauth/google/callback";
 	private final String tokenUri = "https://oauth2.googleapis.com/token";
 	private final String tokenInfoUri = "https://oauth2.googleapis.com/tokeninfo";
 	
