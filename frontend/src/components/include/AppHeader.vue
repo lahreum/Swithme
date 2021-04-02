@@ -179,7 +179,7 @@
               </div>
               <a href="http://localhost:9999/oauth/google"><v-img
                 @click="dialog = false"
-                src="@/assets/img/google_long.png"
+                src="@/assets/img/google_long.png" style="margin-top:5px;"
                 width="380"
               ></v-img></a>
               <v-img
@@ -219,7 +219,6 @@
 import "@/views/user/user.css";
 import AppBtnLarge from "@/components/common/AppBtnLarge.vue";
 import InputBar from "@/components/common/InputBar.vue";
-import GoogleBtn from "@/components/common/GoogleBtn.vue";
 // import axios from "axios";
 
 const storage = window.sessionStorage;
@@ -228,7 +227,6 @@ export default {
   components: {
     "app-btn-large": AppBtnLarge,
     "input-bar": InputBar,
-    "google-btn": GoogleBtn,
   },
   data: function() {
     return {
