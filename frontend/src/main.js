@@ -8,13 +8,12 @@ import VueFullPage from 'vue-fullpage.js';
 import Carousel3d from 'vue-carousel-3d';
 import axios from 'axios';
 
+
 Vue.config.productionTip = false;
 
 Vue.use(VueRouter);
 Vue.use(VueFullPage);
 Vue.use(Carousel3d);
-
-axios.defaults.baseURL = 'http://j4b103.p.ssafy.io/api/';
 
 const router = new VueRouter({
   mode: 'history',

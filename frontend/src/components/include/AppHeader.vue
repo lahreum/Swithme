@@ -1,6 +1,6 @@
 <template>
   <header>
-    <v-row no-gutters align="center" style="height: 100px">
+    <v-row no-gutters align="center" style="height: 100px;">
       <v-col cols="2" class="logo-header">
         <img
           :src="
@@ -8,7 +8,7 @@
               ? require('@/assets/img/logo_wh.png')
               : require('@/assets/img/logo_bl.png')
           "
-          style="width: 75%; height: auto"
+          style="width: 75%; height: auto;"
           alt="swithme-logo"
           @click="goMain"
         />
@@ -65,7 +65,7 @@
           no-gutters
           v-if="!isLogin"
           justify="center"
-          style="margin-left: 60px"
+          style="margin-left: 60px;"
         >
           <div
             class="login-item"
@@ -90,7 +90,7 @@
           </router-link>
         </v-row>
 
-        <v-row no-gutters v-else style="margin-left: 60px">
+        <v-row no-gutters v-else style="margin-left: 60px;">
           <v-menu
             open-on-hover
             close-on-click
@@ -121,7 +121,7 @@
       </v-col>
     </v-row>
     <!-- 로그인 모달팝업 -->
-    <div style="width: 50%" @click="openLogin">
+    <div style="width:50%;" @click="openLogin">
       <!-- 버튼도 v-dialog와 동시에 출력되도록 수정필요 -->
       <!-- <v-btn
         fab
@@ -147,8 +147,8 @@
             <p class="headLine">LOGIN</p>
           </v-card-title>
           <!-- 이메일, 비밀번호 입력란 -->
-          <v-card-text style="padding-bottom: 0px">
-            <hr style="border: solid 1px #e0e0e0" />
+          <v-card-text style="padding-bottom:0px;">
+            <hr style="border:solid 1px #E0E0E0" />
             <br />
 
             <v-container>
@@ -167,7 +167,7 @@
             </v-container>
           </v-card-text>
 
-          <v-card-actions style="padding-bottom: 0px; padding-top: 0px">
+          <v-card-actions style="padding-bottom:0px;padding-top:0px;">
             <div class="buttonGroup">
               <div @click="dialog = false">
                 <app-btn-large
@@ -177,36 +177,34 @@
                   :btnNameColor="'white'"
                 ></app-btn-large>
               </div>
-              <a href="http://j4b103.p.ssafy.io/api/oauth/google"
-                ><v-img
-                  @click="dialog = false"
-                  src="@/assets/img/google_long.png"
-                  width="380"
-                ></v-img
-              ></a>
+              <a href="http://localhost:9999/oauth/google"><v-img
+                @click="dialog = false"
+                src="@/assets/img/google_long.png" style="margin-top:5px;"
+                width="380"
+              ></v-img></a>
               <v-img
                 @click="dialog = false"
                 src="@/assets/img/naver_long.png"
                 width="380"
-                style="margin-bottom: 100px"
+                style="margin-bottom:100px;"
               ></v-img>
               <div class="bottomOption">
                 <v-img
                   src="@/assets/img/pattern.jpg"
-                  style="width: 100%"
+                  style="width:100%;"
                 ></v-img>
                 <router-link
                   to="/find-pw"
-                  style="text-decoration: none; color: #616161"
-                  ><span style="margin-right: 40px"
+                  style="text-decoration: none; color:#616161;"
+                  ><span style="margin-right:40px;"
                     >비밀번호 찾기</span
                   ></router-link
                 >
                 <span>|</span>
                 <router-link
                   to="/join"
-                  style="text-decoration: none; color: #616161"
-                  ><span style="margin-left: 40px">회원가입</span></router-link
+                  style="text-decoration: none; color:#616161;"
+                  ><span style="margin-left:40px;">회원가입</span></router-link
                 >
               </div>
             </div>
@@ -230,7 +228,7 @@ export default {
     "app-btn-large": AppBtnLarge,
     "input-bar": InputBar,
   },
-  data: function () {
+  data: function() {
     return {
       isLogin: false,
       username: "default",
@@ -280,7 +278,7 @@ export default {
     //   });
   },
   methods: {
-    signIn: function () {
+    signIn: function() {
       this.isLogin = true;
     },
     signOut: function() {
