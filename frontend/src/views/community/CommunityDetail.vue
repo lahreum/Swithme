@@ -1,28 +1,38 @@
 <template>
   <div>
-      <div>커뮤니티 > 취업</div>
-      <hr>
-      <p>아니 이번 실기문제 뭐야? 이상해..</p>
+      <div class="section">커뮤니티 > 취업</div>
+      <v-divider></v-divider>
+      <p class="boardTitle">아니 이번 실기문제 뭐야? 이상해..</p>
       <div>
-        <div style="float:left;">정처기out</div>
-        <div style="float:left;">2021.03.13 12:10</div>
-        <div style="float:left;">조회수 29</div><br>
+        <div class="boardInfo" style="float:left;"><strong>정처기out</strong></div>
+        <div class="boardInfo" style="float:left;">2021.03.13 12:10</div>
+        <div class="boardInfo" style="float:left;">조회수 29</div><br><br>
       </div>
-      <hr>
-      <v-textarea
-          value="The Woodman set to work at once, and so sharp was his axe that the tree was soon chopped nearly through."
-        ></v-textarea>
+      <v-divider></v-divider>
+      <div class="boardContent">
+        <p>이번 1번 문제 답 애자일인가요?</p>
+        <div class="heart">좋아요 1개 <v-icon @click="addLike">mdi-heart-outline</v-icon></div>
+      </div>
+      <v-divider></v-divider>
       <CommentInputBar/>
+      <CommentItem/>
   </div>
 </template>
 
 <script>
 import CommentInputBar from '@/components/common/CommentInputBar.vue';
+import CommentItem from '@/components/common/CommentItem.vue';
 import "./community.css";
 
   export default {
     components: {
       CommentInputBar,
+      CommentItem,
+    },
+    methods: {
+      addLike() {
+        alert('좋아요');
+      }
     }
   }
 </script>

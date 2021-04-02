@@ -177,7 +177,11 @@
                   :btnNameColor="'white'"
                 ></app-btn-large>
               </div>
-              <google-btn style="margin-top: 5px;"></google-btn>
+              <a href="http://localhost:9999/oauth/google"><v-img
+                @click="dialog = false"
+                src="@/assets/img/google_long.png"
+                width="380"
+              ></v-img></a>
               <v-img
                 @click="dialog = false"
                 src="@/assets/img/naver_long.png"
@@ -215,14 +219,12 @@
 import '@/views/user/user.css';
 import AppBtnLarge from '@/components/common/AppBtnLarge.vue';
 import InputBar from '@/components/common/InputBar.vue';
-import GoogleBtn from '@/components/common/GoogleBtn.vue';
 
 export default {
   props: ['darkmode'],
   components: {
     'app-btn-large': AppBtnLarge,
     'input-bar': InputBar,
-    'google-btn': GoogleBtn,
   },
   data: function() {
     return {
