@@ -14,7 +14,7 @@ Vue.use(VueRouter);
 Vue.use(VueFullPage);
 Vue.use(Carousel3d);
 
-axios.defaults.baseURL = 'http://localhost:8399/';
+axios.defaults.baseURL = 'http://localhost:8399/api/';
 
 const router = new VueRouter({
   mode: 'history',
