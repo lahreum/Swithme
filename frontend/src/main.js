@@ -6,12 +6,15 @@ import store from './vuex/store';
 import vuetify from './plugins/vuetify';
 import VueFullPage from 'vue-fullpage.js';
 import Carousel3d from 'vue-carousel-3d';
+import axios from 'axios';
 
 Vue.config.productionTip = false;
 
 Vue.use(VueRouter);
 Vue.use(VueFullPage);
 Vue.use(Carousel3d);
+
+axios.defaults.baseURL = 'http://localhost:8399/';
 
 const router = new VueRouter({
   mode: 'history',
