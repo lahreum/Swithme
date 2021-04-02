@@ -11,7 +11,7 @@
       <v-divider></v-divider>
       <div class="boardContent">
         <p>이번 1번 문제 답 애자일인가요?</p>
-        <div class="heart">좋아요 1개 <v-icon @click="addLike">mdi-heart-outline</v-icon></div>
+        <div class="heart">좋아요 1개 <v-icon @click="addLike" v-if="isLiked">mdi-heart-outline</v-icon><v-icon @click="addLike" v-if="!isLiked">mdi-heart</v-icon></div>
       </div>
       <v-divider></v-divider>
       <CommentInputBar/>
@@ -29,9 +29,14 @@ import "./community.css";
       CommentInputBar,
       CommentItem,
     },
+    data: function() {
+      return {
+        isLiked: false,
+      }
+    },
     methods: {
       addLike() {
-        alert('좋아요');
+        this.isLiked = !this.isLiked;
       }
     }
   }
