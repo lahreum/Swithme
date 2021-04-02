@@ -177,7 +177,11 @@
                   :btnNameColor="'white'"
                 ></app-btn-large>
               </div>
-              <google-btn style="margin-top: 5px;"></google-btn>
+              <a href="http://localhost:9999/oauth/google"><v-img
+                @click="dialog = false"
+                src="@/assets/img/google_long.png" style="margin-top:5px;"
+                width="380"
+              ></v-img></a>
               <v-img
                 @click="dialog = false"
                 src="@/assets/img/naver_long.png"
@@ -212,38 +216,81 @@
 </template>
 
 <script>
-import '@/views/user/user.css';
-import AppBtnLarge from '@/components/common/AppBtnLarge.vue';
-import InputBar from '@/components/common/InputBar.vue';
-import GoogleBtn from '@/components/common/GoogleBtn.vue';
+import "@/views/user/user.css";
+import AppBtnLarge from "@/components/common/AppBtnLarge.vue";
+import InputBar from "@/components/common/InputBar.vue";
+// import axios from "axios";
 
+const storage = window.sessionStorage;
 export default {
-  props: ['darkmode'],
+  props: ["darkmode"],
   components: {
-    'app-btn-large': AppBtnLarge,
-    'input-bar': InputBar,
-    'google-btn': GoogleBtn,
+    "app-btn-large": AppBtnLarge,
+    "input-bar": InputBar,
   },
   data: function() {
     return {
       isLogin: false,
-      username: 'default',
+      username: "default",
       dialog: false,
     };
+  },
+  created() {
+    if (storage.getItem("jwt-auth-token")) {
+      this.isLogin = true;
+    }
+    // axios({
+    //   method: "get",
+    //   baseURL: "http://localhost:9999/",
+    //   url: "user",
+    //   Authorization: `Bearer + ${storage.getItem("jwt-auth-token")}`,
+    // }).then((response) => {
+    //   console.log(response);
+    // });
+
+    // axios
+    //   .get("user", {
+    //     headers: {
+    //       Authorization: `Bearer + ${storage.getItem("jwt-auth-token")}`,
+    //     },
+    //   })
+    //   .then((response) => {
+    //     console.log(response);
+    //   });
+    // axios
+    //   .get("http://localhost:9999/user", {
+    //     headers: {
+    //       Authorization: `Bearer ${storage.getItem("jwt-auth-token")}`,
+    //     },
+    //   })
+    //   .then((res) => {
+    //     console.log(res);
+    //   })
+    //   .catch((error) => console.log(error));
+
+    // axios
+    //   .create({
+    //     headers: { "jwt-auth-token": storage.getItem("jwt-auth-token") },
+    //   })
+    //   .get("http://localhost:9999/user")
+    //   .then((response) => {
+    //     console.log(response);
+    //   });
   },
   methods: {
     signIn: function() {
       this.isLogin = true;
     },
     signOut: function() {
-      alert('로그아웃!!!!');
+      alert("로그아웃!!!!");
       this.isLogin = false;
+      storage.removeItem("jwt-auth-token");
     },
     goMyPage: function() {
-      this.$router.push('/my-page-access');
+      this.$router.push("/my-page-access");
     },
     goMain: function() {
-      this.$router.push('/');
+      this.$router.push("/");
     },
     openLogin() {
       this.dialog = true;

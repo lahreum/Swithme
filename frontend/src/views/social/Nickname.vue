@@ -28,7 +28,7 @@ export default {
       // 프론트에서 닉네임 범위 판별해줘야함
       axios
         .get(
-          'http://localhost:9999/user/nickname?userNickname=' + this.nickname
+          'http://localhost:9999/user/nickname?nickname=' + this.nickname
         )
         .then((response) => {
           if (response.data.isPresent) {

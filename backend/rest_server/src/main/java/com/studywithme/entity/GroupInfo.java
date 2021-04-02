@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Group {
+public class GroupInfo {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

@@ -2,8 +2,8 @@ package com.studywithme.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.studywithme.entity.Group;
+import com.studywithme.entity.GroupInfo;
 
-public interface GroupRepository extends JpaRepository<Group,Integer>{
+public interface GroupRepository extends JpaRepository<GroupInfo,Integer>{
 
 }

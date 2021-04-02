@@ -21,7 +21,7 @@ import com.studywithme.entity.Attendance;
 import com.studywithme.entity.TimeDaily;
 import com.studywithme.entity.TimeHourly;
 import com.studywithme.entity.TimeMonthly;
-import com.studywithme.entity.User;
+import com.studywithme.entity.UserInfo;
 import com.studywithme.repository.AttendanceRepository;
 import com.studywithme.repository.TimeDailyRepository;
 import com.studywithme.repository.TimeHourlyRepository;
@@ -64,7 +64,7 @@ public class TimerController {
 		datetime=datetime.replaceAll("-", "");
 		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
 		
-		Optional<User> user=userRepository.findByUserNickname(nickname);
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		Optional<TimeDaily> daily=timeDailyRepository
 				.findByTimeDailyUserNicknameAndTimeDailyYearMonthDayAndTimeDailyAction(nickname, datetime,0);
 		if(user.isPresent()&&daily.isPresent()) {
@@ -88,7 +88,7 @@ public class TimerController {
 		
 		result.put("eachTimeAverage",null);
 		List<TimeHourly> list=null;
-		Optional<User> user=userRepository.findByUserNickname(nickname);
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if (user.isPresent()) {
 			switch (range) {
 			case "day":
@@ -140,7 +140,7 @@ public class TimerController {
 		result.put("success",false);
 		
 		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
-		Optional<User> user=userRepository.findByUserNickname(nickname);
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(user.isPresent()) {
 			datetime=datetime.substring(2,13);
 			datetime.replaceAll("-", "");
@@ -212,7 +212,7 @@ public class TimerController {
 		
 		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
 		
-		Optional<User> user=userRepository.findByUserNickname(nickname);
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(user.isPresent()) {
 			Optional<TimeDaily> timeDaily=timeDailyRepository.findByTimeDailyUserNicknameAndTimeDailyYearMonthDayAndTimeDailyAction(nickname, datetime, action);
 			if(timeDaily.isPresent()) {
@@ -239,7 +239,7 @@ public class TimerController {
 		result.put("curStudyTime",null);
 		
 		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
-		Optional<User> user=userRepository.findByUserNickname(nickname);
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(user.isPresent()) {
 			datetime=datetime.substring(2,13);
 			datetime=datetime.replaceAll("-","");
@@ -264,7 +264,7 @@ public class TimerController {
 		datetime=datetime.substring(2,10);
 		datetime=datetime.replaceAll("-", "");
 		
-		Optional<User> user=userRepository.findByUserNickname(nickname);
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(user.isPresent()) {
 			Optional<List<TimeDaily>> list=timeDailyRepository.findByTimeDailyUserNicknameAndTimeDailyYearMonthDay(nickname, datetime);
 			if(list.isPresent()) {
@@ -285,7 +285,7 @@ public class TimerController {
 		
 		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
 		
-		Optional<User> user=userRepository.findByUserNickname(nickname);
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(user.isPresent()) {
 			Optional<List<Attendance>> attendanceList=attendanceRepository.findByAttendanceUserNickname(nickname);
 			if(attendanceList.isPresent()) {
