@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.studywithme.config.CommonMethods;
 import com.studywithme.entity.Todo;
-import com.studywithme.entity.User;
+import com.studywithme.entity.UserInfo;
 import com.studywithme.repository.TodoRepository;
 import com.studywithme.repository.UserRepository;
 
@@ -46,7 +46,7 @@ public class TodoController {
 		
 		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
 		
-		Optional<User> user=userRepository.findByUserNickname(nickname);
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(user.isPresent()) {
 			Todo todo=new Todo();
 			todo.setTodoContent(content);
@@ -70,7 +70,7 @@ public class TodoController {
 		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
 		
 		Optional<Todo> todo=todoRepository.findById(todoId);
-		Optional<User> user=userRepository.findByUserNickname(nickname);
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(todo.isPresent()&&user.isPresent()&&todo.get().getTodoUserNickname().equals(nickname)) {
 			todoRepository.delete(todo.get());
 			
@@ -90,7 +90,7 @@ public class TodoController {
 		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
 		
 		Optional<Todo> todo=todoRepository.findById(todoId);
-		Optional<User> user=userRepository.findByUserNickname(nickname);
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(todo.isPresent()&&user.isPresent()&&todo.get().getTodoUserNickname().equals(nickname)) {
 			todo.get().setTodoFinish(!todo.get().isTodoFinish());
 			todoRepository.save(todo.get());
@@ -108,7 +108,7 @@ public class TodoController {
 
 		result.put("todoList",null);
 		
-		Optional<User> user=userRepository.findByUserNickname(nickname);
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		Optional<List<Todo>> todoList=todoRepository.findByTodoUserNicknameAndTodoDateStartingWith(nickname,datetime);
 		if(user.isPresent()&&todoList.isPresent()) {
 			result.clear();

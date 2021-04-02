@@ -32,7 +32,7 @@
         <tbody>
           <tr
             v-for="board in boards"
-            :key="board.id" style="height:60px;"
+            :key="board.id" style="height:60px;" @click="$router.push('/community/community-detail')"
           >
             <td class="text-center">{{ board.id }}</td>
             <td class="text-center">{{ board.title }}</td>

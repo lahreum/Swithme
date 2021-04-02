@@ -84,7 +84,7 @@ export default {
 <style>
 .todoList {
   padding: 0;
-  height: 280px;
+  height: 360px;
   overflow: scroll;
 }
 </style>

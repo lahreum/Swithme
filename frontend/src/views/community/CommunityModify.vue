@@ -1,6 +1,6 @@
 <template>
   <div>
-      <p class="letter mainTitle">글쓰기</p>
+      <p class="letter mainTitle">수정하기</p>
       <hr class="lineStyle">
       <v-container style="margin-top:10px;">
         <v-row no-gutters style="margin-bottom:10px;"> 
@@ -16,7 +16,7 @@
         <v-row no-gutters>
           <v-col class="letter" cols="1">제목</v-col>
           <v-col cols="11">
-            <v-text-field
+            <v-text-field 
             placeholder="3자 이상 입력" v-model="title"
             outlined
           ></v-text-field>
