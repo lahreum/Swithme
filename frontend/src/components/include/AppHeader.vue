@@ -247,6 +247,7 @@ export default {
       pw: "",
     };
   },
+
   created() {
     if (storage.getItem("jwt-auth-token")) {
       this.isLogin = true;
@@ -304,8 +305,9 @@ export default {
             this.dialog = false;
             this.isLogin = true;
             this.getUserInfo(res.headers["jwt-auth-token"]);
+            storage.setItem("jwt-auth-token", res.headers["jwt-auth-token"]);
           } else {
-            alert("비번틀림");
+            alert("아이디 또는 비밀번호를 잘못 입력하였습니다.");
           }
         })
         .catch((err) => console.log(err));
