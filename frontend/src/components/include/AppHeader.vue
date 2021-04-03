@@ -281,6 +281,7 @@ export default {
       alert("로그아웃!!!!");
       this.isLogin = false;
       storage.removeItem("jwt-auth-token");
+      this.$router.push("/");
     },
     goMyPage: function() {
       this.$router.push("/my-page-access");
