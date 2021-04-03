@@ -29,10 +29,10 @@ hand_weights = './contents/checkpoints/hand.tf'
 # 모델 생성
 settings.ORIGIN_YOLO = YoloV3(classes=origin_num_classes, yolo_max_boxes=origin_yolo_max_boxes)
 settings.ORIGIN_YOLO.load_weights(origin_weights)
-# settings.FACE_YOLO = YoloV3(classes=face_num_classes, yolo_max_boxes=face_yolo_max_boxes)
-# settings.FACE_YOLO.load_weights(face_weights)
-# settings.HAND_YOLO = YoloV3(classes=hand_num_classes, yolo_max_boxes=hand_yolo_max_boxes)
-# settings.HAND_YOLO.load_weights(hand_weights)
+settings.FACE_YOLO = YoloV3(classes=face_num_classes, yolo_max_boxes=face_yolo_max_boxes)
+settings.FACE_YOLO.load_weights(face_weights)
+settings.HAND_YOLO = YoloV3(classes=hand_num_classes, yolo_max_boxes=hand_yolo_max_boxes)
+settings.HAND_YOLO.load_weights(hand_weights)
 
 
 @csrf_exempt
