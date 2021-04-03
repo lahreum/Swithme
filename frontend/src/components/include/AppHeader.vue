@@ -101,7 +101,7 @@
             <template v-slot:activator="{ on }">
               <!-- 이 위치에 프로필 사진 컴포넌트 넣어야 함 -->
               <v-col align="center" v-on="on">
-                {{ userInfo.userNickname }}님, 안녕하세요!
+                {{ userNickname }}님, 안녕하세요!
               </v-col>
             </template>
             <v-list>
@@ -242,19 +242,38 @@ export default {
       isLogin: false,
       username: "default",
       dialog: false,
-      userInfo: [],
+      userInfo: {},
       email: "",
       pw: "",
+      userNickname: "",
     };
   },
-
+  watch: {
+    userInfo: function() {
+      this.checkLogin();
+    },
+  },
   created() {
+    console.log("크리에이티드됨?");
+    this.getUserInfo(storage.getItem("jwt-auth-token"));
+  },
+
+  mounted() {
+    console.log("마운티드됨?");
     if (storage.getItem("jwt-auth-token")) {
       this.isLogin = true;
       this.getUserInfo(storage.getItem("jwt-auth-token"));
     }
   },
+
   methods: {
+    checkLogin() {
+      if (this.userInfo === null) {
+        this.isLogin = false;
+      } else {
+        this.isLogin = true;
+      }
+    },
     signIn: function() {
       this.isLogin = true;
     },
@@ -282,15 +301,15 @@ export default {
         .get("user")
         .then((res) => {
           this.userInfo = res.data.data;
+          this.$store.commit("LOGIN", this.userInfo);
+          this.userNickname = this.$store.getters.getUserNickname;
           console.log("무야호", this.userInfo);
         })
         .catch((err) => {
           console.log(err);
         });
     },
-    // wrongPw(){
-    //   this.clearInput = '',
-    // },
+
     login() {
       console.log("로그인버튼눌럿다!");
 
@@ -306,6 +325,11 @@ export default {
             this.isLogin = true;
             this.getUserInfo(res.headers["jwt-auth-token"]);
             storage.setItem("jwt-auth-token", res.headers["jwt-auth-token"]);
+
+            console.log(this.userNickname);
+            console.log(this.$store.state.user);
+            this.userNickname = this.$store.getters.getUserNickname;
+            console.log("스토어", this.userNickname);
           } else {
             alert("아이디 또는 비밀번호를 잘못 입력하였습니다.");
           }

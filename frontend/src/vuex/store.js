@@ -20,9 +20,9 @@ export const store = new Vuex.Store({
     getUserNickname(state) {
       return state.user.userNickname;
     },
-    getUserImage(state) {
-      return state.user.userImage;
-    },
+    // getUserImage(state) {
+    //   return state.user.userImage;
+    // },
     getUserMessage(state) {
       return state.user.userMessage;
     },
