@@ -1,6 +1,6 @@
 <template>
   <div>
-      <div class="communitySection">커뮤니티 > {{ board.boardId }}</div>
+      <div class="communitySection">커뮤니티 > {{ board.boardId }} </div>
       <v-divider></v-divider>
       <p class="boardTitle">{{ board.boardTitle }}</p>
       <div>
@@ -48,7 +48,7 @@ const storage = window.sessionStorage;
       this.getBoardDetail();
     },
     methods: {
-      addLike() {
+      addLike() { 
         console.log('addLike 함수 안에는 들어감');
         console.log(`${this.$store.state.boardDetailId}`);
         this.$Axios
