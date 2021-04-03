@@ -31,8 +31,8 @@
         </thead>
         <tbody>
           <tr
-            v-for="board in boardList"
-            :key="board.boardId" style="height:60px;" @click="$router.push('/community/community-detail')"
+            v-for="board in calData"
+            :key="board.boardId" style="height:60px;" @click="moveToBoardDetail(board)"
           >
             <td class="text-center">{{ board.boardId }}</td>
             <td class="text-center">{{ board.boardTitle }}</td>
@@ -45,8 +45,8 @@
     <div style="text-align:right;padding-top:20px;" @click="$router.push('/community/community-create')"><AppBtnSmall :btnColor="'#424242'" :btnName="'글쓰기'" :btnNameColor="'white'"/></div>
     <div class="text-center" style="padding-top:10px;">
       <v-pagination
-        v-model="page" color="#673fb4"
-        :length="5"
+        v-model="curPageNum" color="#673fb4"
+        :length="numOfPages"
         circle
       ></v-pagination>
     </div>
@@ -59,7 +59,7 @@ import SelectBox from '@/components/common/SelectBox.vue';
 import AppBtnSmall from '@/components/common/AppBtnSmall.vue';
 import "./community.css";
 import "../user/user.css";
-const storage = window.sessionStorage;
+
 export default {
     components: {
         CategoryNav,
@@ -68,12 +68,13 @@ export default {
     },
     data: function() {
       return {
-        page: 1,
         categoryNum: 1,
         categoryName: '초중고',
         boardList: [
           
-        ],
+          ],
+        curPageNum: 1,
+        dataPerPage: 5,
       };
     },
     created() {
@@ -84,6 +85,20 @@ export default {
         this.getBoardList();
       }
     },
+    computed: {
+      startOffset() {
+        return ((this.curPageNum - 1) * this.dataPerPage);
+      },
+      endOffset() {
+        return (this.startOffset + this.dataPerPage);
+      },
+      numOfPages() {
+        return Math.ceil(this.boardList.length / this.dataPerPage);
+      },
+      calData() {   // 보여지고 있는 page의 숫자와 page당 보여질 data의 갯수에 따라서 계산된 startOffset과 endOffset을 이용해 slice 하여 return
+        return this.boardList.slice(this.startOffset, this.endOffset)
+      }
+    },
     methods: {
       getCategory: function(value){
         this.categoryName = value.name; 
@@ -91,15 +106,9 @@ export default {
       },
       getBoardList() { 
         this.$Axios
-        .get(`community/board?categoryId=`+ this.categoryNum, {
-          headers: {
-            "Content-Type": "application/json",
-            "jwt-auth-token": storage.getItem("jwt-auth-token"),
-          }
-        })
+        .get(`community/board?categoryId=`+ this.categoryNum)
         .then((res) => {
           if(Object.keys(res.data.boardList).length > 0) {
-            console.log('게시글 목록은 일단 들어옴');
             this.boardList = res.data.boardList;
           } else {
             this.boardList = [];
@@ -108,6 +117,10 @@ export default {
         .catch((error) => {
           console.log(error);
         })
+      },
+      moveToBoardDetail(board) {
+        this.$store.commit("MOVETOBOARDDETAIL", board.boardId);
+        this.$router.push("/community/community-detail");
       }
     },
 }
