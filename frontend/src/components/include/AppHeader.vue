@@ -258,7 +258,7 @@ export default {
     //     console.log(response);
     //   });
     // axios
-    //   .get("http://localhost:9999/user", {
+    //   .get("user", {
     //     headers: {
     //       Authorization: `Bearer ${storage.getItem("jwt-auth-token")}`,
     //     },
@@ -272,7 +272,7 @@ export default {
     //   .create({
     //     headers: { "jwt-auth-token": storage.getItem("jwt-auth-token") },
     //   })
-    //   .get("http://localhost:9999/user")
+    //   .get("user")
     //   .then((response) => {
     //     console.log(response);
     //   });

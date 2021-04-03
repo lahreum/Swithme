@@ -41,6 +41,8 @@ import HomeSecond from "../components/include/HomeSecond.vue";
 import HomeThird from "../components/include/HomeThird.vue";
 import HomeFourth from "../components/include/HomeFourth.vue";
 import StudyBtn from "../components/common/StudyBtn.vue";
+import axios from "axios";
+const storage = window.sessionStorage;
 
 export default {
   components: {
@@ -86,6 +88,54 @@ export default {
         this.isDarkmode = true;
       }
     },
+  },
+
+  created() {
+    // axios
+    //   .create({
+    //     headers: {
+    //       "jwt-auth-token":
+    //         "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzd2l0aG1lVG9rZW4iLCJleHAiOjE2MTc0MzU0NTYsIlVzZXIiOnsidXNlcklkIjoiZWVhcGJoQGdtYWlsLmNvbSIsInVzZXJOaWNrbmFtZSI6ImJvbmcxIiwidXNlclR5cGUiOiJnb29nbGUiLCJ1c2VySXNTdHVkeWluZyI6ZmFsc2V9fQ.idRpfPJjV4FrrBm6kWl9w1lusM7_JwkjHM0DWhYduMw",
+    //     },
+    //   })
+    //   .get("user")
+    //   .then((response) => {
+    //     console.log(response);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+    // axios
+    //   .request((rq) => {
+    //     console.log("리퀘스트", rq);
+    //   })
+    //   .get("user", {
+    //     headers: {
+    //       "jwt-auth-token": storage.getItem("jwt-auth-token"),
+    //     },
+    //   })
+    //   .then((response) => {
+    //     console.log(response);
+    //   });
+    axios.get("user", {
+      headers: {
+        "Content-Type": "application/json",
+        "jwt-auth-token": storage.getItem("jwt-auth-token"),
+      },
+    });
+    console.log(storage.getItem("jwt-auth-token"));
+    // if (storage.getItem("jwt-auth-token")) {
+    //   axios
+    //     .get("user", {
+    //       headers: {
+    //         "jwt-auth-token": storage.getItem("jwt-auth-token"),
+    //       },
+    //     })
+    //     .then((res) => {
+    //       console.log(res);
+    //     })
+    //     .catch((error) => console.log(error));
+    // }
   },
 };
 </script>
