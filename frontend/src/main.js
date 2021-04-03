@@ -8,7 +8,7 @@ import VueFullPage from 'vue-fullpage.js';
 import Carousel3d from 'vue-carousel-3d';
 import axios from 'axios';
 
-
+Vue.prototype.$Axios = axios; // this.$Axios 로 전역으로 사용 가능
 Vue.config.productionTip = false;
 
 Vue.use(VueRouter);
@@ -19,7 +19,10 @@ const router = new VueRouter({
   mode: 'history',
   routes,
 });
+
+// axios.defaults.baseURL = 'http://j4b103.p.ssafy.io/service/';
 axios.defaults.baseURL = 'http://localhost:9999/';
+
 new Vue({
   router,
   store,

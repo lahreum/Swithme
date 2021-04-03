@@ -177,13 +177,11 @@
                   :btnNameColor="'white'"
                 ></app-btn-large>
               </div>
-              <a href="http://localhost:9999/oauth/google"
-                ><v-img
-                  @click="dialog = false"
-                  src="@/assets/img/google_long.png"
-                  width="380"
-                ></v-img
-              ></a>
+              <a href="http://localhost:9999/oauth/google"><v-img
+                @click="dialog = false"
+                src="@/assets/img/google_long.png" style="margin-top:5px;"
+                width="380"
+              ></v-img></a>
               <v-img
                 @click="dialog = false"
                 src="@/assets/img/naver_long.png"

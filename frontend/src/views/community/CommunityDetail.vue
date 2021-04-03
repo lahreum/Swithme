@@ -1,6 +1,6 @@
 <template>
   <div>
-      <div class="section">커뮤니티 > 취업</div>
+      <div class="communitySection">커뮤니티 > 취업</div>
       <v-divider></v-divider>
       <p class="boardTitle">아니 이번 실기문제 뭐야? 이상해..</p>
       <div>
