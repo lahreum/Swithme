@@ -2,7 +2,6 @@ import os
 import cv2
 import base64
 import numpy as np
-import tensorflow as tf
 from contents.detect import detect
 from contents.yolov3.models import YoloV3
 from django.conf import settings
