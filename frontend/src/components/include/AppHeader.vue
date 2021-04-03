@@ -101,7 +101,7 @@
             <template v-slot:activator="{ on }">
               <!-- 이 위치에 프로필 사진 컴포넌트 넣어야 함 -->
               <v-col align="center" v-on="on">
-                {{ username }}님, 안녕하세요!
+                {{ userInfo.userNickname }}님, 안녕하세요!
               </v-col>
             </template>
             <v-list>
@@ -155,13 +155,13 @@
               <v-row>
                 <v-col class="middleLetter formLetter" cols="3">이메일</v-col>
                 <v-col cols="9"
-                  ><input-bar placeholder="이메일"></input-bar
+                  ><input-bar v-model="email" placeholder="이메일"></input-bar
                 ></v-col>
               </v-row>
               <v-row>
                 <v-col class="middleLetter formLetter" cols="3">비밀번호</v-col>
                 <v-col cols="9"
-                  ><input-bar placeholder="비밀번호"></input-bar
+                  ><input-bar v-model="pw" placeholder="비밀번호"></input-bar
                 ></v-col>
               </v-row>
             </v-container>
@@ -169,7 +169,7 @@
 
           <v-card-actions style="padding-bottom:0px;padding-top:0px;">
             <div class="buttonGroup">
-              <div @click="dialog = false">
+              <div @click="login">
                 <app-btn-large
                   class="btnOption"
                   :btnColor="'#673fb4'"
@@ -177,11 +177,14 @@
                   :btnNameColor="'white'"
                 ></app-btn-large>
               </div>
-              <a href="http://localhost:9999/oauth/google"><v-img
-                @click="dialog = false"
-                src="@/assets/img/google_long.png" style="margin-top:5px;"
-                width="380"
-              ></v-img></a>
+              <a href="http://localhost:9999/oauth/google"
+                ><v-img
+                  @click="dialog = false"
+                  src="@/assets/img/google_long.png"
+                  style="margin-top:5px;"
+                  width="380"
+                ></v-img
+              ></a>
               <v-img
                 @click="dialog = false"
                 src="@/assets/img/naver_long.png"
@@ -219,7 +222,7 @@
 import "@/views/user/user.css";
 import AppBtnLarge from "@/components/common/AppBtnLarge.vue";
 import InputBar from "@/components/common/InputBar.vue";
-// import axios from "axios";
+import axios from "axios";
 
 const storage = window.sessionStorage;
 export default {
@@ -233,49 +236,29 @@ export default {
       isLogin: false,
       username: "default",
       dialog: false,
+      userInfo: [],
+      email: "",
+      pw: "",
     };
   },
   created() {
     if (storage.getItem("jwt-auth-token")) {
       this.isLogin = true;
+      axios
+        .create({
+          headers: {
+            "jwt-auth-token": storage.getItem("jwt-auth-token"),
+          },
+        })
+        .get("user")
+        .then((res) => {
+          this.userInfo = res.data.data;
+          console.log("무야호", this.userInfo);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
-    // axios({
-    //   method: "get",
-    //   baseURL: "http://localhost:9999/",
-    //   url: "user",
-    //   Authorization: `Bearer + ${storage.getItem("jwt-auth-token")}`,
-    // }).then((response) => {
-    //   console.log(response);
-    // });
-
-    // axios
-    //   .get("user", {
-    //     headers: {
-    //       Authorization: `Bearer + ${storage.getItem("jwt-auth-token")}`,
-    //     },
-    //   })
-    //   .then((response) => {
-    //     console.log(response);
-    //   });
-    // axios
-    //   .get("user", {
-    //     headers: {
-    //       Authorization: `Bearer ${storage.getItem("jwt-auth-token")}`,
-    //     },
-    //   })
-    //   .then((res) => {
-    //     console.log(res);
-    //   })
-    //   .catch((error) => console.log(error));
-
-    // axios
-    //   .create({
-    //     headers: { "jwt-auth-token": storage.getItem("jwt-auth-token") },
-    //   })
-    //   .get("user")
-    //   .then((response) => {
-    //     console.log(response);
-    //   });
   },
   methods: {
     signIn: function() {
@@ -294,6 +277,15 @@ export default {
     },
     openLogin() {
       this.dialog = true;
+    },
+    login() {
+      console.log("로그인버튼눌럿다!");
+      axios.post("user/login");
+      console.log(this.email);
+      console.log(this.pw);
+    },
+    fun() {
+      console.log(this.pw);
     },
   },
 };
