@@ -41,7 +41,6 @@ import HomeSecond from "../components/include/HomeSecond.vue";
 import HomeThird from "../components/include/HomeThird.vue";
 import HomeFourth from "../components/include/HomeFourth.vue";
 import StudyBtn from "../components/common/StudyBtn.vue";
-import axios from "axios";
 const storage = window.sessionStorage;
 
 export default {
@@ -117,13 +116,15 @@ export default {
     //   .then((response) => {
     //     console.log(response);
     //   });
-    axios.get("user", {
+
+    this.$Axios.get("user", {
       headers: {
         "Content-Type": "application/json",
         "jwt-auth-token": storage.getItem("jwt-auth-token"),
       },
     });
     console.log(storage.getItem("jwt-auth-token"));
+
     // if (storage.getItem("jwt-auth-token")) {
     //   axios
     //     .get("user", {
