@@ -1,6 +1,6 @@
 <template>
   <v-btn
-    :disabled="disabled"
+    :disabled="isDisabled"
     class="btnStyle"
     width="150px"
     height="50px"
@@ -12,7 +12,7 @@
 
 <script>
 export default {
-  props: ['btnColor', 'btnName', 'btnNameColor', 'disabled'],
+  props: ['btnColor', 'btnName', 'btnNameColor', 'isDisabled'],
 };
 </script>
 

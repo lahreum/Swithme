@@ -59,7 +59,7 @@
                 :btnColor="'#673fb4'"
                 :btnName="'중복체크'"
                 :btnNameColor="'#ffffff'"
-                :disabled="!isValidNickname"
+                :isDisabled="!isValidNickname"
               >
               </app-btn-middle>
             </div>
@@ -104,7 +104,7 @@
       </div>
       <div class="oneBtn" @click="joinRequest">
         <app-btn-middle
-          :disabled="
+          :isDisabled="
             isMounted && (!isAllValid || !isduplComplete || !isValidNickname)
           "
           :btnColor="'#424242'"

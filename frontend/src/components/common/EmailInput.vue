@@ -4,6 +4,7 @@
       :items="items"
       :value="items"
       placeholder="이메일 주소"
+      prepend-icon="mdi-at"
       outlined
       v-model="selected"
       @change="passEvent()"

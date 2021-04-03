@@ -13,31 +13,43 @@
         <v-col class="formLetter" cols="2">이메일</v-col>
         <v-col cols="3">
           <input-bar
-            :placeholder="'이메일을 입력해주세요.'"
+            :placeholder="'이메일 입력'"
             @pass-input="getEmailFront"
           ></input-bar>
         </v-col>
-        <v-col cols="3">
+        <v-col cols="3" style="padding-left: 0;">
           <email-input @pass-input="getEmailBack"></email-input>
         </v-col>
-        <v-col cols="2 "
-          ><app-btn-middle
+        <v-col cols="3" align-self="center" align="center" @click="getAuthNum">
+          <app-btn-middle
             :btnColor="'#673fb4'"
             :btnName="'인증번호 받기'"
             :btnNameColor="'#ffffff'"
-          ></app-btn-middle
-        ></v-col>
+          ></app-btn-middle>
+        </v-col>
       </v-row>
       <v-row style="padding-bottom:40px;">
         <v-col class="formLetter" cols="2">인증번호</v-col>
-        <v-col cols="6"><input-bar></input-bar></v-col>
-        <v-col cols="3"
-          ><app-btn-middle
+        <v-col cols="6">
+          <input-bar
+            :isDisabled="isValid"
+            :placeholder="'4자리 숫자를 입력 해주세요.'"
+            @pass-input="getMyAuthNum"
+          ></input-bar>
+        </v-col>
+        <v-col
+          cols="3"
+          align-self="center"
+          align="center"
+          @click="compareAuthNum"
+        >
+          <app-btn-middle
+            :isDisabled="isValid"
             :btnColor="'#673fb4'"
             :btnName="'확인'"
             :btnNameColor="'#ffffff'"
-          ></app-btn-middle
-        ></v-col>
+          ></app-btn-middle>
+        </v-col>
       </v-row>
     </v-container>
     <div style="text-align:center;">
@@ -50,6 +62,7 @@
       </div>
       <div class="oneBtn" @click="goRouting">
         <app-btn-middle
+          :isDisabled="!isValid"
           :btnColor="'#424242'"
           :btnName="'다음'"
           :btnNameColor="'white'"
@@ -75,6 +88,9 @@ export default {
     return {
       emailFront: '',
       emailBack: '',
+      myAuthNum: 0,
+      realAuthNum: 1234,
+      isValid: false,
     };
   },
   methods: {
@@ -91,6 +107,20 @@ export default {
     },
     getEmailBack(value) {
       this.emailBack = value;
+    },
+    getAuthNum() {
+      alert('1234 입력');
+    },
+    getMyAuthNum(value) {
+      this.myAuthNum = value;
+    },
+    compareAuthNum() {
+      if (this.myAuthNum == this.realAuthNum) {
+        alert('통과!');
+        this.isValid = true;
+      } else {
+        this.isValid = false;
+      }
     },
   },
 };
