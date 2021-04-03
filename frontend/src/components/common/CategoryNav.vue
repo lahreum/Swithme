@@ -3,16 +3,16 @@
     <v-slide-group show-arrows>
       <v-slide-item
         v-for="i in items"
-        :key="i"
+        :key="i.value"
         v-slot:default="{ active, toggle }"
       >
-        <div
+        <div @click="toggle"><div
           class="category-item"
           :class="{ 'category-active': active, 'category-default': !active }"
-          @click="toggle"
+          @click="sendCategory(i.name, i.value)"
         >
-          {{ i }}
-        </div>
+          {{ i.name }}
+        </div></div>
       </v-slide-item>
     </v-slide-group>
   </v-sheet>
@@ -23,15 +23,42 @@ export default {
   data: function() {
     return {
       items: [
-        '초중고',
-        '수능',
-        '대학교',
-        '대학원',
-        '취업',
-        '공무원시험',
-        '자격증',
-        '어학',
-        '기타',
+        {
+          name: '초중고',
+          value: 1,
+        },
+        {
+          name: '수능',
+          value: 2,
+        },
+        {
+          name: '대학교', 
+          value: 3
+        },
+        {
+          name: '대학원',
+          value: 4,
+        },
+        {
+          name: '취업',
+          value: 5,
+        },
+        {
+          name: '공무원시험',
+          value: 6
+        },
+        {
+          name: '자격증',
+          value: 7,
+        },
+        {
+          name: '어학',
+          value: 8,
+        },
+        {
+          name: '기타',
+          value: 9,
+        },
       ],
     };
   },
@@ -39,6 +66,10 @@ export default {
     goRouting() {
       console.log('성공!!');
     },
+    sendCategory(i) {
+        // 부모로 카테고리 정보 보냄. 
+        this.$emit('categoryName', i);
+    }
   },
 };
 </script>
