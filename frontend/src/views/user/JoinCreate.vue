@@ -32,58 +32,67 @@
         </div>
       </v-form> -->
     <v-container class="joinForm">
-      <v-row>
-        <v-col cols="4" class="formLetter">
-          아이디(이메일)
-        </v-col>
-        <v-col cols="7"><input-bar></input-bar></v-col>
-        <v-col cols="1"></v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="4" class="formLetter">닉네임</v-col>
-        <v-col cols="7">
-          <input-bar
-            :placeholder="'8자 이내로 입력해주세요.'"
-            @pass-input="getNickname"
-          >
-          </input-bar>
-        </v-col>
-        <v-col cols="1">
-          <div @click="duplChk">
-            <app-btn-middle
-              class="inBox"
-              :btnColor="'#673fb4'"
-              :btnName="'중복체크'"
-              :btnNameColor="'#ffffff'"
+      <v-form ref="form" lazy-validation>
+        <v-row>
+          <v-col cols="4" class="formLetter">
+            아이디(이메일)
+          </v-col>
+          <v-col cols="7">
+            <input-bar :isDisabled="true" :placeholder="email"></input-bar>
+          </v-col>
+          <v-col cols="1"></v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="4" class="formLetter">닉네임</v-col>
+          <v-col cols="7">
+            <input-bar
+              :placeholder="'8자 이내로 입력해주세요.'"
+              :rules="nicknameRules"
+              @pass-input="getNickname"
             >
-            </app-btn-middle>
-          </div>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="4" class="formLetter" v-model="password">비밀번호</v-col>
-        <v-col cols="7">
-          <input-bar
-            :placeholder="'문자, 숫자 8자리 이상입니다.'"
-            :type="'password'"
-            @pass-input="getPassword"
+            </input-bar>
+          </v-col>
+          <v-col cols="1">
+            <div @click="duplChk">
+              <app-btn-middle
+                class="inBox"
+                :btnColor="'#673fb4'"
+                :btnName="'중복체크'"
+                :btnNameColor="'#ffffff'"
+                :disabled="!isValidNickname"
+              >
+              </app-btn-middle>
+            </div>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="4" class="formLetter" v-model="password">비밀번호</v-col>
+          <v-col cols="7">
+            <!-- <v-text-field ref="password" :rules="passwordRules"></v-text-field> -->
+            <input-bar
+              :placeholder="'문자, 숫자 8자리 이상입니다.'"
+              :rules="passwordRules"
+              :type="'password'"
+              @pass-input="getPassword"
+            >
+            </input-bar>
+          </v-col>
+          <v-col cols="1"></v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="4" class="formLetter" v-model="passwordConfirm"
+            >비밀번호 확인</v-col
           >
-          </input-bar>
-        </v-col>
-        <v-col cols="1"></v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="4" class="formLetter" v-model="passwordConfirm"
-          >비밀번호 확인</v-col
-        >
-        <v-col cols="7">
-          <input-bar
-            :placeholder="'다시 한 번 더 입력해주세요.'"
-            :type="'password'"
-          ></input-bar>
-        </v-col>
-        <v-col cols="1"></v-col>
-      </v-row>
+          <v-col cols="7">
+            <input-bar
+              :placeholder="'다시 한 번 더 입력해주세요.'"
+              :rules="passwordConfirmRules"
+              :type="'password'"
+            ></input-bar>
+          </v-col>
+          <v-col cols="1"></v-col>
+        </v-row>
+      </v-form>
     </v-container>
     <div style="text-align:center;">
       <div class="oneBtn" @click="$router.push('/join/join-auth')">
@@ -93,14 +102,19 @@
           :btnNameColor="'#424242'"
         ></app-btn-middle>
       </div>
-      <div class="oneBtn" @click="$router.push('/join/join-complete')">
+      <div class="oneBtn" @click="joinRequest">
         <app-btn-middle
+          :disabled="
+            isMounted && (!isAllValid || !isduplComplete || !isValidNickname)
+          "
           :btnColor="'#424242'"
           :btnName="'가입하기'"
           :btnNameColor="'white'"
         ></app-btn-middle>
       </div>
     </div>
+    <!-- <v-row v-if="isMounted"> isAllValid: {{ isAllValid }} </v-row>
+    <v-row> isduplComplete: {{ isduplComplete }} </v-row> -->
   </div>
 </template>
 
@@ -115,33 +129,101 @@ export default {
     'input-bar': InputBar,
     'app-btn-middle': AppBtnMiddle,
   },
+  created: function() {
+    // console.log(this.$route.query.emailF);
+    // console.log(this.$route.query.emailB);
+    let emailF = this.$route.query.emailF;
+    let emailB = this.$route.query.emailB;
+    this.email = emailF + '@' + emailB;
+  },
+  mounted: function() {
+    this.isMounted = true;
+  },
   data: function() {
     return {
       email: '',
-      nickname: '',
+      userNickname: '',
       password: '',
       passwordConfirm: '',
+      isduplComplete: false,
+      isValidNickname: false,
+      isMounted: false,
+      // isAllValid: false,
+      nicknameRules: [
+        // (v) => v == null,
+        (v) => !!v || '닉네임을 입력해주세요.',
+        (v) => (v && v.length <= 8) || '닉네임은 8자 이하로 입력해주세요.',
+      ],
       passwordRules: [
         (v) => !!v || '비밀번호를 입력해주세요.',
         (v) => (v && v.length >= 8) || '비밀번호는 8자 이상으로 입력해주세요.',
-        (v) => /(?=.*[A-Za-z])/.test(v) || '문자도 포함해볼까요?',
-        (v) => /(?=.*\d)/.test(v) || '숫자를 꼭 포함해야 해요!',
+        (v) => /(?=.*[A-Za-z])/.test(v) || '문자와 숫자를 꼭 포함해주세요.',
+        (v) => /(?=.*\d)/.test(v) || '문자와 숫자를 꼭 포함해주세요.',
+      ],
+      passwordConfirmRules: [
+        (v) => !!v || '비밀번호를 입력해주세요.',
+        (v) => v == this.password || '비밀번호와 일치해야해요.',
       ],
     };
   },
+  computed: {
+    isAllValid: function() {
+      if (this.$refs.form.validate()) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+  },
+  watch: {
+    userNickname: function() {
+      if (this.userNickname == 0 || this.userNickname.length > 8) {
+        this.isValidNickname = false;
+        this.isduplComplete = false;
+        // this.isAllValid = false;
+      } else {
+        this.isValidNickname = true;
+        this.isduplComplete = false;
+        // this.isAllValid = false;
+      }
+    },
+  },
   methods: {
     getNickname: function(value) {
-      this.nickname = value;
+      this.userNickname = value;
     },
     getPassword: function(value) {
       this.password = value;
     },
+    joinRequest: function() {
+      if (this.isAllValid) {
+        this.$router.push('/join/join-complete');
+      }
+      // if (this.$refs.form.validate()) {
+      //   alert(this.$refs.form.validate());
+      // } else {
+      //   alert(this.$refs.form.validate());
+      // }
+    },
     duplChk: function() {
-      axios
-        .get('http://localhost:9999/user/nickname', this.nickname)
-        .then((response) => {
-          console.log(response);
-        });
+      if (this.isValidNickname) {
+        axios
+          .get(
+            'http://localhost:9999/user/nickname?userNickname=' +
+              this.userNickname
+          )
+          .then((response) => {
+            if (response.data.isPresent) {
+              alert('이미 존재하는 닉네임입니다.');
+            } else {
+              alert('사용할 수 있는 닉네임입니다.');
+              this.isduplComplete = true;
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     },
   },
 };
