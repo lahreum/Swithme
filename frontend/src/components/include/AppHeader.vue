@@ -155,13 +155,19 @@
               <v-row>
                 <v-col class="middleLetter formLetter" cols="3">이메일</v-col>
                 <v-col cols="9"
-                  ><input-bar v-model="email" placeholder="이메일"></input-bar
+                  ><input-bar
+                    @pass-input="getEmail"
+                    placeholder="이메일"
+                  ></input-bar
                 ></v-col>
               </v-row>
               <v-row>
                 <v-col class="middleLetter formLetter" cols="3">비밀번호</v-col>
                 <v-col cols="9"
-                  ><input-bar v-model="pw" placeholder="비밀번호"></input-bar
+                  ><input-bar
+                    @pass-input="getPw"
+                    placeholder="비밀번호"
+                  ></input-bar
                 ></v-col>
               </v-row>
             </v-container>
@@ -244,20 +250,7 @@ export default {
   created() {
     if (storage.getItem("jwt-auth-token")) {
       this.isLogin = true;
-      axios
-        .create({
-          headers: {
-            "jwt-auth-token": storage.getItem("jwt-auth-token"),
-          },
-        })
-        .get("user")
-        .then((res) => {
-          this.userInfo = res.data.data;
-          console.log("무야호", this.userInfo);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      this.getUserInfo(storage.getItem("jwt-auth-token"));
     }
   },
   methods: {
@@ -278,14 +271,52 @@ export default {
     openLogin() {
       this.dialog = true;
     },
+    getUserInfo(token) {
+      axios
+        .create({
+          headers: {
+            "jwt-auth-token": token,
+          },
+        })
+        .get("user")
+        .then((res) => {
+          this.userInfo = res.data.data;
+          console.log("무야호", this.userInfo);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    // wrongPw(){
+    //   this.clearInput = '',
+    // },
     login() {
       console.log("로그인버튼눌럿다!");
-      axios.post("user/login");
+
+      var params = new URLSearchParams();
+      params.append("userId", this.email);
+      params.append("userPassword", this.pw);
+      axios
+        .post("user/login", params)
+        .then((res) => {
+          console.log(res);
+          if (res.data.success === true) {
+            this.dialog = false;
+            this.isLogin = true;
+            this.getUserInfo(res.headers["jwt-auth-token"]);
+          } else {
+            alert("비번틀림");
+          }
+        })
+        .catch((err) => console.log(err));
       console.log(this.email);
       console.log(this.pw);
     },
-    fun() {
-      console.log(this.pw);
+    getEmail(parm) {
+      this.email = parm;
+    },
+    getPw(parm) {
+      this.pw = parm;
     },
   },
 };
