@@ -59,7 +59,7 @@ import SelectBox from '@/components/common/SelectBox.vue';
 import AppBtnSmall from '@/components/common/AppBtnSmall.vue';
 import "./community.css";
 import "../user/user.css";
-
+const storage = window.sessionStorage;
 export default {
     components: {
         CategoryNav,
@@ -70,7 +70,7 @@ export default {
       return {
         page: 1,
         categoryNum: 1,
-        categoryName: '',
+        categoryName: '초중고',
         boardList: [
           
         ],
@@ -79,25 +79,35 @@ export default {
     created() {
       this.getBoardList(); 
     },
+    watch: {
+      categoryNum: function() {
+        this.getBoardList();
+      }
+    },
     methods: {
-      getCategory: function(name, value){
-        this.categoryName = name; 
-        this.categoryNum = value;
+      getCategory: function(value){
+        this.categoryName = value.name; 
+        this.categoryNum = value.value;
       },
-      getBoardList() {  // 헤더담기 -> 토큰 올려서 커뮤니티 보드에 요청하기.
-        // this.$Axios
-        // .get(`community/board?categoryId=`+ this.categoryNum)
-        // .then((res) => {
-        //   if(Object.keys(res.data.boardList).length > 0) {
-        //     console.log('게시글 목록은 일단 들어옴');
-        //     this.boardList = res.data.boardList;
-        //   } else {
-        //     alert('게시글 목록 로딩 실패');
-        //   }
-        // })
-        // .catch((error) => {
-        //   console.log(error);
-        // })
+      getBoardList() { 
+        this.$Axios
+        .get(`community/board?categoryId=`+ this.categoryNum, {
+          headers: {
+            "Content-Type": "application/json",
+            "jwt-auth-token": storage.getItem("jwt-auth-token"),
+          }
+        })
+        .then((res) => {
+          if(Object.keys(res.data.boardList).length > 0) {
+            console.log('게시글 목록은 일단 들어옴');
+            this.boardList = res.data.boardList;
+          } else {
+            this.boardList = [];
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        })
       }
     },
 }

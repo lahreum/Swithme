@@ -9,7 +9,7 @@
         <div @click="toggle"><div
           class="category-item"
           :class="{ 'category-active': active, 'category-default': !active }"
-          @click="sendCategory(i.name, i.value)"
+          @click="sendCategory(i)"
         >
           {{ i.name }}
         </div></div>
@@ -68,7 +68,7 @@ export default {
     },
     sendCategory(i) {
         // 부모로 카테고리 정보 보냄. 
-        this.$emit('categoryName', i);
+        this.$emit('categoryName',i);
     }
   },
 };
