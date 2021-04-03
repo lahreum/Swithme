@@ -55,14 +55,14 @@
                 카테고리
               </v-col>
               <v-col cols="9">
+                <!-- :error-messages="errors" -->
+                <!-- v-model="select" -->
+                <!-- data-vv-name="select" -->
                 <v-select
-                  v-model="select"
                   :items="items"
-                  :error-messages="errors"
                   outlined
                   color="black"
                   label="스터디를 대표할수 있는 카테고리를 선택하세요."
-                  data-vv-name="select"
                   required
                 ></v-select>
               </v-col>
