@@ -79,7 +79,7 @@ export default {
 
                       // 집중 여부 판단을 위해 이미지를 인공지능 서버로 전송
                       axios
-                        .post('https://j4b103.p.ssafy.io:8000/predict', data)
+                        .post('https://j4b103.p.ssafy.io/ai/predict', data)
                         .then((response) => {
                           // 집중 여부 판단 결과
                           console.log(response);
