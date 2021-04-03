@@ -53,8 +53,3 @@ def predict(request):
     image_bytes = base64.b64encode(image_bytes)
 
     return HttpResponse(image_bytes, content_type='application/octet-stream')
-
-
-@csrf_exempt
-def hello(request):
-    return HttpResponse('hello')
