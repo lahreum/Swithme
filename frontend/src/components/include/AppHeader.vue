@@ -177,11 +177,13 @@
                   :btnNameColor="'white'"
                 ></app-btn-large>
               </div>
-              <a href="http://localhost:9999/oauth/google"><v-img
-                @click="dialog = false"
-                src="@/assets/img/google_long.png"
-                width="380"
-              ></v-img></a>
+              <a href="http://localhost:9999/oauth/google"
+                ><v-img
+                  @click="dialog = false"
+                  src="@/assets/img/google_long.png"
+                  width="380"
+                ></v-img
+              ></a>
               <v-img
                 @click="dialog = false"
                 src="@/assets/img/naver_long.png"
@@ -219,7 +221,6 @@
 import "@/views/user/user.css";
 import AppBtnLarge from "@/components/common/AppBtnLarge.vue";
 import InputBar from "@/components/common/InputBar.vue";
-import GoogleBtn from "@/components/common/GoogleBtn.vue";
 // import axios from "axios";
 
 const storage = window.sessionStorage;
@@ -228,7 +229,6 @@ export default {
   components: {
     "app-btn-large": AppBtnLarge,
     "input-bar": InputBar,
-    "google-btn": GoogleBtn,
   },
   data: function() {
     return {
@@ -260,7 +260,7 @@ export default {
     //     console.log(response);
     //   });
     // axios
-    //   .get("http://localhost:9999/user", {
+    //   .get("user", {
     //     headers: {
     //       Authorization: `Bearer ${storage.getItem("jwt-auth-token")}`,
     //     },
@@ -274,7 +274,7 @@ export default {
     //   .create({
     //     headers: { "jwt-auth-token": storage.getItem("jwt-auth-token") },
     //   })
-    //   .get("http://localhost:9999/user")
+    //   .get("user")
     //   .then((response) => {
     //     console.log(response);
     //   });
