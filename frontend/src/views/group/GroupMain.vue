@@ -62,7 +62,7 @@
               v-for="(group, index) in AllGroup"
               :key="index"
               ><GroupInfo
-                :src="group.src"
+                :src="'data:image/png;base64,' + group.src"
                 :groupName="group.groupName"
                 :groupDesc="group.groupNotice"
                 :groupCnt="group.groupCurMemberCount"
@@ -76,7 +76,7 @@
               v-for="(group, index) in MyGroup"
               :key="index"
               ><GroupInfo
-                :src="group.src"
+                :src="'data:image/png;base64,' + group.src"
                 :groupName="group.groupName"
                 :groupDesc="group.groupNotice"
                 :groupCnt="group.groupCurMemberCount"
@@ -90,7 +90,7 @@
               v-for="(group, index) in HotGroup"
               :key="index"
               ><GroupInfo
-                :src="group.src"
+                :src="'data:image/png;base64,' + group.src"
                 :groupName="group.groupName"
                 :groupDesc="group.groupNotice"
                 :groupCnt="group.groupCurMemberCount"
@@ -104,7 +104,7 @@
               v-for="(group, index) in NewGroup"
               :key="index"
               ><GroupInfo
-                :src="group.src"
+                :src="'data:image/png;base64,' + group.src"
                 :groupName="group.groupName"
                 :groupDesc="group.groupNotice"
                 :groupCnt="group.groupCurMemberCount"
@@ -118,7 +118,7 @@
               v-for="(group, index) in SearchedGroup"
               :key="index"
               ><GroupInfo
-                :src="group.src"
+                :src="'data:image/png;base64,' + group.src"
                 :groupName="group.groupName"
                 :groupDesc="group.groupNotice"
                 :groupCnt="group.groupCurMemberCount"
@@ -729,6 +729,10 @@ export default {
         .then((res) => {
           console.log("내가잇는그룹", res);
           this.MyGroup = res.data.groupListThatIAm;
+          for (var i = 0; i < this.MyGroup.length; i++) {
+            this.MyGroup[i]["src"] =
+              res.data.groupProfileList[i].groupProfileImg;
+          }
         });
       console.log(this.MyGroup);
       console.log(this.caseNum);
@@ -751,13 +755,13 @@ export default {
       // var month = ("0" + (1 + date.getMonth())).slice(-2);
       // var day = ("0" + date.getDate()).slice(-2);
       for (var i = 0; i < this.groups.length; i++) {
-        var groupMadeDate = this.groups[i].date;
+        var groupMadeDate = this.groups[i].groupCreatedDate;
         var groupDate = new Date(groupMadeDate.substring(0, 10));
-        console.log("그룹만들어진날짜==", groupDate);
-        console.log(
-          "오늘날짜 빼기 그룹만들어진날짜",
-          (Today.getTime() - groupDate.getTime()) / 1000 / 60 / 60 / 24
-        );
+        // console.log("그룹만들어진날짜==", groupDate);
+        // console.log(
+        //   "오늘날짜 빼기 그룹만들어진날짜",
+        //   (Today.getTime() - groupDate.getTime()) / 1000 / 60 / 60 / 24
+        // );
         if ((Today.getTime() - groupDate.getTime()) / 1000 / 60 / 60 / 24 < 3) {
           this.NewGroup.push(this.groups[i]);
         }
@@ -792,7 +796,10 @@ export default {
       .then((res) => {
         console.log("그룹메인created될때", res);
         this.groups = res.data.groupList;
-
+        for (var i = 0; i < this.groups.length; i++) {
+          this.groups[i]["src"] = res.data.groupProfileList[i].groupProfileImg;
+        }
+        console.log(this.groups);
         this.AllGroup = this.groups.slice(0, 12);
       })
       .catch((err) => {

@@ -28,6 +28,8 @@
                 hidden
                 @change="onChangeImages"
               />
+              <!-- <v-file-input v-model="fileList" @change="onChangeImages">
+              </v-file-input> -->
             </v-col>
             <v-row
               style="height:150px; width:100%; border-bottom: 1px solid black"
@@ -219,6 +221,7 @@ export default {
       groupNotice: "",
       groupGoalDate: "",
       groupGoalTitle: "",
+      fileList: [],
       navInfo: [
         "sample2.png",
         "그룹",
@@ -248,25 +251,56 @@ export default {
       console.log(e.target.files);
       const file = e.target.files[0]; // Get first index in files
       this.imageUrl = URL.createObjectURL(file); // Create File URL
+      this.fileList = e.target.files;
     },
     ToGroupMain() {
-      var params = new URLSearchParams();
-      params.append("groupCategory", this.items.indexOf(this.groupCategory));
-      params.append("groupMaxMemberCount", this.groupMaxMemberCount);
-      params.append("groupGoalDate", this.groupGoalDate);
-      params.append("groupNotice", this.groupNotice);
-      params.append("groupName", this.groupName);
-      params.append("groupPassword", this.groupPassword);
+      // params.append("groupCategory", this.items.indexOf(this.groupCategory));
+      // params.append("groupMaxMemberCount", this.groupMaxMemberCount);
+      // params.append("groupGoalDate", this.groupGoalDate);
+      // params.append("groupGoalTitle", this.groupGoalTitle);
+      // params.append("groupNotice", this.groupNotice);
+      // params.append("groupName", this.groupName);
+      // params.append("groupPassword", this.groupPassword);
+
       axios
         .create({
           headers: {
             "jwt-auth-token": storage.getItem("jwt-auth-token"),
           },
         })
-        .post("group", params)
+        .post("group", {
+          groupCategory: this.items.indexOf(this.groupCategory) + 1,
+          groupMaxMemberCount: this.groupMaxMemberCount,
+          groupGoalDate: this.groupGoalDate,
+          groupGoalTitle: this.groupGoalTitle,
+          groupNotice: this.groupNotice,
+          groupName: this.groupName,
+          groupPasswor: this.groupPassword,
+        })
         .then((res) => {
           console.log(res);
-          this.$router.push("/");
+
+          // console.log("파일리스트", this.fileList);
+          // console.log("받아온그룹아이디", res.data.createdGroupId);
+          console.log(this.fileList);
+          var params = new FormData();
+          params.append("groupId", res.data.createdGroupId);
+          // if (this.fileList.length === 0){
+          //   this.fileList[0] =
+          // }
+          params.append("file", this.fileList[0]);
+
+          console.log(this.fileList[0]);
+          axios
+            .create({
+              headers: {
+                "Content-Type": "multipart/form-data",
+                "jwt-auth-token": storage.getItem("jwt-auth-token"),
+              },
+            })
+            .put("group/profile-img", params)
+            .then((res) => console.log("해치웠나??", res));
+          // this.$router.push("/");
         });
     },
   },
