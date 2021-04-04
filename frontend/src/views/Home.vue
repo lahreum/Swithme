@@ -35,21 +35,23 @@
 </template>
 
 <script>
-import AppHeader from '../components/include/AppHeader.vue';
-import HomeFirst from '../components/include/HomeFirst.vue';
-import HomeSecond from '../components/include/HomeSecond.vue';
-import HomeThird from '../components/include/HomeThird.vue';
-import HomeFourth from '../components/include/HomeFourth.vue';
-import StudyBtn from '../components/common/StudyBtn.vue';
+import AppHeader from "../components/include/AppHeader.vue";
+import HomeFirst from "../components/include/HomeFirst.vue";
+import HomeSecond from "../components/include/HomeSecond.vue";
+import HomeThird from "../components/include/HomeThird.vue";
+import HomeFourth from "../components/include/HomeFourth.vue";
+import StudyBtn from "../components/common/StudyBtn.vue";
+// import axios from "axios";
+// const storage = window.sessionStorage;
 
 export default {
   components: {
-    'app-header': AppHeader,
-    'home-first': HomeFirst,
-    'home-second': HomeSecond,
-    'home-third': HomeThird,
-    'home-fourth': HomeFourth,
-    'study-btn': StudyBtn,
+    "app-header": AppHeader,
+    "home-first": HomeFirst,
+    "home-second": HomeSecond,
+    "home-third": HomeThird,
+    "home-fourth": HomeFourth,
+    "study-btn": StudyBtn,
   },
   data() {
     return {
@@ -59,6 +61,7 @@ export default {
       },
       isDarkmode: true,
       isTop: true,
+      userInfo: [],
     };
   },
   methods: {
@@ -67,26 +70,28 @@ export default {
     },
     onLeave(index, nextIndex, direction) {
       // isTop
-      if (index.index == 0 && direction == 'down') {
+      if (index.index == 0 && direction == "down") {
         this.isTop = false;
-      } else if (index.index == 1 && direction == 'up') {
+      } else if (index.index == 1 && direction == "up") {
         this.isTop = true;
       }
 
       // isDarkmode
       if (
-        (index.index == 0 && direction == 'down') ||
-        (index.index == 3 && direction == 'up')
+        (index.index == 0 && direction == "down") ||
+        (index.index == 3 && direction == "up")
       ) {
         this.isDarkmode = false;
       } else if (
-        (index.index == 1 && direction == 'up') ||
-        (index.index == 2 && direction == 'down')
+        (index.index == 1 && direction == "up") ||
+        (index.index == 2 && direction == "down")
       ) {
         this.isDarkmode = true;
       }
     },
   },
+
+  created() {},
 };
 </script>
 

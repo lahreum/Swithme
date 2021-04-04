@@ -5,7 +5,12 @@
     <v-col class="pg-item pg-order-1" align-self="center">
       <v-row no-gutters justify="center" class="pg-order-1">
         <v-avatar size="60" :color="isActive == 1 ? '#673fb4' : '#d9d9d9'">
-          <span :class="{ 'active-num': (isActive == 1), 'default-num': !(isActive == 1) }">
+          <span
+            :class="{
+              'active-num': isActive == 1,
+              'default-num': !(isActive == 1),
+            }"
+          >
             1
           </span>
         </v-avatar>
@@ -24,7 +29,12 @@
     <v-col class="pg-item pg-order-2" align-self="center">
       <v-row no-gutters justify="center">
         <v-avatar size="50" :color="isActive == 2 ? '#673fb4' : '#d9d9d9'">
-          <span :class="{ 'active-num': (isActive == 2), 'default-num': !(isActive == 2) }">
+          <span
+            :class="{
+              'active-num': isActive == 2,
+              'default-num': !(isActive == 2),
+            }"
+          >
             2
           </span>
         </v-avatar>
@@ -43,7 +53,12 @@
     <v-col class="pg-item pg-order-3" align-self="center">
       <v-row no-gutters justify="center">
         <v-avatar size="50" :color="isActive == 3 ? '#673fb4' : '#d9d9d9'">
-          <span :class="{ 'active-num': (isActive == 3) , 'default-num': (isActive != 3) }">
+          <span
+            :class="{
+              'active-num': isActive == 3,
+              'default-num': isActive != 3,
+            }"
+          >
             3
           </span>
         </v-avatar>
@@ -62,7 +77,12 @@
     <v-col class="pg-item pg-order-4" align-self="center">
       <v-row no-gutters justify="center">
         <v-avatar size="50" :color="isActive == 4 ? '#673fb4' : '#d9d9d9'">
-          <span :class="{ 'active-num': (isActive == 4) , 'default-num': (isActive != 4) }">
+          <span
+            :class="{
+              'active-num': isActive == 4,
+              'default-num': isActive != 4,
+            }"
+          >
             4
           </span>
         </v-avatar>
@@ -76,16 +96,13 @@
 export default {
   data: function() {
     return {
-      isActive: 1,    // 1단계:1,  2단계:2, 3단계:3, 4단계:4
+      isActive: 1, // 1단계:1,  2단계:2, 3단계:3, 4단계:4
     };
   },
   methods: {
-    moveForward() {
-      this.isActive = this.isActive + 1;
+    moveStep(value) {
+      this.isActive = value;
     },
-    moveBackward() {
-      this.isActive = this.isActive - 1;
-    }
   },
 };
 </script>
@@ -94,7 +111,7 @@ export default {
 .pg-container {
   padding-left: 200px;
   padding-right: 200px;
-  padding-top:80px;
+  padding-top: 80px;
   padding-bottom: 20px;
 }
 .pg-word {

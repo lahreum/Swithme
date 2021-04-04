@@ -5,7 +5,7 @@
       <v-row>
         <v-col cols="2"></v-col>
         <v-col>
-          <h1 style="text-align:center">그룹 정보 수정</h1>
+          <h1 style="text-align:center">그룹 만들기</h1>
           <hr />
           <v-row align-content="center">
             <v-col style="margin-bottom:50px;" align="center">
@@ -17,7 +17,7 @@
               <v-img
                 class="groupImgUpload"
                 v-else
-                :src="group.groupImg"
+                src="https://ifh.cc/g/3qRFoS.png"
               ></v-img>
               <v-btn type="button" @click="onClickImageUpload"
                 >이미지 업로드</v-btn
@@ -28,6 +28,8 @@
                 hidden
                 @change="onChangeImages"
               />
+              <!-- <v-file-input v-model="fileList" @change="onChangeImages">
+              </v-file-input> -->
             </v-col>
             <v-row
               style="height:150px; width:100%; border-bottom: 1px solid black"
@@ -36,8 +38,15 @@
               <v-col cols="3" style="font-size: 2rem;">
                 그룹이름
               </v-col>
-              <v-col cols="9" style="font-size: 2rem;">
-                {{ group.name }}
+              <v-col cols="9">
+                <v-text-field
+                  :counter="10"
+                  outlined
+                  color="black"
+                  label="그룹이름을 입력하세요"
+                  required
+                  v-model="groupName"
+                ></v-text-field>
               </v-col>
             </v-row>
 
@@ -48,8 +57,18 @@
               <v-col cols="3" style="font-size: 2rem;">
                 카테고리
               </v-col>
-              <v-col cols="9" style="font-size: 2rem;">
-                {{ group.category }}
+              <v-col cols="9">
+                <!-- :error-messages="errors" -->
+                <!-- v-model="select" -->
+                <!-- data-vv-name="select" -->
+                <v-select
+                  :items="items"
+                  outlined
+                  color="black"
+                  label="스터디를 대표할수 있는 카테고리를 선택하세요."
+                  required
+                  v-model="groupCategory"
+                ></v-select>
               </v-col>
             </v-row>
 
@@ -66,7 +85,8 @@
                   outlined
                   label="최대그룹원수를 지정하세요"
                   required
-                  :value="group.total"
+                  min="1"
+                  v-model="groupMaxMemberCount"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -106,6 +126,7 @@
                   outlined
                   label="그룹 비밀번호를 입력하세요"
                   required
+                  v-model="groupPassword"
                 ></v-text-field
               ></v-col>
             </v-row>
@@ -122,10 +143,11 @@
                   outlined
                   :counter="50"
                   placeholder="이 그룹을 나타내는 소개글을 멋지게 써주세요."
-                  :value="group.info"
+                  v-model="groupNotice"
                 ></v-textarea>
               </v-col>
             </v-row>
+
             <v-row
               style="height:200px;width:100%; border-bottom: 1px solid black"
               align="center"
@@ -139,15 +161,15 @@
                   outlined
                   label="날짜를 등록하세요"
                   required
-                  :value="group.DdayDate"
+                  v-model="groupGoalDate"
                 ></v-text-field>
                 <v-text-field
                   :counter="20"
                   outlined
                   color="black"
                   label="D-Day제목을 등록하세요"
-                  :value="group.DdayName"
                   required
+                  v-model="groupGoalTitle"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -166,7 +188,7 @@
             <div style="display:inline-block;margin:5%" @click="ToGroupMain">
               <app-btn-middle
                 :btnColor="'#424242'"
-                :btnName="'수정하기'"
+                :btnName="'만들기'"
                 :btnNameColor="'white'"
               ></app-btn-middle>
             </div>
@@ -180,8 +202,10 @@
 </template>
 
 <script>
-import AppBtnMiddle from "../components/common/AppBtnMiddle.vue";
-import MiddleNav from "../components/include/MiddleNav.vue";
+import AppBtnMiddle from "@/components/common/AppBtnMiddle.vue";
+import MiddleNav from "@/components/include/MiddleNav.vue";
+import axios from "axios";
+const storage = window.sessionStorage;
 
 export default {
   components: {
@@ -190,6 +214,14 @@ export default {
   },
   data() {
     return {
+      groupName: "",
+      groupCategory: "",
+      groupMaxMemberCount: 0,
+      groupPassword: "",
+      groupNotice: "",
+      groupGoalDate: "",
+      groupGoalTitle: "",
+      fileList: [],
       navInfo: [
         "sample2.png",
         "그룹",
@@ -197,18 +229,18 @@ export default {
         "목표로 가는 길이 덜 힘들고, 더욱 든든해질 거예요",
       ],
       imageUrl: null,
-      items: ["정보처리기사", "토익", "임용고시", "공무원"],
+      items: [
+        "초중고",
+        "수능",
+        "대학교",
+        "대학원",
+        "취업",
+        "공무원시험",
+        "자격증",
+        "어학",
+        "기타",
+      ],
       radios: null,
-      group: {
-        groupImg: "https://ifh.cc/g/yuecDg.jpg",
-        name: "정처기합격가즈아",
-        category: "자격증",
-        total: 10,
-        public: true,
-        info: "정처기 원콤을 목표로 하는 스터디입니다.",
-        DdayDate: "2021-04-25",
-        DdayName: "정보처리기사",
-      },
     };
   },
   methods: {
@@ -216,12 +248,58 @@ export default {
       this.$refs.imageInput.click();
     },
     onChangeImages(e) {
-      console.log(e.target.files);
+      // console.log(e.target.files);
       const file = e.target.files[0]; // Get first index in files
       this.imageUrl = URL.createObjectURL(file); // Create File URL
+      this.fileList = e.target.files;
     },
     ToGroupMain() {
-      this.$router.push("/group");
+      // params.append("groupCategory", this.items.indexOf(this.groupCategory));
+      // params.append("groupMaxMemberCount", this.groupMaxMemberCount);
+      // params.append("groupGoalDate", this.groupGoalDate);
+      // params.append("groupGoalTitle", this.groupGoalTitle);
+      // params.append("groupNotice", this.groupNotice);
+      // params.append("groupName", this.groupName);
+      // params.append("groupPassword", this.groupPassword);
+
+      axios
+        .create({
+          headers: {
+            "jwt-auth-token": storage.getItem("jwt-auth-token"),
+          },
+        })
+        .post("group", {
+          groupCategory: this.items.indexOf(this.groupCategory) + 1,
+          groupMaxMemberCount: this.groupMaxMemberCount,
+          groupGoalDate: this.groupGoalDate,
+          groupGoalTitle: this.groupGoalTitle,
+          groupNotice: this.groupNotice,
+          groupName: this.groupName,
+          groupPasswor: this.groupPassword,
+        })
+        .then((res) => {
+          console.log(res);
+
+          // console.log("파일리스트", this.fileList);
+          // console.log("받아온그룹아이디", res.data.createdGroupId);
+          // console.log(this.fileList);
+          var params = new FormData();
+          params.append("groupId", res.data.createdGroupId);
+
+          params.append("file", this.fileList[0]);
+
+          // console.log(this.fileList[0]);
+          axios
+            .create({
+              headers: {
+                "Content-Type": "multipart/form-data",
+                "jwt-auth-token": storage.getItem("jwt-auth-token"),
+              },
+            })
+            .put("group/profile-img", params)
+            .then((res) => console.log("해치웠나??", res));
+          // this.$router.push("/");
+        });
     },
   },
 };

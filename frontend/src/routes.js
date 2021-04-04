@@ -4,12 +4,12 @@ import MyPageAccess from '@/views/MyPageAccess.vue';
 import MyPageModify from '@/views/MyPageModify.vue';
 import MyPage from '@/views/MyPage.vue';
 import Ranking from '@/views/Ranking.vue';
-import GroupMain from '@/views/GroupMain.vue';
-import GroupCreate from '@/views/GroupCreate.vue';
-import GroupDetail from '@/views/GroupDetail.vue';
-import GroupRanking from '@/views/GroupRanking.vue';
-import GroupAttendance from '@/views/GroupAttendance.vue';
-import GroupModify from '@/views/GroupModify.vue';
+import GroupMain from '@/views/group/GroupMain.vue';
+import GroupCreate from '@/views/group/GroupCreate.vue';
+import GroupDetail from '@/views/group/GroupDetail.vue';
+import GroupRanking from '@/views/group/GroupRanking.vue';
+import GroupAttendance from '@/views/group/GroupAttendance.vue';
+import GroupModify from '@/views/group/GroupModify.vue';
 import Home from '@/views/Home.vue';
 import Timer from '@/views/timer/Timer.vue';
 import Join from '@/views/user/Join.vue';
@@ -17,6 +17,7 @@ import JoinAgree from '@/views/user/JoinAgree.vue';
 import JoinAuth from '@/views/user/JoinAuth.vue';
 import JoinCreate from '@/views/user/JoinCreate.vue';
 import JoinComplete from '@/views/user/JoinComplete.vue';
+import JoinLogin from '@/views/user/JoinLogin.vue';
 import Token from '@/views/social/Token.vue';
 import Nickname from '@/views/social/Nickname.vue';
 import NoAccess from '@/views/NoAccess.vue';
@@ -89,6 +90,11 @@ export default [
         path: 'join-complete',
         name: 'JoinComplete',
         component: JoinComplete,
+      },
+      {
+        path: 'join-login',
+        name: 'JoinLogin',
+        component: JoinLogin,
       },
     ],
   },

@@ -20,10 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.studywithme.config.CommonMethods;
 import com.studywithme.entity.Board;
+import com.studywithme.entity.Category;
 import com.studywithme.entity.Liked;
 import com.studywithme.entity.Reply;
 import com.studywithme.entity.UserInfo;
 import com.studywithme.repository.BoardRepository;
+import com.studywithme.repository.CategoryRepository;
 import com.studywithme.repository.LikedRepository;
 import com.studywithme.repository.ReplyRepository;
 import com.studywithme.repository.TodoRepository;
@@ -52,6 +54,9 @@ public class CommunityController {
 	
 	@Autowired
 	TodoRepository todoRepository;
+	
+	@Autowired
+	CategoryRepository categoryRepository;
 	
 	
 	@GetMapping("/board")
@@ -93,6 +98,9 @@ public class CommunityController {
 				
 			}
 			result.put("boardDetail",board.get());
+			Optional<Category> category=categoryRepository.findById(board.get().getBoardCategory());
+			if(category.isPresent())
+				result.put("categoryName",category.get().getCategoryName());
 		}
 		else
 			result.put("boardDetail",null);
@@ -144,8 +152,9 @@ public class CommunityController {
 			String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
 			Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 			if(user.isPresent()&&boardBefore.get().getBoardWriter().equals(nickname)) {
-				boardAfter.setBoardWriter(nickname);
-				boardRepository.save(boardAfter);
+				boardBefore.get().setBoardTitle(boardAfter.getBoardTitle());
+				boardBefore.get().setBoardContent(boardAfter.getBoardContent());
+				boardRepository.save(boardBefore.get());
 				
 				result.clear();
 				result.put("success",true);

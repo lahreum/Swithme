@@ -28,6 +28,19 @@
               ><v-icon>mdi-calendar-month</v-icon> 출석부</v-btn
             >
           </v-row>
+          <div style="padding:30px; text-align:center">
+            <v-btn x-large @click="weekMinus" icon
+              ><v-icon>mdi-chevron-left</v-icon></v-btn
+            >
+            <span style="font-size:1.5rem; margin:0 5%"
+              >{{ weekly1.getFullYear() }}년 {{ weekly1.getMonth() + 1 }}월
+              {{ weekly1.getDate() }}일 ~ {{ weekly2.getFullYear() }}년
+              {{ weekly2.getMonth() + 1 }}월 {{ weekly2.getDate() }}일</span
+            >
+            <v-btn x-large @click="weekPlus" icon
+              ><v-icon>mdi-chevron-right</v-icon></v-btn
+            >
+          </div>
           <v-row justify="center" style="margin-bottom:50px;">
             <v-progress-circular
               :rotate="-90"
@@ -86,31 +99,19 @@
 </template>
 
 <script>
-import MiddleNav from "../components/include/MiddleNav.vue";
+import MiddleNav from "@/components/include/MiddleNav.vue";
 export default {
   components: {
     MiddleNav,
   },
   computed: {},
-  created() {
-    var cnt = 0;
-    var i = 0;
-    var j = 0;
 
-    const CountGroupers = this.groupers.length;
-    const a = CountGroupers * 7;
-    for (i = 0; i < CountGroupers; i++) {
-      for (j = 0; j < 7; j++) {
-        if (this.groupers[i].arr[j] === "") {
-          cnt += 1;
-        }
-      }
-    }
-    this.AttendanceRate = parseInt((100 * (a - cnt)) / a);
-    console.log(this.AttendanceRate);
-  },
   data() {
     return {
+      today: new Date(),
+      weekly1: new Date(),
+      weekly2: new Date(),
+      tmp: "",
       AttendanceRate: 0,
       navInfo: [
         "sample2.png",
@@ -208,6 +209,51 @@ export default {
     ToGroupAttendance() {
       this.$router.push("/group-attendance");
     },
+    getWeekly1() {
+      this.weekly1 = new Date(
+        this.today.setDate(this.today.getDate() - this.today.getDay() + 1)
+      );
+      console.log("weekly1", this.weekly1);
+      this.tmp = new Date(this.weekly1);
+      this.weekly2 = new Date(this.tmp.setDate(this.tmp.getDate() + 6));
+    },
+    getWeekly2() {
+      this.tmp = new Date(this.weekly1);
+      this.weekly2 = new Date(this.tmp.setDate(this.tmp.getDate() + 6));
+    },
+
+    weekMinus() {
+      this.tmp = new Date(this.weekly1);
+      this.weekly1 = new Date(
+        this.tmp.setDate(this.tmp.getDate() - 6 - this.tmp.getDay())
+      );
+      this.getWeekly2();
+    },
+    weekPlus() {
+      this.tmp = new Date(this.weekly1);
+      this.weekly1 = new Date(
+        this.tmp.setDate(this.tmp.getDate() + 8 - this.tmp.getDay())
+      );
+      this.getWeekly2();
+    },
+  },
+  created() {
+    var cnt = 0;
+    var i = 0;
+    var j = 0;
+
+    const CountGroupers = this.groupers.length;
+    const a = CountGroupers * 7;
+    for (i = 0; i < CountGroupers; i++) {
+      for (j = 0; j < 7; j++) {
+        if (this.groupers[i].arr[j] === "") {
+          cnt += 1;
+        }
+      }
+    }
+    this.AttendanceRate = parseInt((100 * (a - cnt)) / a);
+    console.log(this.AttendanceRate);
+    this.getWeekly1();
   },
 };
 </script>

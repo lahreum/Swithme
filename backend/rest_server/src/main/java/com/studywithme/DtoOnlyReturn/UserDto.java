@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserDto implements Comparable<UserDto>{
 	private String nickname;
-	private Blob profileImg;
+	private byte[] profileImg;
 	private int todayStudyTime;
 	private boolean isStudying;
 

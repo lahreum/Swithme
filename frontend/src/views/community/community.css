@@ -13,7 +13,7 @@
 .community {
     width:65%;
     margin:0 auto;
-    adding-top:20px;
+    padding-top:20px;
 }
 .lineStyle {
     border: solid 2px #424242;
@@ -24,4 +24,33 @@
 }
 .writeText {
     padding: 10px;
+}
+.communitySection {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 16px;
+}
+.boardTitle {
+    padding-top: 10px;
+    font-size: 20px;
+    font-weight: 600;
+}
+.boardInfo {
+    padding-right: 20px;
+}
+.boardContent {
+    height:200px;
+    padding-top: 20px;
+}
+.heart {
+    padding-top: 100px;
+    float:right;
+    color:#757575;
+}
+.commentInfo {
+    font-size: 20px;
+}
+.registerBtn {
+    color:white;
+    border-radius: 30px;
 }

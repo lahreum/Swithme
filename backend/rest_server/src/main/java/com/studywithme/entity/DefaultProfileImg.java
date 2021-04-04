@@ -2,7 +2,6 @@ package com.studywithme.entity;
 
 import java.sql.Blob;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,21 +18,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Group {
-
+public class DefaultProfileImg {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int groupId;
-	
-	private String groupName;
-	private int groupCategory;
-	private int groupDailyGoal;
-	private String groupPassword;
-	private String groupGoalDate;
-	private int groupMaxMemberCount;
-	@Column(insertable=false)
-	private int groupCurMemberCount;
-	private String groupMasterNickname;
-	private Blob groupProfileImg;
-	private String groupNotice;
+	private int defaultProfileImgId;
+	private Blob defaultProfileImgData;
 }
