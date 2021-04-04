@@ -4,6 +4,11 @@ import createPersistedState from 'vuex-persistedstate';
 
 Vue.use(Vuex);
 
+const state = {
+  awayTime: 0,
+  phoneTime: 0,
+};
+
 export const store = new Vuex.Store({
   // modules,
   plugins: [createPersistedState()],
@@ -12,6 +17,8 @@ export const store = new Vuex.Store({
     host: 'http://localhost:9999/',
     boardDetailId: 0,
     isLogin: false,
+    awayTime: 0,
+  phoneTime: 0,
   },
   getters: {
     /* 로그인한 유저의 정보 */
@@ -30,6 +37,12 @@ export const store = new Vuex.Store({
     getUserIsStudying(state) {
       return state.user.userIsStudying;
     },
+    getAwayTime(state) {
+    return state.awayTime;
+  },
+  getPhoneTime(state) {
+    return state.phoneTime;
+  },
   },
   mutations: {
     LOGIN(state, payload) {
@@ -46,6 +59,12 @@ export const store = new Vuex.Store({
     },
     userInit(state){
       state.user = {};
-    }
+    },
+    setAwayTime(state) {
+    state.awayTime++;
+  },
+  setPhoneTime(state) {
+    state.phoneTime++;
+  },
   },
 });
