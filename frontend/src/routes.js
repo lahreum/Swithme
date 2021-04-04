@@ -27,6 +27,8 @@ import CommunityCreate from '@/views/community/CommunityCreate.vue';
 import CommunityDetail from '@/views/community/CommunityDetail.vue';
 import CommunityModify from '@/views/community/CommunityModify.vue';
 
+const storage = window.sessionStorage;
+
 export default [
   {
     path: '/',
@@ -63,7 +65,7 @@ export default [
         name: 'CommunityModify',
         component: CommunityModify,
       },
-    ]
+    ],
   },
   {
     path: '/join',
@@ -101,6 +103,9 @@ export default [
     path: '/timer',
     name: 'Timer',
     component: Timer,
+    beforeEnter: (to, from, next) => {
+      if (storage.getItem('jwt-auth-token') != null) next();
+    },
   },
   {
     path: '/my-study',
