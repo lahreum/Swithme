@@ -8,7 +8,7 @@
           <v-col cols="3"><v-select
             disabled
             :items="items"
-            :placeholder="category"
+            :placeholder="categoryName"
             outlined
           ></v-select></v-col>
           <v-col cols="7"></v-col>
@@ -46,10 +46,10 @@ const storage = window.sessionStorage;
     },
     data: () => ({
       items: ['초중고', '수능', '대학교',  '대학원', '취업', '공무원시험', '자격증', '어학', '기타'],
-      category: 'ddd',
+      categoryName: '',
       board: {
           boardId: 0,
-          // boardCategory: "",
+          boardCategory: 0,
           boardWriter: "",
           boardTitle: "",
           boardContent: "",
@@ -72,7 +72,7 @@ const storage = window.sessionStorage;
         .then((res) => {
           if(res.data.boardDetail.boardId > 0 ) {
             this.board.boardId = res.data.boardDetail.boardId;
-            // this.board.boardCategory = res.data.boardDetail.boardCategory;
+            this.board.boardCategory = res.data.boardDetail.boardCategory;
             this.board.boardWriter = res.data.boardDetail.boardWriter;
             this.board.boardTitle = res.data.boardDetail.boardTitle;
             this.board.boardContent = res.data.boardDetail.boardContent;
@@ -80,7 +80,8 @@ const storage = window.sessionStorage;
             this.board.boardView = res.data.boardDetail.boardView;
             this.board.boardLiked = res.data.boardDetail.boardLiked;
             this.isLiked = res.data.didILiked;
-            this.getWriterInfo();
+            this.isWriter = res.data.isWriter;
+            this.categoryName = res.data.categoryName;
           } else {
             console.log('아예 받아오질 못함.');
           }
@@ -90,8 +91,30 @@ const storage = window.sessionStorage;
         })
       },
       modifyBoard(){
-        
-        
+        this.$Axios
+        .put('community/board',{
+          boardCategory: this.board.boardCategory,
+          boardContent: this.board.boardContent,
+          boardId: this.board.boardId,
+          boardTitle: this.board.boardTitle,
+          boardWriter: this.board.boardWriter},
+          {
+            headers: {
+              "jwt-auth-token": storage.getItem("jwt-auth-token")
+            }
+          }
+        )
+        .then((res)=>{
+          if(res.data.success) {
+            alert('글 수정 성공');
+            this.$router.push('/community/community-detail');
+          } else {
+            console.log('글 수정 실패')
+          }
+        })
+        .catch((error)=>{
+          console.log(error);
+        })
       },
       createBoard() {
         alert('글을 작성하였습니다.');

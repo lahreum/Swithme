@@ -59,7 +59,7 @@ import SelectBox from '@/components/common/SelectBox.vue';
 import AppBtnSmall from '@/components/common/AppBtnSmall.vue';
 import "./community.css";
 import "../user/user.css";
-
+const storage = window.sessionStorage;
 export default {
     components: {
         CategoryNav,
@@ -106,7 +106,11 @@ export default {
       },
       getBoardList() { 
         this.$Axios
-        .get(`community/board?categoryId=`+ this.categoryNum)
+        .get(`community/board?categoryId=`+ this.categoryNum,{
+          headers: {
+            "jwt-auth-token": storage.getItem("jwt-auth-token"),
+          }
+        })
         .then((res) => {
           if(Object.keys(res.data.boardList).length > 0) {
             this.boardList = res.data.boardList;
