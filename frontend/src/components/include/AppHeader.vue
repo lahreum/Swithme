@@ -68,6 +68,7 @@
           style="margin-left: 60px;"
         >
           <div
+            style="cursor: pointer;"
             class="login-item"
             @click="openLogin"
             :class="{ 'white-text': darkmode, 'black-text': !darkmode }"
@@ -100,7 +101,11 @@
           >
             <template v-slot:activator="{ on }">
               <!-- 이 위치에 프로필 사진 컴포넌트 넣어야 함 -->
-              <v-col align="center" v-on="on">
+              <v-col
+                align="center"
+                v-on="on"
+                :class="{ 'white-text': darkmode, 'black-text': !darkmode }"
+              >
                 {{ userNickname }}님, 안녕하세요!
               </v-col>
             </template>
@@ -225,36 +230,36 @@
 </template>
 
 <script>
-import "@/views/user/user.css";
-import AppBtnLarge from "@/components/common/AppBtnLarge.vue";
-import InputBar from "@/components/common/InputBar.vue";
-import axios from "axios";
+import '@/views/user/user.css';
+import AppBtnLarge from '@/components/common/AppBtnLarge.vue';
+import InputBar from '@/components/common/InputBar.vue';
+import axios from 'axios';
 
 const storage = window.sessionStorage;
 export default {
-  props: ["darkmode"],
+  props: ['darkmode'],
   components: {
-    "app-btn-large": AppBtnLarge,
-    "input-bar": InputBar,
+    'app-btn-large': AppBtnLarge,
+    'input-bar': InputBar,
   },
   data: function() {
     return {
       isLogin: false,
-      username: "default",
+      username: 'default',
       dialog: false,
       userInfo: {},
-      email: "",
-      pw: "",
-      userNickname: "",
+      email: '',
+      pw: '',
+      userNickname: '',
     };
   },
 
   mounted() {
-    console.log("마운티드됨?");
-    if (storage.getItem("jwt-auth-token")) {
+    console.log('마운티드됨?');
+    if (storage.getItem('jwt-auth-token')) {
       this.isLogin = true;
-      this.getUserInfo(storage.getItem("jwt-auth-token"));
-      console.log(storage.getItem("jwt-auth-token"));
+      this.getUserInfo(storage.getItem('jwt-auth-token'));
+      // console.log(storage.getItem("jwt-auth-token"));
     }
   },
 
@@ -270,17 +275,17 @@ export default {
       this.isLogin = true;
     },
     signOut: function() {
-      alert("로그아웃!!!!");
+      alert('로그아웃!!!!');
       this.isLogin = false;
-      storage.removeItem("jwt-auth-token");
-      this.$store.commit("userInit");
-      this.$router.push("/");
+      storage.removeItem('jwt-auth-token');
+      this.$store.commit('userInit');
+      this.$router.push('/');
     },
     goMyPage: function() {
-      this.$router.push("/my-page-access");
+      this.$router.push('/my-page-access');
     },
     goMain: function() {
-      this.$router.push("/");
+      this.$router.push('/');
     },
     openLogin() {
       this.dialog = true;
@@ -289,18 +294,18 @@ export default {
       axios
         .create({
           headers: {
-            "jwt-auth-token": token,
+            'jwt-auth-token': token,
           },
         })
-        .get("user")
+        .get('user')
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           this.userInfo = res.data.data;
-          console.log(this.userInfo);
-          this.$store.commit("LOGIN", this.userInfo);
+          // console.log(this.userInfo);
+          this.$store.commit('LOGIN', this.userInfo);
           this.userNickname = this.$store.getters.getUserNickname;
-          console.log(this.userNickname);
-          console.log("무야호", this.userInfo);
+          // console.log(this.userNickname);
+          // console.log("무야호", this.userInfo);
         })
         .catch((err) => {
           console.log(err);
@@ -308,33 +313,33 @@ export default {
     },
 
     login() {
-      console.log("로그인버튼눌럿다!");
+      // console.log('로그인버튼눌럿다!');
 
       var params = new URLSearchParams();
-      params.append("userId", this.email);
-      params.append("userPassword", this.pw);
+      params.append('userId', this.email);
+      params.append('userPassword', this.pw);
       axios
-        .post("user/login", params)
+        .post('user/login', params)
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           if (res.data.success === true) {
             this.dialog = false;
             this.isLogin = true;
-            console.log(res);
-            this.getUserInfo(res.headers["jwt-auth-token"]);
-            storage.setItem("jwt-auth-token", res.headers["jwt-auth-token"]);
+            // console.log(res);
+            this.getUserInfo(res.headers['jwt-auth-token']);
+            storage.setItem('jwt-auth-token', res.headers['jwt-auth-token']);
 
-            console.log("유저닉네임", this.userNickname);
-            console.log(this.$store.state.user);
+            // console.log("유저닉네임", this.userNickname);
+            // console.log(this.$store.state.user);
 
-            console.log("스토어", this.userNickname);
+            // console.log("스토어", this.userNickname);
           } else {
-            alert("아이디 또는 비밀번호를 잘못 입력하였습니다.");
+            alert('아이디 또는 비밀번호를 잘못 입력하였습니다.');
           }
         })
         .catch((err) => console.log(err));
-      console.log(this.email);
-      console.log(this.pw);
+      // console.log(this.email);
+      // console.log(this.pw);
     },
     getEmail(parm) {
       this.email = parm;
@@ -369,6 +374,7 @@ export default {
 .logo-header {
   display: flex;
   justify-content: center;
+  cursor: pointer;
 }
 .v-text-field.v-text-field--enclosed .v-text-field__details {
   display: none !important;
