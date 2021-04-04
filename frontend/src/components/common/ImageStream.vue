@@ -82,7 +82,6 @@ export default {
                       // 객체 감지를 위해 이미지를 인공지능 서버로 전송
                       axios
                         .post('https://j4b103.p.ssafy.io/aipredict', data)
-                        // .post('http://localhost:8000/predict', data)
                         .then((response) => {
                           // 객체 감지 결과
                           let detectResult = response.data;
@@ -145,7 +144,8 @@ export default {
                           );
 
                           // 이미지 출력
-                          img.src = canvas.toDataURL();
+                          img.src = 'data:image/png;base64,' + response.data;
+                          // img.src = canvas.toDataURL();
 
                           // 0.005초씩 카운트
                           cnt += period;

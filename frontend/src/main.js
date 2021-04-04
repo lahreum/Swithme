@@ -16,6 +16,8 @@ Vue.use(VueRouter);
 Vue.use(VueFullPage);
 Vue.use(Carousel3d);
 
+axios.defaults.baseURL = 'http://j4b103.p.ssafy.io/service';
+
 const router = new VueRouter({
   mode: 'history',
   routes,

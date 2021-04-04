@@ -28,7 +28,6 @@ public class GoogleOauth implements SocialOauth {
 	private final String clientSecret = "EQxkCbPjG_8TM4guXxgIsX6G";
 	private final String authUri = "https://accounts.google.com/o/oauth2/v2/auth";
 	private final String redirectUri = "http://j4b103.p.ssafy.io/service/oauth/google/callback";
-//	private final String redirectUri = "http://localhost:9999/oauth/google/callback";
 	private final String tokenUri = "https://oauth2.googleapis.com/token";
 	private final String tokenInfoUri = "https://oauth2.googleapis.com/tokeninfo";
 	
@@ -79,7 +78,6 @@ public class GoogleOauth implements SocialOauth {
 			if(optUserAccount.get().getUserType().equals("google")) {	// Google로 가입한 계정일 경우
 				jwtToken = jwtService.create(optUserAccount.get());
 				redirectUri = "https://j4b103.p.ssafy.io/token?is-user=true&jwt-auth-token=" + jwtToken;
-//				redirectUri = "http://localhost:8080/token?is-user=true&jwt-auth-token=" + jwtToken;
 				return redirectUri;
 			}
 			else return "https://j4b103.p.ssafy.io/no-access/invalid_account";	// Google로 가입한 계정이 아닐 경우
