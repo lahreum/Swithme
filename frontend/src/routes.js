@@ -105,6 +105,7 @@ export default [
     component: Timer,
     beforeEnter: (to, from, next) => {
       if (storage.getItem('jwt-auth-token') != null) next();
+      else alert('로그인이 필요한 서비스입니다.');
     },
   },
   {
