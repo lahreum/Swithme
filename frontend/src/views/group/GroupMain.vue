@@ -64,9 +64,9 @@
               ><GroupInfo
                 :src="group.src"
                 :groupName="group.groupName"
-                :groupDesc="group.groupDesc"
-                :groupCnt="group.groupCnt"
-                :groupTotalCnt="group.groupTotalCnt"
+                :groupDesc="group.groupNotice"
+                :groupCnt="group.groupCurMemberCount"
+                :groupTotalCnt="group.groupMaxMemberCount"
             /></v-col>
           </v-row>
           <v-row v-else-if="caseNum === 2">
@@ -78,9 +78,9 @@
               ><GroupInfo
                 :src="group.src"
                 :groupName="group.groupName"
-                :groupDesc="group.groupDesc"
-                :groupCnt="group.groupCnt"
-                :groupTotalCnt="group.groupTotalCnt"
+                :groupDesc="group.groupNotice"
+                :groupCnt="group.groupCurMemberCount"
+                :groupTotalCnt="group.groupMaxMemberCount"
             /></v-col>
           </v-row>
           <v-row v-else-if="caseNum === 3">
@@ -92,9 +92,9 @@
               ><GroupInfo
                 :src="group.src"
                 :groupName="group.groupName"
-                :groupDesc="group.groupDesc"
-                :groupCnt="group.groupCnt"
-                :groupTotalCnt="group.groupTotalCnt"
+                :groupDesc="group.groupNotice"
+                :groupCnt="group.groupCurMemberCount"
+                :groupTotalCnt="group.groupMaxMemberCount"
             /></v-col>
           </v-row>
           <v-row v-else-if="caseNum === 4">
@@ -106,9 +106,9 @@
               ><GroupInfo
                 :src="group.src"
                 :groupName="group.groupName"
-                :groupDesc="group.groupDesc"
-                :groupCnt="group.groupCnt"
-                :groupTotalCnt="group.groupTotalCnt"
+                :groupDesc="group.groupNotice"
+                :groupCnt="group.groupCurMemberCount"
+                :groupTotalCnt="group.groupMaxMemberCount"
             /></v-col>
           </v-row>
           <v-row v-else-if="caseNum === 5">
@@ -120,10 +120,20 @@
               ><GroupInfo
                 :src="group.src"
                 :groupName="group.groupName"
-                :groupDesc="group.groupDesc"
-                :groupCnt="group.groupCnt"
-                :groupTotalCnt="group.groupTotalCnt"
+                :groupDesc="group.groupNotice"
+                :groupCnt="group.groupCurMemberCount"
+                :groupTotalCnt="group.groupMaxMemberCount"
             /></v-col>
+          </v-row>
+          <v-row justify="center" v-else-if="caseNum === 6">
+            <v-col align-self="center" align="end" cols="5"
+              ><span style="font-size:2rem">...이런</span
+              ><span>검색어와 일치하는 결과가 없네요</span>
+              <h2>다른검색어로 검색해보시겠어요?</h2></v-col
+            >
+            <v-col cols="5"
+              ><v-img src="https://ifh.cc/g/yLHO83.png"></v-img
+            ></v-col>
           </v-row>
           <v-col
             v-if="
@@ -167,6 +177,9 @@ import GroupSelect from "@/components/common/GroupSelect.vue";
 import SearchBar from "@/components/common/SearchBar.vue";
 import AppBtnSmall from "@/components/common/AppBtnSmall.vue";
 import GroupRecommend from "@/components/common/GroupRecommend.vue";
+import axios from "axios";
+
+const storage = window.sessionStorage;
 
 export default {
   components: {
@@ -195,503 +208,502 @@ export default {
         "목표로 가는 길이 덜 힘들고, 더욱 든든해질 거예요",
       ],
       groups: [
-        {
-          src: "https://ifh.cc/g/wyakuA.jpg",
-          groupName: "자면 안돼",
-          groupDesc:
-            "잠을 자는 사람은 꿈을 꾸지만, 잠을 자지 않는 사람은 꿈을 이룬다",
-          groupCnt: 7,
-          groupTotalCnt: 13,
-          grouper: [
-            "zasdfasdf",
-            "빛봉현",
-            "별빛지현",
-            "정처기out",
-            "녹용파는사슴",
-          ],
-          date: "2021-03-22 14:21:46",
-        },
-        {
-          src: "https://ifh.cc/g/qJkaF3.png",
-          groupName: "싸피모임",
-          groupDesc: "싸피 1~4기 아무나 모여~!",
-          groupCnt: 17,
-          groupTotalCnt: 26,
-          grouper: [
-            "ffdfdw",
-            "빛봉현",
-            "별빛지현",
-            "정처기out",
-            "녹용파는사슴",
-          ],
-          date: "2021-03-22 14:21:46",
-        },
-        {
-          src: "https://ifh.cc/g/GAyQK3.jpg",
-          groupName: "피자레인저",
-          groupDesc: "일주일목표를 다이루면 피자를사먹는그룹입니다",
-          groupCnt: 8,
-          groupTotalCnt: 12,
-          grouper: [
-            "dldkfma",
-            "빛봉현",
-            "별빛지현",
-            "정처기out",
-            "녹용파는사슴",
-          ],
-          date: "2021-03-22 14:21:46",
-        },
-
-        {
-          src: "https://ifh.cc/g/Zp0ZYA.jpg",
-          groupName: "합격할거야!",
-          groupDesc: "정처기 같이 공부하실분!!",
-          groupCnt: 5,
-          groupTotalCnt: 12,
-          grouper: [
-            "dldkfma",
-            "빛봉현",
-            "별빛지현",
-            "정처기out",
-            "녹용파는사슴",
-          ],
-          date: "2021-03-23 14:21:46",
-        },
-        {
-          src: "https://ifh.cc/g/Zp0ZYA.jpg",
-          groupName: "공무원 자율스터디",
-          groupDesc: "공무원, 자율스터디",
-          groupCnt: 7,
-          groupTotalCnt: 13,
-          grouper: [
-            "dldkfma",
-            "빛봉현",
-            "별빛지현",
-            "정처기out",
-            "녹용파는사슴",
-          ],
-          date: "2021-03-24 14:21:46",
-        },
-        {
-          src: "https://ifh.cc/g/ojNXEJ.jpg",
-          groupName: "예비 선생님들 스터디~",
-          groupDesc: "임용고시 같이 준비해요~",
-          groupCnt: 6,
-          groupTotalCnt: 18,
-          grouper: [
-            "dldkfma",
-            "빛봉현",
-            "별빛지현",
-            "정처기out",
-            "녹용파는사슴",
-          ],
-          date: "2021-03-25 14:21:46",
-        },
-        {
-          src: "https://ifh.cc/g/JPassm.jpg",
-          groupName: "토익 가즈아",
-          groupDesc: "토익 스터디 환영합니다",
-          groupCnt: 5,
-          groupTotalCnt: 11,
-          grouper: [
-            "dldkfma",
-            "빛봉현",
-            "별빛지현",
-            "정처기out",
-            "녹용파는사슴",
-          ],
-          date: "2021-03-26 14:21:46",
-        },
-        {
-          src: "https://ifh.cc/g/Zp0ZYA.jpg",
-          groupName: "온라인 스터디룸",
-          groupDesc: "누구나 환영~~~",
-          groupCnt: 3,
-          groupTotalCnt: 10,
-          grouper: [
-            "dldkfma",
-            "빛봉현",
-            "별빛지현",
-            "정처기out",
-            "녹용파는사슴",
-          ],
-          date: "2021-03-29 14:21:46",
-        },
-        {
-          src: "https://ifh.cc/g/Zp0ZYA.jpg",
-          groupName: "어서오세요",
-          groupDesc: "자율 스터디 방입니다!",
-          groupCnt: 7,
-          groupTotalCnt: 13,
-          grouper: [
-            "dldkfma",
-            "빛봉현",
-            "별빛지현",
-            "정처기out",
-            "녹용파는사슴",
-          ],
-          date: "2021-03-30 14:21:46",
-        },
-        {
-          src: "https://ifh.cc/g/Zp0ZYA.jpg",
-          groupName: "하이하이요",
-          groupDesc: "자율 스터디 방입니다람쥐!",
-          groupCnt: 0,
-          groupTotalCnt: 13,
-          grouper: [
-            "zxmcvnkjc",
-            "빛봉현",
-            "별빛지현",
-            "정처기out",
-            "녹용파는사슴",
-          ],
-          date: "2021-03-30 14:21:46",
-        },
-        {
-          src: "https://ifh.cc/g/Zp0ZYA.jpg",
-          groupName: "하이하이요",
-          groupDesc: "자율 스터디 방입니다람쥐!",
-          groupCnt: 0,
-          groupTotalCnt: 13,
-          grouper: [
-            "zxmcvnkjc",
-            "빛봉현",
-            "별빛지현",
-            "정처기out",
-            "녹용파는사슴",
-          ],
-          date: "2021-03-30 14:21:46",
-        },
-        {
-          src: "https://ifh.cc/g/Zp0ZYA.jpg",
-          groupName: "하이하이요",
-          groupDesc: "자율 스터디 방입니다람쥐!",
-          groupCnt: 0,
-          groupTotalCnt: 13,
-          grouper: [
-            "zxmcvnkjc",
-            "빛봉현",
-            "별빛지현",
-            "정처기out",
-            "녹용파는사슴",
-          ],
-          date: "2021-03-30 14:21:46",
-        },
-        {
-          src: "https://ifh.cc/g/Zp0ZYA.jpg",
-          groupName: "하이하이요",
-          groupDesc: "자율 스터디 방입니다람쥐!",
-          groupCnt: 0,
-          groupTotalCnt: 13,
-          grouper: [
-            "zxmcvnkjc",
-            "빛봉현",
-            "별빛지현",
-            "정처기out",
-            "녹용파는사슴",
-          ],
-          date: "2021-03-30 14:21:46",
-        },
-        {
-          src: "https://ifh.cc/g/Zp0ZYA.jpg",
-          groupName: "하이하이요",
-          groupDesc: "자율 스터디 방입니다람쥐!",
-          groupCnt: 0,
-          groupTotalCnt: 13,
-          grouper: [
-            "zxmcvnkjc",
-            "빛봉현",
-            "별빛지현",
-            "정처기out",
-            "녹용파는사슴",
-          ],
-          date: "2021-03-30 14:21:46",
-        },
-        {
-          src: "https://ifh.cc/g/Zp0ZYA.jpg",
-          groupName: "하이하이요",
-          groupDesc: "자율 스터디 방입니다람쥐!",
-          groupCnt: 0,
-          groupTotalCnt: 13,
-          grouper: [
-            "zxmcvnkjc",
-            "빛봉현",
-            "별빛지현",
-            "정처기out",
-            "녹용파는사슴",
-          ],
-          date: "2021-03-30 14:21:46",
-        },
-        {
-          src: "https://ifh.cc/g/Zp0ZYA.jpg",
-          groupName: "하이하이요",
-          groupDesc: "자율 스터디 방입니다람쥐!",
-          groupCnt: 0,
-          groupTotalCnt: 13,
-          grouper: [
-            "zxmcvnkjc",
-            "빛봉현",
-            "별빛지현",
-            "정처기out",
-            "녹용파는사슴",
-          ],
-          date: "2021-03-30 14:21:46",
-        },
-        {
-          src: "https://ifh.cc/g/Zp0ZYA.jpg",
-          groupName: "하이하이요",
-          groupDesc: "자율 스터디 방입니다람쥐!",
-          groupCnt: 0,
-          groupTotalCnt: 13,
-          grouper: [
-            "zxmcvnkjc",
-            "빛봉현",
-            "별빛지현",
-            "정처기out",
-            "녹용파는사슴",
-          ],
-          date: "2021-03-30 14:21:46",
-        },
-        {
-          src: "https://ifh.cc/g/Zp0ZYA.jpg",
-          groupName: "하이하이요",
-          groupDesc: "자율 스터디 방입니다람쥐!",
-          groupCnt: 0,
-          groupTotalCnt: 13,
-          grouper: [
-            "zxmcvnkjc",
-            "빛봉현",
-            "별빛지현",
-            "정처기out",
-            "녹용파는사슴",
-          ],
-          date: "2021-03-30 14:21:46",
-        },
-        {
-          src: "https://ifh.cc/g/Zp0ZYA.jpg",
-          groupName: "하이하이요",
-          groupDesc: "자율 스터디 방입니다람쥐!",
-          groupCnt: 0,
-          groupTotalCnt: 13,
-          grouper: [
-            "asdlfkjlew",
-            "빛봉현",
-            "별빛지현",
-            "정처기out",
-            "녹용파는사슴",
-          ],
-          date: "2021-03-30 14:21:46",
-        },
-        {
-          src: "https://ifh.cc/g/Zp0ZYA.jpg",
-          groupName: "하이하이요",
-          groupDesc: "자율 스터디 방입니다람쥐!",
-          groupCnt: 0,
-          groupTotalCnt: 13,
-          grouper: [
-            "asdlfkjlew",
-            "빛봉현",
-            "별빛지현",
-            "정처기out",
-            "녹용파는사슴",
-          ],
-          date: "2021-03-30 14:21:46",
-        },
-        {
-          src: "https://ifh.cc/g/Zp0ZYA.jpg",
-          groupName: "하이하이요",
-          groupDesc: "자율 스터디 방입니다람쥐!",
-          groupCnt: 0,
-          groupTotalCnt: 13,
-          grouper: [
-            "asdlfkjlew",
-            "빛봉현",
-            "별빛지현",
-            "정처기out",
-            "녹용파는사슴",
-          ],
-          date: "2021-03-30 14:21:46",
-        },
-        {
-          src: "https://ifh.cc/g/Zp0ZYA.jpg",
-          groupName: "하이하이요",
-          groupDesc: "자율 스터디 방입니다람쥐!",
-          groupCnt: 0,
-          groupTotalCnt: 13,
-          grouper: [
-            "asdlfkjlew",
-            "빛봉현",
-            "별빛지현",
-            "정처기out",
-            "녹용파는사슴",
-          ],
-          date: "2021-03-30 14:21:46",
-        },
-        {
-          src: "https://ifh.cc/g/Zp0ZYA.jpg",
-          groupName: "하이하이요",
-          groupDesc: "자율 스터디 방입니다람쥐!",
-          groupCnt: 0,
-          groupTotalCnt: 13,
-          grouper: [
-            "asdlfkjlew",
-            "빛봉현",
-            "별빛지현",
-            "정처기out",
-            "녹용파는사슴",
-          ],
-          date: "2021-03-30 14:21:46",
-        },
-        {
-          src: "https://ifh.cc/g/Zp0ZYA.jpg",
-          groupName: "하이하이요",
-          groupDesc: "자율 스터디 방입니다람쥐!",
-          groupCnt: 0,
-          groupTotalCnt: 13,
-          grouper: [
-            "asdlfkjlew",
-            "빛봉현",
-            "별빛지현",
-            "정처기out",
-            "녹용파는사슴",
-          ],
-          date: "2021-03-30 14:21:46",
-        },
-        {
-          src: "https://ifh.cc/g/Zp0ZYA.jpg",
-          groupName: "하이하이요",
-          groupDesc: "자율 스터디 방입니다람쥐!",
-          groupCnt: 0,
-          groupTotalCnt: 13,
-          grouper: [
-            "asdlfkjlew",
-            "빛봉현",
-            "별빛지현",
-            "정처기out",
-            "녹용파는사슴",
-          ],
-          date: "2021-03-30 14:21:46",
-        },
-        {
-          src: "https://ifh.cc/g/Zp0ZYA.jpg",
-          groupName: "하이하이요",
-          groupDesc: "자율 스터디 방입니다람쥐!",
-          groupCnt: 0,
-          groupTotalCnt: 13,
-          grouper: [
-            "asdlfkjlew",
-            "빛봉현",
-            "별빛지현",
-            "정처기out",
-            "녹용파는사슴",
-          ],
-          date: "2021-03-30 14:21:46",
-        },
-        {
-          src: "https://ifh.cc/g/Zp0ZYA.jpg",
-          groupName: "하이하이요",
-          groupDesc: "자율 스터디 방입니다람쥐!",
-          groupCnt: 0,
-          groupTotalCnt: 13,
-          grouper: [
-            "asdlfkjlew",
-            "빛봉현",
-            "별빛지현",
-            "정처기out",
-            "녹용파는사슴",
-          ],
-          date: "2021-03-30 14:21:46",
-        },
-        {
-          src: "https://ifh.cc/g/Zp0ZYA.jpg",
-          groupName: "하이하이요",
-          groupDesc: "자율 스터디 방입니다람쥐!",
-          groupCnt: 0,
-          groupTotalCnt: 13,
-          grouper: [
-            "asdlfkjlew",
-            "빛봉현",
-            "별빛지현",
-            "정처기out",
-            "녹용파는사슴",
-          ],
-          date: "2021-03-30 14:21:46",
-        },
-        {
-          src: "https://ifh.cc/g/Zp0ZYA.jpg",
-          groupName: "하이하이요",
-          groupDesc: "자율 스터디 방입니다람쥐!",
-          groupCnt: 0,
-          groupTotalCnt: 13,
-          grouper: [
-            "qqqweeeer",
-            "빛봉현",
-            "별빛지현",
-            "정처기out",
-            "녹용파는사슴",
-          ],
-          date: "2021-03-30 14:21:46",
-        },
-        {
-          src: "https://ifh.cc/g/Zp0ZYA.jpg",
-          groupName: "하이하이요",
-          groupDesc: "자율 스터디 방입니다람쥐!",
-          groupCnt: 0,
-          groupTotalCnt: 13,
-          grouper: [
-            "qqqweeeer",
-            "빛봉현",
-            "별빛지현",
-            "정처기out",
-            "녹용파는사슴",
-          ],
-          date: "2021-03-30 14:21:46",
-        },
-        {
-          src: "https://ifh.cc/g/Zp0ZYA.jpg",
-          groupName: "하이하이요",
-          groupDesc: "자율 스터디 방입니다람쥐!",
-          groupCnt: 0,
-          groupTotalCnt: 13,
-          grouper: [
-            "qqqweeeer",
-            "빛봉현",
-            "별빛지현",
-            "정처기out",
-            "녹용파는사슴",
-          ],
-          date: "2021-03-30 14:21:46",
-        },
-        {
-          src: "https://ifh.cc/g/Zp0ZYA.jpg",
-          groupName: "하이하이요",
-          groupDesc: "자율 스터디 방입니다람쥐!",
-          groupCnt: 0,
-          groupTotalCnt: 13,
-          grouper: [
-            "qqqweeeer",
-            "빛봉현",
-            "별빛지현",
-            "정처기out",
-            "녹용파는사슴",
-          ],
-          date: "2021-03-30 14:21:46",
-        },
-        {
-          src: "https://ifh.cc/g/Zp0ZYA.jpg",
-          groupName: "하이하이요",
-          groupDesc: "자율 스터디 방입니다람쥐!",
-          groupCnt: 0,
-          groupTotalCnt: 13,
-          grouper: [
-            "qqqweeeer",
-            "빛봉현",
-            "별빛지현",
-            "정처기out",
-            "녹용파는사슴",
-          ],
-          date: "2021-03-30 14:21:46",
-        },
+        // {
+        //   src: "https://ifh.cc/g/wyakuA.jpg",
+        //   groupName: "자면 안돼",
+        //   groupDesc:
+        //     "잠을 자는 사람은 꿈을 꾸지만, 잠을 자지 않는 사람은 꿈을 이룬다",
+        //   groupCnt: 7,
+        //   groupTotalCnt: 13,
+        //   grouper: [
+        //     "zasdfasdf",
+        //     "빛봉현",
+        //     "별빛지현",
+        //     "정처기out",
+        //     "녹용파는사슴",
+        //   ],
+        //   date: "2021-03-22 14:21:46",
+        // },
+        // {
+        //   src: "https://ifh.cc/g/qJkaF3.png",
+        //   groupName: "싸피모임",
+        //   groupDesc: "싸피 1~4기 아무나 모여~!",
+        //   groupCnt: 17,
+        //   groupTotalCnt: 26,
+        //   grouper: [
+        //     "ffdfdw",
+        //     "빛봉현",
+        //     "별빛지현",
+        //     "정처기out",
+        //     "녹용파는사슴",
+        //   ],
+        //   date: "2021-03-22 14:21:46",
+        // },
+        // {
+        //   src: "https://ifh.cc/g/GAyQK3.jpg",
+        //   groupName: "피자레인저",
+        //   groupDesc: "일주일목표를 다이루면 피자를사먹는그룹입니다",
+        //   groupCnt: 8,
+        //   groupTotalCnt: 12,
+        //   grouper: [
+        //     "dldkfma",
+        //     "빛봉현",
+        //     "별빛지현",
+        //     "정처기out",
+        //     "녹용파는사슴",
+        //   ],
+        //   date: "2021-03-22 14:21:46",
+        // },
+        // {
+        //   src: "https://ifh.cc/g/Zp0ZYA.jpg",
+        //   groupName: "합격할거야!",
+        //   groupDesc: "정처기 같이 공부하실분!!",
+        //   groupCnt: 5,
+        //   groupTotalCnt: 12,
+        //   grouper: [
+        //     "dldkfma",
+        //     "빛봉현",
+        //     "별빛지현",
+        //     "정처기out",
+        //     "녹용파는사슴",
+        //   ],
+        //   date: "2021-03-23 14:21:46",
+        // },
+        // {
+        //   src: "https://ifh.cc/g/Zp0ZYA.jpg",
+        //   groupName: "공무원 자율스터디",
+        //   groupDesc: "공무원, 자율스터디",
+        //   groupCnt: 7,
+        //   groupTotalCnt: 13,
+        //   grouper: [
+        //     "dldkfma",
+        //     "빛봉현",
+        //     "별빛지현",
+        //     "정처기out",
+        //     "녹용파는사슴",
+        //   ],
+        //   date: "2021-03-24 14:21:46",
+        // },
+        // {
+        //   src: "https://ifh.cc/g/ojNXEJ.jpg",
+        //   groupName: "예비 선생님들 스터디~",
+        //   groupDesc: "임용고시 같이 준비해요~",
+        //   groupCnt: 6,
+        //   groupTotalCnt: 18,
+        //   grouper: [
+        //     "dldkfma",
+        //     "빛봉현",
+        //     "별빛지현",
+        //     "정처기out",
+        //     "녹용파는사슴",
+        //   ],
+        //   date: "2021-03-25 14:21:46",
+        // },
+        // {
+        //   src: "https://ifh.cc/g/JPassm.jpg",
+        //   groupName: "토익 가즈아",
+        //   groupDesc: "토익 스터디 환영합니다",
+        //   groupCnt: 5,
+        //   groupTotalCnt: 11,
+        //   grouper: [
+        //     "dldkfma",
+        //     "빛봉현",
+        //     "별빛지현",
+        //     "정처기out",
+        //     "녹용파는사슴",
+        //   ],
+        //   date: "2021-03-26 14:21:46",
+        // },
+        // {
+        //   src: "https://ifh.cc/g/Zp0ZYA.jpg",
+        //   groupName: "온라인 스터디룸",
+        //   groupDesc: "누구나 환영~~~",
+        //   groupCnt: 3,
+        //   groupTotalCnt: 10,
+        //   grouper: [
+        //     "dldkfma",
+        //     "빛봉현",
+        //     "별빛지현",
+        //     "정처기out",
+        //     "녹용파는사슴",
+        //   ],
+        //   date: "2021-03-29 14:21:46",
+        // },
+        // {
+        //   src: "https://ifh.cc/g/Zp0ZYA.jpg",
+        //   groupName: "어서오세요",
+        //   groupDesc: "자율 스터디 방입니다!",
+        //   groupCnt: 7,
+        //   groupTotalCnt: 13,
+        //   grouper: [
+        //     "dldkfma",
+        //     "빛봉현",
+        //     "별빛지현",
+        //     "정처기out",
+        //     "녹용파는사슴",
+        //   ],
+        //   date: "2021-03-30 14:21:46",
+        // },
+        // {
+        //   src: "https://ifh.cc/g/Zp0ZYA.jpg",
+        //   groupName: "하이하이요",
+        //   groupDesc: "자율 스터디 방입니다람쥐!",
+        //   groupCnt: 0,
+        //   groupTotalCnt: 13,
+        //   grouper: [
+        //     "zxmcvnkjc",
+        //     "빛봉현",
+        //     "별빛지현",
+        //     "정처기out",
+        //     "녹용파는사슴",
+        //   ],
+        //   date: "2021-03-30 14:21:46",
+        // },
+        // {
+        //   src: "https://ifh.cc/g/Zp0ZYA.jpg",
+        //   groupName: "하이하이요",
+        //   groupDesc: "자율 스터디 방입니다람쥐!",
+        //   groupCnt: 0,
+        //   groupTotalCnt: 13,
+        //   grouper: [
+        //     "zxmcvnkjc",
+        //     "빛봉현",
+        //     "별빛지현",
+        //     "정처기out",
+        //     "녹용파는사슴",
+        //   ],
+        //   date: "2021-03-30 14:21:46",
+        // },
+        // {
+        //   src: "https://ifh.cc/g/Zp0ZYA.jpg",
+        //   groupName: "하이하이요",
+        //   groupDesc: "자율 스터디 방입니다람쥐!",
+        //   groupCnt: 0,
+        //   groupTotalCnt: 13,
+        //   grouper: [
+        //     "zxmcvnkjc",
+        //     "빛봉현",
+        //     "별빛지현",
+        //     "정처기out",
+        //     "녹용파는사슴",
+        //   ],
+        //   date: "2021-03-30 14:21:46",
+        // },
+        // {
+        //   src: "https://ifh.cc/g/Zp0ZYA.jpg",
+        //   groupName: "하이하이요",
+        //   groupDesc: "자율 스터디 방입니다람쥐!",
+        //   groupCnt: 0,
+        //   groupTotalCnt: 13,
+        //   grouper: [
+        //     "zxmcvnkjc",
+        //     "빛봉현",
+        //     "별빛지현",
+        //     "정처기out",
+        //     "녹용파는사슴",
+        //   ],
+        //   date: "2021-03-30 14:21:46",
+        // },
+        // {
+        //   src: "https://ifh.cc/g/Zp0ZYA.jpg",
+        //   groupName: "하이하이요",
+        //   groupDesc: "자율 스터디 방입니다람쥐!",
+        //   groupCnt: 0,
+        //   groupTotalCnt: 13,
+        //   grouper: [
+        //     "zxmcvnkjc",
+        //     "빛봉현",
+        //     "별빛지현",
+        //     "정처기out",
+        //     "녹용파는사슴",
+        //   ],
+        //   date: "2021-03-30 14:21:46",
+        // },
+        // {
+        //   src: "https://ifh.cc/g/Zp0ZYA.jpg",
+        //   groupName: "하이하이요",
+        //   groupDesc: "자율 스터디 방입니다람쥐!",
+        //   groupCnt: 0,
+        //   groupTotalCnt: 13,
+        //   grouper: [
+        //     "zxmcvnkjc",
+        //     "빛봉현",
+        //     "별빛지현",
+        //     "정처기out",
+        //     "녹용파는사슴",
+        //   ],
+        //   date: "2021-03-30 14:21:46",
+        // },
+        // {
+        //   src: "https://ifh.cc/g/Zp0ZYA.jpg",
+        //   groupName: "하이하이요",
+        //   groupDesc: "자율 스터디 방입니다람쥐!",
+        //   groupCnt: 0,
+        //   groupTotalCnt: 13,
+        //   grouper: [
+        //     "zxmcvnkjc",
+        //     "빛봉현",
+        //     "별빛지현",
+        //     "정처기out",
+        //     "녹용파는사슴",
+        //   ],
+        //   date: "2021-03-30 14:21:46",
+        // },
+        // {
+        //   src: "https://ifh.cc/g/Zp0ZYA.jpg",
+        //   groupName: "하이하이요",
+        //   groupDesc: "자율 스터디 방입니다람쥐!",
+        //   groupCnt: 0,
+        //   groupTotalCnt: 13,
+        //   grouper: [
+        //     "zxmcvnkjc",
+        //     "빛봉현",
+        //     "별빛지현",
+        //     "정처기out",
+        //     "녹용파는사슴",
+        //   ],
+        //   date: "2021-03-30 14:21:46",
+        // },
+        // {
+        //   src: "https://ifh.cc/g/Zp0ZYA.jpg",
+        //   groupName: "하이하이요",
+        //   groupDesc: "자율 스터디 방입니다람쥐!",
+        //   groupCnt: 0,
+        //   groupTotalCnt: 13,
+        //   grouper: [
+        //     "zxmcvnkjc",
+        //     "빛봉현",
+        //     "별빛지현",
+        //     "정처기out",
+        //     "녹용파는사슴",
+        //   ],
+        //   date: "2021-03-30 14:21:46",
+        // },
+        // {
+        //   src: "https://ifh.cc/g/Zp0ZYA.jpg",
+        //   groupName: "하이하이요",
+        //   groupDesc: "자율 스터디 방입니다람쥐!",
+        //   groupCnt: 0,
+        //   groupTotalCnt: 13,
+        //   grouper: [
+        //     "asdlfkjlew",
+        //     "빛봉현",
+        //     "별빛지현",
+        //     "정처기out",
+        //     "녹용파는사슴",
+        //   ],
+        //   date: "2021-03-30 14:21:46",
+        // },
+        // {
+        //   src: "https://ifh.cc/g/Zp0ZYA.jpg",
+        //   groupName: "하이하이요",
+        //   groupDesc: "자율 스터디 방입니다람쥐!",
+        //   groupCnt: 0,
+        //   groupTotalCnt: 13,
+        //   grouper: [
+        //     "asdlfkjlew",
+        //     "빛봉현",
+        //     "별빛지현",
+        //     "정처기out",
+        //     "녹용파는사슴",
+        //   ],
+        //   date: "2021-03-30 14:21:46",
+        // },
+        // {
+        //   src: "https://ifh.cc/g/Zp0ZYA.jpg",
+        //   groupName: "하이하이요",
+        //   groupDesc: "자율 스터디 방입니다람쥐!",
+        //   groupCnt: 0,
+        //   groupTotalCnt: 13,
+        //   grouper: [
+        //     "asdlfkjlew",
+        //     "빛봉현",
+        //     "별빛지현",
+        //     "정처기out",
+        //     "녹용파는사슴",
+        //   ],
+        //   date: "2021-03-30 14:21:46",
+        // },
+        // {
+        //   src: "https://ifh.cc/g/Zp0ZYA.jpg",
+        //   groupName: "하이하이요",
+        //   groupDesc: "자율 스터디 방입니다람쥐!",
+        //   groupCnt: 0,
+        //   groupTotalCnt: 13,
+        //   grouper: [
+        //     "asdlfkjlew",
+        //     "빛봉현",
+        //     "별빛지현",
+        //     "정처기out",
+        //     "녹용파는사슴",
+        //   ],
+        //   date: "2021-03-30 14:21:46",
+        // },
+        // {
+        //   src: "https://ifh.cc/g/Zp0ZYA.jpg",
+        //   groupName: "하이하이요",
+        //   groupDesc: "자율 스터디 방입니다람쥐!",
+        //   groupCnt: 0,
+        //   groupTotalCnt: 13,
+        //   grouper: [
+        //     "asdlfkjlew",
+        //     "빛봉현",
+        //     "별빛지현",
+        //     "정처기out",
+        //     "녹용파는사슴",
+        //   ],
+        //   date: "2021-03-30 14:21:46",
+        // },
+        // {
+        //   src: "https://ifh.cc/g/Zp0ZYA.jpg",
+        //   groupName: "하이하이요",
+        //   groupDesc: "자율 스터디 방입니다람쥐!",
+        //   groupCnt: 0,
+        //   groupTotalCnt: 13,
+        //   grouper: [
+        //     "asdlfkjlew",
+        //     "빛봉현",
+        //     "별빛지현",
+        //     "정처기out",
+        //     "녹용파는사슴",
+        //   ],
+        //   date: "2021-03-30 14:21:46",
+        // },
+        // {
+        //   src: "https://ifh.cc/g/Zp0ZYA.jpg",
+        //   groupName: "하이하이요",
+        //   groupDesc: "자율 스터디 방입니다람쥐!",
+        //   groupCnt: 0,
+        //   groupTotalCnt: 13,
+        //   grouper: [
+        //     "asdlfkjlew",
+        //     "빛봉현",
+        //     "별빛지현",
+        //     "정처기out",
+        //     "녹용파는사슴",
+        //   ],
+        //   date: "2021-03-30 14:21:46",
+        // },
+        // {
+        //   src: "https://ifh.cc/g/Zp0ZYA.jpg",
+        //   groupName: "하이하이요",
+        //   groupDesc: "자율 스터디 방입니다람쥐!",
+        //   groupCnt: 0,
+        //   groupTotalCnt: 13,
+        //   grouper: [
+        //     "asdlfkjlew",
+        //     "빛봉현",
+        //     "별빛지현",
+        //     "정처기out",
+        //     "녹용파는사슴",
+        //   ],
+        //   date: "2021-03-30 14:21:46",
+        // },
+        // {
+        //   src: "https://ifh.cc/g/Zp0ZYA.jpg",
+        //   groupName: "하이하이요",
+        //   groupDesc: "자율 스터디 방입니다람쥐!",
+        //   groupCnt: 0,
+        //   groupTotalCnt: 13,
+        //   grouper: [
+        //     "asdlfkjlew",
+        //     "빛봉현",
+        //     "별빛지현",
+        //     "정처기out",
+        //     "녹용파는사슴",
+        //   ],
+        //   date: "2021-03-30 14:21:46",
+        // },
+        // {
+        //   src: "https://ifh.cc/g/Zp0ZYA.jpg",
+        //   groupName: "하이하이요",
+        //   groupDesc: "자율 스터디 방입니다람쥐!",
+        //   groupCnt: 0,
+        //   groupTotalCnt: 13,
+        //   grouper: [
+        //     "asdlfkjlew",
+        //     "빛봉현",
+        //     "별빛지현",
+        //     "정처기out",
+        //     "녹용파는사슴",
+        //   ],
+        //   date: "2021-03-30 14:21:46",
+        // },
+        // {
+        //   src: "https://ifh.cc/g/Zp0ZYA.jpg",
+        //   groupName: "하이하이요",
+        //   groupDesc: "자율 스터디 방입니다람쥐!",
+        //   groupCnt: 0,
+        //   groupTotalCnt: 13,
+        //   grouper: [
+        //     "qqqweeeer",
+        //     "빛봉현",
+        //     "별빛지현",
+        //     "정처기out",
+        //     "녹용파는사슴",
+        //   ],
+        //   date: "2021-03-30 14:21:46",
+        // },
+        // {
+        //   src: "https://ifh.cc/g/Zp0ZYA.jpg",
+        //   groupName: "하이하이요",
+        //   groupDesc: "자율 스터디 방입니다람쥐!",
+        //   groupCnt: 0,
+        //   groupTotalCnt: 13,
+        //   grouper: [
+        //     "qqqweeeer",
+        //     "빛봉현",
+        //     "별빛지현",
+        //     "정처기out",
+        //     "녹용파는사슴",
+        //   ],
+        //   date: "2021-03-30 14:21:46",
+        // },
+        // {
+        //   src: "https://ifh.cc/g/Zp0ZYA.jpg",
+        //   groupName: "하이하이요",
+        //   groupDesc: "자율 스터디 방입니다람쥐!",
+        //   groupCnt: 0,
+        //   groupTotalCnt: 13,
+        //   grouper: [
+        //     "qqqweeeer",
+        //     "빛봉현",
+        //     "별빛지현",
+        //     "정처기out",
+        //     "녹용파는사슴",
+        //   ],
+        //   date: "2021-03-30 14:21:46",
+        // },
+        // {
+        //   src: "https://ifh.cc/g/Zp0ZYA.jpg",
+        //   groupName: "하이하이요",
+        //   groupDesc: "자율 스터디 방입니다람쥐!",
+        //   groupCnt: 0,
+        //   groupTotalCnt: 13,
+        //   grouper: [
+        //     "qqqweeeer",
+        //     "빛봉현",
+        //     "별빛지현",
+        //     "정처기out",
+        //     "녹용파는사슴",
+        //   ],
+        //   date: "2021-03-30 14:21:46",
+        // },
+        // {
+        //   src: "https://ifh.cc/g/Zp0ZYA.jpg",
+        //   groupName: "하이하이요",
+        //   groupDesc: "자율 스터디 방입니다람쥐!",
+        //   groupCnt: 0,
+        //   groupTotalCnt: 13,
+        //   grouper: [
+        //     "qqqweeeer",
+        //     "빛봉현",
+        //     "별빛지현",
+        //     "정처기out",
+        //     "녹용파는사슴",
+        //   ],
+        //   date: "2021-03-30 14:21:46",
+        // },
       ],
     };
   },
@@ -707,13 +719,17 @@ export default {
     MakeMyGroup() {
       this.caseNum = 2;
       this.MyGroup = [];
-      for (var i = 0; i < this.groups.length; i++) {
-        for (var j = 0; j < this.groups[i].grouper.length; j++) {
-          if (this.groups[i].grouper[j] === this.nickName) {
-            this.MyGroup.push(this.groups[i]);
-          }
-        }
-      }
+      axios
+        .create({
+          headers: {
+            "jwt-auth-token": storage.getItem("jwt-auth-token"),
+          },
+        })
+        .get("group/that-i-am")
+        .then((res) => {
+          console.log("내가잇는그룹", res);
+          this.MyGroup = res.data.groupListThatIAm;
+        });
       console.log(this.MyGroup);
       console.log(this.caseNum);
     },
@@ -721,7 +737,7 @@ export default {
       this.caseNum = 3;
       this.HotGroup = this.groups.slice(); //배열 복사
       this.HotGroup.sort(function(a, b) {
-        return b.groupTotalCnt - a.groupTotalCnt;
+        return b.groupMaxMemberCount - a.groupMaxMemberCount;
       });
       this.HotGroup = this.HotGroup.slice(0, 8);
       console.log(this.HotGroup);
@@ -757,11 +773,31 @@ export default {
           this.SearchedGroup.push(this.groups[i]);
         }
       }
+      if (this.SearchedGroup.length === 0) {
+        this.caseNum = 6;
+      }
     },
   },
   created() {
     // const nickName = storage.getItem('nickName')
-    this.AllGroup = this.groups.slice(0, 12);
+
+    console.log("그룹메인created===", storage.getItem("jwt-auth-token"));
+    axios
+      .create({
+        headers: {
+          "jwt-auth-token": storage.getItem("jwt-auth-token"),
+        },
+      })
+      .get("group")
+      .then((res) => {
+        console.log("그룹메인created될때", res);
+        this.groups = res.data.groupList;
+
+        this.AllGroup = this.groups.slice(0, 12);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   },
 };
 </script>

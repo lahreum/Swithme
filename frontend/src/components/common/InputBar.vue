@@ -24,8 +24,6 @@ export default {
   methods: {
     passEvent: function() {
       this.$emit('pass-input', this.input);
-      // console.log(this.input);
-      // console.log(this.rules);
     },
   },
 };

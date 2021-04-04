@@ -1,7 +1,7 @@
+import os
 import cv2
 import base64
 import numpy as np
-import tensorflow as tf
 from contents.detect import detect
 from contents.yolov3.models import YoloV3
 from django.conf import settings
@@ -9,6 +9,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
 # 파라미터 설정
+os.environ['TF_XLA_FLAGS'] = '--tf_xla_enable_xla_devices'
 origin_yolo_max_boxes = 100
 face_yolo_max_boxes = 10
 hand_yolo_max_boxes = 10
@@ -18,10 +19,6 @@ hand_num_classes = 2
 origin_weights = './contents/checkpoints/origin.tf'
 face_weights = './contents/checkpoints/face.tf'
 hand_weights = './contents/checkpoints/hand.tf'
-
-# GPU 메모리 설정
-physical_devices = tf.config.experimental.list_physical_devices('GPU')
-tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
 # 모델 생성
 settings.ORIGIN_YOLO = YoloV3(classes=origin_num_classes, yolo_max_boxes=origin_yolo_max_boxes)

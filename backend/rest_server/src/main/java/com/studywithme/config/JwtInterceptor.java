@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+
 @Component
 public class JwtInterceptor implements HandlerInterceptor {
 	
@@ -15,6 +16,8 @@ public class JwtInterceptor implements HandlerInterceptor {
 	
 	@Override
 	public boolean preHandle(HttpServletRequest req, HttpServletResponse resp,Object handler) {
+		if("OPTIONS".equals(req.getMethod()))
+			return true;
 		String token=req.getHeader("jwt-auth-token");
 		if(token!=null&&token.length()>0) {
 			jwtService.checkValid(token);

@@ -32,15 +32,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-
-import com.studywithme.DtoOnlyReturn.UserDto;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import com.studywithme.DtoOnlyReturn.UserDto;
 import com.studywithme.config.CommonMethods;
 import com.studywithme.config.JwtService;
 import com.studywithme.entity.TimeMonthly;
 import com.studywithme.entity.UserInfo;
+import com.studywithme.repository.DefaultProfileImgRepository;
 import com.studywithme.repository.TimeMonthlyRepository;
 import com.studywithme.repository.UserRepository;
 
@@ -60,6 +58,9 @@ public class UserController {
 	CommonMethods commonMethods;
 	
 	@Autowired
+	DefaultProfileImgRepository defaultProfileImgRepository;
+	
+	@Autowired
 	TimeMonthlyRepository timeMonthlyRepository;
 	
 	@PostMapping("/signup")
@@ -71,6 +72,7 @@ public class UserController {
 			String hashed=commonMethods.getHashed(user.getUserPassword());
 			if(hashed!=null) {
 				user.setUserPassword(hashed);
+				user.setUserProfileImg(defaultProfileImgRepository.findById(1).get().getDefaultProfileImgData());
 				userRepository.save(user);
 				result.put("success",true);
 			}
@@ -219,14 +221,23 @@ public class UserController {
 		Map<String,Object> result=new HashMap<>();
 
 		String id=commonMethods.getUserId(req.getHeader("jwt-auth-token"));
-
+		
 		Optional<UserInfo> user=userRepository.findById(id);
 		if(user.isPresent()) {
 			user.get().setUserPassword(null);
+//			user.setProfileImg(user.get().getUserProfileImg().getBytes(1l, (int)user.get().getUserProfileImg().length()));
+			try {
+				result.put("profileImg",user.get().getUserProfileImg().getBytes(1l, (int)user.get().getUserProfileImg().length()));
+				user.get().setUserProfileImg(null);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			result.put("data",user.get());
 		}
 		else
 			result.put("data",null);
+		
 		return result;
 	}
 	
@@ -355,7 +366,12 @@ public class UserController {
 				if(user.isPresent()) {
 					UserDto userDto=new UserDto();
 					userDto.setNickname(user.get().getUserNickname());
-					userDto.setProfileImg(user.get().getUserProfileImg());
+					try {
+						userDto.setProfileImg(user.get().getUserProfileImg().getBytes(1l, (int)user.get().getUserProfileImg().length()));
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					userDto.setTodayStudyTime(tm.getTimeMonthlyTime());
 					
 					userList.add(userDto);
