@@ -24,7 +24,7 @@
               </v-col>
               <v-col cols="4" style="font-size: 1rem;" align="end">
                 관심카테고리설정
-                <GroupSelect />
+                <GroupSelect @filtering="filteringGroup" />
               </v-col>
             </v-row>
             <hr />
@@ -62,6 +62,7 @@
               v-for="(group, index) in AllGroup"
               :key="index"
               ><GroupInfo
+                @clickGroupInfo="toGroupDetail(group.groupId)"
                 :src="'data:image/png;base64,' + group.src"
                 :groupName="group.groupName"
                 :groupDesc="group.groupNotice"
@@ -75,7 +76,8 @@
               sm="3"
               v-for="(group, index) in MyGroup"
               :key="index"
-              ><GroupInfo
+              ><GroupInfo(group.groupId)
+                @clickGroupInfo="toGroupDetail(group.groupId)"
                 :src="'data:image/png;base64,' + group.src"
                 :groupName="group.groupName"
                 :groupDesc="group.groupNotice"
@@ -90,6 +92,7 @@
               v-for="(group, index) in HotGroup"
               :key="index"
               ><GroupInfo
+                @clickGroupInfo="toGroupDetail(group.groupId)"
                 :src="'data:image/png;base64,' + group.src"
                 :groupName="group.groupName"
                 :groupDesc="group.groupNotice"
@@ -104,6 +107,7 @@
               v-for="(group, index) in NewGroup"
               :key="index"
               ><GroupInfo
+                @clickGroupInfo="toGroupDetail(group.groupId)"
                 :src="'data:image/png;base64,' + group.src"
                 :groupName="group.groupName"
                 :groupDesc="group.groupNotice"
@@ -118,6 +122,7 @@
               v-for="(group, index) in SearchedGroup"
               :key="index"
               ><GroupInfo
+                @clickGroupInfo="toGroupDetail(group.groupId)"
                 :src="'data:image/png;base64,' + group.src"
                 :groupName="group.groupName"
                 :groupDesc="group.groupNotice"
@@ -780,6 +785,10 @@ export default {
       if (this.SearchedGroup.length === 0) {
         this.caseNum = 6;
       }
+    },
+    filteringGroup() {},
+    toGroupDetail(g) {
+      this.$router.push({ name: "GroupDetail", params: { groupId: g } });
     },
   },
   created() {
