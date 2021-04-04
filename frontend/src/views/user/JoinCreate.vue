@@ -205,7 +205,6 @@ export default {
             if (response.data.success) {
               this.$emit('move-forward');
               this.$router.push('/join/join-complete');
-              console.log('회원가입 성공!');
             } else {
               alert('회원가입 도중 문제가 생겼습니다.');
               this.$router.push('/');
