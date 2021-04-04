@@ -37,4 +37,5 @@ public class GroupInfo {
 	private Blob groupProfileImg;
 	private String groupNotice;
 	private String groupCreatedDate;
+	private String groupGoalTitle;
 }
