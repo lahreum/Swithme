@@ -26,7 +26,7 @@
           </v-row>
 
           <v-row justify="space-around" style="margin-bottom:50px;">
-            <v-btn icon color="black" x-large @click="toHome"
+            <v-btn icon color="black" x-large @click="toGroupHome"
               ><v-icon>mdi-home</v-icon> 홈</v-btn
             >
             <v-btn icon color="black" x-large @click="toGroupRanking"
@@ -49,7 +49,11 @@
           </v-row>
 
           <v-row style="margin-bottom:50px;">
-            <v-col cols="12" sm="2" v-for="grouper in studying" :key="grouper"
+            <v-col
+              cols="12"
+              sm="2"
+              v-for="(grouper, idx) in studying"
+              :key="'studying' + idx"
               ><div class="GroupStudyUser">
                 <ProfileStudying
                   :src="grouper.profile"
@@ -62,8 +66,8 @@
             <v-col
               cols="12"
               sm="2"
-              v-for="grouper in notStudying"
-              :key="grouper"
+              v-for="(grouper, idx) in notStudying"
+              :key="'notStudying' + idx"
               ><div class="GroupStudyUser">
                 <ProfileStudying
                   :src="grouper.profile"
@@ -84,6 +88,9 @@
 <script>
 import ProfileStudying from "@/components/common/ProfileStudying.vue";
 import MiddleNav from "@/components/include/MiddleNav.vue";
+import axios from "axios";
+const storage = window.sessionStorage;
+
 export default {
   data() {
     return {
@@ -184,9 +191,19 @@ export default {
       }
     }
 
-    console.log("받아왓니", this.$route.params.groupId);
-    console.log("dfasdf", this.studying);
-    console.log(this.notStudying);
+    axios
+      .create({
+        headers: {
+          "jwt-auth-token": storage.getItem("jwt-auth-token"),
+        },
+      })
+      .get("group/" + this.$route.params.groupId)
+      .then((res) => {
+        console.log(res);
+      });
+    // console.log("받아왓니", this.$route.params.groupId);
+    // console.log("dfasdf", this.studying);
+    // console.log(this.notStudying);
   },
   components: {
     MiddleNav,
