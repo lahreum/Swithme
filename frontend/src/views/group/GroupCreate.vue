@@ -285,9 +285,7 @@ export default {
           console.log(this.fileList);
           var params = new FormData();
           params.append("groupId", res.data.createdGroupId);
-          // if (this.fileList.length === 0){
-          //   this.fileList[0] =
-          // }
+
           params.append("file", this.fileList[0]);
 
           console.log(this.fileList[0]);

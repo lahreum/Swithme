@@ -69,9 +69,9 @@ export default {
       for (var i = 0; i < 9; i++) {
         if (this.category[i].title === s1) {
           if (s2 === true) {
-            this.categoryIdxList.push(i);
+            this.categoryIdxList.push(i + 1);
           } else {
-            var j = this.categoryIdxList.indexOf(i);
+            var j = this.categoryIdxList.indexOf(i) + 1;
             this.categoryIdxList.splice(j);
           }
         }
@@ -80,6 +80,7 @@ export default {
     },
     sendCategoryIdx() {
       console.log(this.categoryIdxList);
+      this.$emit("filtering", this.categoryIdxList);
       this.menu = false;
     },
   },
