@@ -36,6 +36,7 @@ public class GroupInfo {
 	private String groupMasterNickname;
 	private Blob groupProfileImg;
 	private String groupNotice;
+	@Column(insertable=false)
 	private String groupCreatedDate;
 	private String groupGoalTitle;
 }
