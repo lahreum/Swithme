@@ -225,6 +225,14 @@ public class UserController {
 		Optional<UserInfo> user=userRepository.findById(id);
 		if(user.isPresent()) {
 			user.get().setUserPassword(null);
+//			user.setProfileImg(user.get().getUserProfileImg().getBytes(1l, (int)user.get().getUserProfileImg().length()));
+			try {
+				result.put("profileImg",user.get().getUserProfileImg().getBytes(1l, (int)user.get().getUserProfileImg().length()));
+				user.get().setUserProfileImg(null);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			result.put("data",user.get());
 		}
 		else
@@ -358,7 +366,12 @@ public class UserController {
 				if(user.isPresent()) {
 					UserDto userDto=new UserDto();
 					userDto.setNickname(user.get().getUserNickname());
-					userDto.setProfileImg(user.get().getUserProfileImg());
+					try {
+						userDto.setProfileImg(user.get().getUserProfileImg().getBytes(1l, (int)user.get().getUserProfileImg().length()));
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					userDto.setTodayStudyTime(tm.getTimeMonthlyTime());
 					
 					userList.add(userDto);
