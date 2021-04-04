@@ -143,11 +143,12 @@ public class TimerController {
 		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(user.isPresent()) {
 			datetime=datetime.substring(2,13);
-			datetime.replaceAll("-", "");
-			datetime.replaceAll(" ", "");
+			datetime=datetime.replaceAll("-", "");
+			datetime=datetime.replaceAll(" ", "");
 			Optional<TimeHourly> timeHourly=timeHourlyRepository.findByTimeHourlyUserNicknameAndTimeHourlyYearMonthDayHour(nickname, datetime);
+			
 			if(timeHourly.isPresent()) {//hourly에 저장하고 daily,monthly에도 반영
-				timeHourly.get().setTimeHourlyTime(studyTime);
+				timeHourly.get().setTimeHourlyTime(timeHourly.get().getTimeHourlyTime()+studyTime);
 				timeHourlyRepository.save(timeHourly.get());
 			}
 			else {
