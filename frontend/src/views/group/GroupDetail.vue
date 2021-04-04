@@ -90,6 +90,7 @@ export default {
       studying: [],
       notStudying: [],
       IsGM: false,
+
       navInfo: [
         "sample2.png",
         "그룹",
@@ -165,6 +166,7 @@ export default {
       ],
     };
   },
+  // props: ["groupId"],
   created() {
     var i = 0;
     for (i; i < this.groupers.length; i++) {
@@ -182,6 +184,7 @@ export default {
       }
     }
 
+    console.log("받아왓니", this.$route.params.groupId);
     console.log("dfasdf", this.studying);
     console.log(this.notStudying);
   },

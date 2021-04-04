@@ -1,18 +1,7 @@
 <template>
-  <div class="groupInfo">
+  <div class="groupInfo" @click="clickGroupInfo">
     <div>
-      <v-img
-        v-if="src === NULL"
-        class="groupInfoImg"
-        src="https://ifh.cc/g/wyakuA.jpg"
-        style="border-radius:10px;"
-      >
-        <div class="groupCnt">
-          <v-icon color="black" dark>mdi-account</v-icon
-          ><span>{{ groupCnt }} / {{ groupTotalCnt }}</span>
-        </div>
-      </v-img>
-      <v-img v-else class="groupInfoImg" :src="src" style="border-radius:10px;">
+      <v-img class="groupInfoImg" :src="src" style="border-radius:10px;">
         <div class="groupCnt">
           <v-icon color="black" dark>mdi-account</v-icon
           ><span>{{ groupCnt }} / {{ groupTotalCnt }}</span>
@@ -30,6 +19,11 @@
 <script>
 export default {
   props: ["src", "groupName", "groupDesc", "groupCnt", "groupTotalCnt"],
+  methods: {
+    clickGroupInfo() {
+      this.$emit("clickGroupInfo");
+    },
+  },
 };
 </script>
 
