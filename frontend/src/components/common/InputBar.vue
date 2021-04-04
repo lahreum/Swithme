@@ -2,6 +2,8 @@
   <v-text-field
     :placeholder="placeholder"
     :type="type"
+    :disabled="isDisabled"
+    :rules="rules"
     outlined
     color="#673fb4"
     v-model="input"
@@ -12,16 +14,16 @@
 
 <script>
 export default {
-  name: "InputBar",
-  props: ["placeholder", "type"],
+  name: 'InputBar',
+  props: ['placeholder', 'type', 'isDisabled', 'rules'],
   data: function() {
     return {
-      input: "",
+      input: '',
     };
   },
   methods: {
     passEvent: function() {
-      this.$emit("pass-input", this.input);
+      this.$emit('pass-input', this.input);
     },
   },
 };
