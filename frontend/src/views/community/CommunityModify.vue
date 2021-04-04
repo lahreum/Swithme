@@ -116,10 +116,6 @@ const storage = window.sessionStorage;
           console.log(error);
         })
       },
-      createBoard() {
-        alert('글을 작성하였습니다.');
-        this.$router.push('/community');
-      },
       goHome() {
         alert('작성한 글이 취소됩니다.');
         this.$router.push('/community');

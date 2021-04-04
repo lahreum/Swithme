@@ -67,6 +67,9 @@ export default {
       modifyContent: '',
     }
   },
+  created() {
+    this.checkcheck();
+  },
   methods: {
     toggleModify() {
       this.modifying = !this.modifying;
@@ -81,6 +84,9 @@ export default {
     },
     deleteComment() {
       // 댓글 삭제
+    },
+    checkcheck() {
+      console.log('talk is = ', this.talk);
     }
   }
 }
