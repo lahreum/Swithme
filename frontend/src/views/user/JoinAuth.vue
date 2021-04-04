@@ -125,12 +125,7 @@ export default {
     getAuthNum() {
       if (!this.isDisabled) {
         axios
-          .get(
-            'http://localhost:9999/user/id?userId=' +
-              this.emailFront +
-              '@' +
-              this.emailBack
-          )
+          .get('user/id?userId=' + this.emailFront + '@' + this.emailBack)
           .then((response) => {
             if (response.data.isPresent) {
               alert('중복된 이메일 입니다. 다른 이메일 주소를 입력해주세요.');
