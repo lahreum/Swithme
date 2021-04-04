@@ -23,42 +23,15 @@ export default {
   data: function() {
     return {
       items: [
-        {
-          name: '초중고',
-          value: 1,
-        },
-        {
-          name: '수능',
-          value: 2,
-        },
-        {
-          name: '대학교', 
-          value: 3
-        },
-        {
-          name: '대학원',
-          value: 4,
-        },
-        {
-          name: '취업',
-          value: 5,
-        },
-        {
-          name: '공무원시험',
-          value: 6
-        },
-        {
-          name: '자격증',
-          value: 7,
-        },
-        {
-          name: '어학',
-          value: 8,
-        },
-        {
-          name: '기타',
-          value: 9,
-        },
+        {name: '초중고', value: 1},
+        {name: '수능', value: 2},
+        {name: '대학교', value: 3},
+        {name: '대학원', value: 4},
+        {name: '취업', value: 5},
+        {name: '공무원시험', value: 6},
+        {name: '자격증',value: 7},
+        {name: '어학',value: 8},
+        {name: '기타', value: 9},
       ],
     };
   },

@@ -11,6 +11,7 @@ export const store = new Vuex.Store({
     user: {},
     host: 'http://localhost:9999/',
     boardDetailId: 0,
+    isLogin: false,
   },
   getters: {
     /* 로그인한 유저의 정보 */
