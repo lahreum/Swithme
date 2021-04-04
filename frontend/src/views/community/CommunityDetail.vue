@@ -1,6 +1,6 @@
 <template>
   <div>
-      <div class="communitySection">커뮤니티 > {{ board.boardId }} </div>
+      <div class="communitySection">커뮤니티 > {{ categoryName }} </div>
       <v-divider></v-divider>
       <p class="boardTitle">{{ board.boardTitle }}</p>
       <div>
@@ -68,6 +68,7 @@ const storage = window.sessionStorage;
       return {
         isLiked: false,
         isWriter: false,
+        categoryName: '',
         board: {
           boardId: 0,
           // boardCategory: "",
@@ -167,7 +168,8 @@ const storage = window.sessionStorage;
             this.board.boardView = res.data.boardDetail.boardView;
             this.board.boardLiked = res.data.boardDetail.boardLiked;
             this.isLiked = res.data.didILiked;
-            this.getWriterInfo();
+            this.isWriter = res.data.isWriter;
+            this.categoryName = res.data.categoryName;
           } else {
             console.log('아예 받아오질 못함.');
           }
@@ -215,13 +217,13 @@ const storage = window.sessionStorage;
           console.log(error);
         })
       },
-      getWriterInfo() {
-        if(`${this.$store.state.user.userNickname}` ===  this.board.boardWriter){
-          this.isWriter = true;
-        } else {
-          this.isWriter = false;
-        }
-      },
+      // getWriterInfo() {
+      //   if(`${this.$store.state.user.userNickname}` ===  this.board.boardWriter){
+      //     this.isWriter = true;
+      //   } else {
+      //     this.isWriter = false;
+      //   }
+      // },
       deleteBoard() {
         this.$Axios
         .delete('/community/board/' + `${this.$store.state.boardDetailId}`,{
