@@ -1,8 +1,8 @@
 <template>
   <v-row>
-    <v-col style="margin-left: 500px; margin-right: 500px;">
+    <v-col style="margin-left: 500px; margin-right: 500px">
       <v-text-field v-model="nickname" label="닉네임"></v-text-field>
-      <v-btn style="margin-right: 10px;" @click="check()"
+      <v-btn style="margin-right: 10px" @click="check()"
         >닉네임 중복 확인</v-btn
       >
       <v-btn :disabled="!valid" @click="submit()">회원가입</v-btn>
@@ -27,9 +27,7 @@ export default {
     check() {
       // 프론트에서 닉네임 범위 판별해줘야함
       axios
-        .get(
-          'http://localhost:9999/user/nickname?nickname=' + this.nickname
-        )
+        .get('user/nickname?nickname=' + this.nickname)
         .then((response) => {
           if (response.data.isPresent) {
             this.valid = false;
@@ -45,7 +43,7 @@ export default {
     },
     submit() {
       axios
-        .post('http://localhost:9999/user/signup-social', {
+        .post('user/signup-social', {
           nickname: this.nickname,
           token: this.tmpToken,
         })
