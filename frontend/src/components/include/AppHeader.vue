@@ -68,6 +68,7 @@
           style="margin-left: 60px"
         >
           <div
+            style="cursor: pointer;"
             class="login-item"
             @click="openLogin"
             :class="{ 'white-text': darkmode, 'black-text': !darkmode }"
@@ -100,18 +101,23 @@
           >
             <template v-slot:activator="{ on }">
               <!-- 이 위치에 프로필 사진 컴포넌트 넣어야 함 -->
-              <v-col align="center" v-on="on">
-                {{ username }}님, 안녕하세요!
+              <v-col
+                style="cursor: pointer;"
+                align="center"
+                v-on="on"
+                :class="{ 'white-text': darkmode, 'black-text': !darkmode }"
+              >
+                {{ userNickname }}님, 안녕하세요!
               </v-col>
             </template>
             <v-list>
               <v-list-item>
-                <v-list-item-title @click="goMyPage">
+                <v-list-item-title style="cursor: pointer;" @click="goMyPage">
                   마이페이지
                 </v-list-item-title>
               </v-list-item>
               <v-list-item>
-                <v-list-item-title @click="signOut">
+                <v-list-item-title style="cursor: pointer;" @click="signOut">
                   로그아웃
                 </v-list-item-title>
               </v-list-item>
@@ -155,13 +161,19 @@
               <v-row>
                 <v-col class="middleLetter formLetter" cols="3">이메일</v-col>
                 <v-col cols="9"
-                  ><input-bar placeholder="이메일"></input-bar
+                  ><input-bar
+                    @pass-input="getEmail"
+                    placeholder="이메일"
+                  ></input-bar
                 ></v-col>
               </v-row>
               <v-row>
                 <v-col class="middleLetter formLetter" cols="3">비밀번호</v-col>
                 <v-col cols="9"
-                  ><input-bar placeholder="비밀번호"></input-bar
+                  ><input-bar
+                    @pass-input="getPw"
+                    placeholder="비밀번호"
+                  ></input-bar
                 ></v-col>
               </v-row>
             </v-container>
@@ -169,7 +181,7 @@
 
           <v-card-actions style="padding-bottom: 0px; padding-top: 0px">
             <div class="buttonGroup">
-              <div @click="dialog = false">
+              <div @click="login">
                 <app-btn-large
                   class="btnOption"
                   :btnColor="'#673fb4'"
@@ -222,7 +234,7 @@
 import '@/views/user/user.css';
 import AppBtnLarge from '@/components/common/AppBtnLarge.vue';
 import InputBar from '@/components/common/InputBar.vue';
-// import axios from "axios";
+import axios from 'axios';
 
 const storage = window.sessionStorage;
 export default {
@@ -236,67 +248,105 @@ export default {
       isLogin: false,
       username: 'default',
       dialog: false,
+      userInfo: {},
+      email: '',
+      pw: '',
+      userNickname: '',
     };
   },
-  created() {
+
+  mounted() {
+    console.log('마운티드됨?');
     if (storage.getItem('jwt-auth-token')) {
       this.isLogin = true;
+      this.getUserInfo(storage.getItem('jwt-auth-token'));
+      // console.log(storage.getItem("jwt-auth-token"));
     }
-    // axios({
-    //   method: "get",
-    //   baseURL: "http://localhost:9999/",
-    //   url: "user",
-    //   Authorization: `Bearer + ${storage.getItem("jwt-auth-token")}`,
-    // }).then((response) => {
-    //   console.log(response);
-    // });
-
-    // axios
-    //   .get("user", {
-    //     headers: {
-    //       Authorization: `Bearer + ${storage.getItem("jwt-auth-token")}`,
-    //     },
-    //   })
-    //   .then((response) => {
-    //     console.log(response);
-    //   });
-    // axios
-    //   .get("http://localhost:9999/user", {
-    //     headers: {
-    //       Authorization: `Bearer ${storage.getItem("jwt-auth-token")}`,
-    //     },
-    //   })
-    //   .then((res) => {
-    //     console.log(res);
-    //   })
-    //   .catch((error) => console.log(error));
-
-    // axios
-    //   .create({
-    //     headers: { "jwt-auth-token": storage.getItem("jwt-auth-token") },
-    //   })
-    //   .get("http://localhost:9999/user")
-    //   .then((response) => {
-    //     console.log(response);
-    //   });
   },
+
   methods: {
-    signIn: function () {
+    checkLogin() {
+      if (this.userInfo === null) {
+        this.isLogin = false;
+      } else {
+        this.isLogin = true;
+      }
+    },
+    signIn: function() {
       this.isLogin = true;
     },
-    signOut: function () {
+    signOut: function() {
       alert('로그아웃!!!!');
       this.isLogin = false;
       storage.removeItem('jwt-auth-token');
+      this.$store.commit('userInit');
+      this.$router.push('/');
     },
-    goMyPage: function () {
+    goMyPage: function() {
       this.$router.push('/my-page-access');
     },
-    goMain: function () {
+    goMain: function() {
       this.$router.push('/');
     },
     openLogin() {
       this.dialog = true;
+    },
+    getUserInfo(token) {
+      axios
+        .create({
+          headers: {
+            'jwt-auth-token': token,
+          },
+        })
+        .get('user')
+        .then((res) => {
+          // console.log(res);
+          this.userInfo = res.data.data;
+          // console.log(this.userInfo);
+          this.$store.commit('LOGIN', this.userInfo);
+          this.userNickname = this.$store.getters.getUserNickname;
+          // console.log(this.userNickname);
+          // console.log("무야호", this.userInfo);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+
+    login() {
+      // console.log('로그인버튼눌럿다!');
+
+      var params = new URLSearchParams();
+      params.append('userId', this.email);
+      params.append('userPassword', this.pw);
+      axios
+        .post('user/login', params)
+        .then((res) => {
+          // console.log(res);
+          if (res.data.success === true) {
+            this.dialog = false;
+            this.isLogin = true;
+            // console.log(res);
+            this.getUserInfo(res.headers['jwt-auth-token']);
+            storage.setItem('jwt-auth-token', res.headers['jwt-auth-token']);
+
+            // console.log("유저닉네임", this.userNickname);
+            // console.log(this.$store.state.user);
+
+            // console.log("스토어", this.userNickname);
+          } else {
+            alert('아이디 또는 비밀번호를 잘못 입력하였습니다.');
+          }
+        })
+        .catch((err) => console.log(err));
+      // console.log(this.email);
+      // console.log(this.pw);
+    },
+    getEmail(parm) {
+      this.email = parm;
+    },
+    getPw(parm) {
+      this.pw = parm;
     },
   },
 };
@@ -325,6 +375,7 @@ export default {
 .logo-header {
   display: flex;
   justify-content: center;
+  cursor: pointer;
 }
 .v-text-field.v-text-field--enclosed .v-text-field__details {
   display: none !important;

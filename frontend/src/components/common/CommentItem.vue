@@ -1,18 +1,17 @@
 <template>
   <div class="talk">
-    <!-- 댓글 갯수 -->
-    <p class="commentInfo"><span class="countNumber" style="padding-bottom:20px;"> 5 </span> 개의 댓글</p>
-    <v-divider></v-divider><br>
+    
     <!-- 댓글리스트 -->
     <div class="box">
       <article class="media">
           <div class="content">
             <!-- 닉네임 -->
             <p>
-              <strong>녹용파는 사슴</strong>
+              <strong>{{ talk.replyWriter }}</strong>
             </p>
             <!-- 댓글 내용 -->
-            <p v-if="!modifying">애자일 맞아요</p>
+            <p v-if="!modifying">{{ talk.replyContent }}</p>
+            <p style="color:#BDBDBD;">{{ talk.replyDate }}</p>
             <!-- 댓글 작성자와 로그인 정보가 같을때 댓글 수정가능 -->
             <div v-if="modifying">
               <v-col cols="12" md="6">
@@ -27,34 +26,38 @@
             </div>
             <!-- 수정중 아닐때, 수정 | 삭제 메뉴보임 -->
             <div v-if="!modifying">
-              <span
+              <p
                 class="option"
-                >수정</span>
+                >수정 
               <span
-                class="option"
-                >삭제</span>
+                class="option" style="padding-left:10px;"
+                >삭제</span></p>
             </div>
             <!-- 수정중일때, 저장 취소 버튼 -->
             <div v-if="modifying">
-              <span
+              <p
                 @click="modifyComment(modifyNumber, modifyContent)"
                 v-if="talk.userNickname == nickname"
                 class="option"
-                >저장</span>
+                >저장 
               <span
                 @click="toggleModify"
                 v-if="talk.userNickname == nickname"
-                class="option"
-                >취소</span>
+                class="option" style="padding-left:10px;"
+                >취소</span></p>
             </div>
           </div>
       </article>
     </div>
+    <v-divider></v-divider>
   </div>
 </template>
 
 <script>
+
+
 export default {
+  
   props: {
     talk: Object,
   },
@@ -63,6 +66,9 @@ export default {
       modifying: false,
       modifyContent: '',
     }
+  },
+  created() {
+    this.checkcheck();
   },
   methods: {
     toggleModify() {
@@ -78,6 +84,9 @@ export default {
     },
     deleteComment() {
       // 댓글 삭제
+    },
+    checkcheck() {
+      console.log('talk is = ', this.talk);
     }
   }
 }

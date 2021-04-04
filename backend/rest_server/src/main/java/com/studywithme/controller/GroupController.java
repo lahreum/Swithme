@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.studywithme.DtoOnlyReturn.GroupProfileDto;
 import com.studywithme.DtoOnlyReturn.UserDto;
 import com.studywithme.config.CommonMethods;
 import com.studywithme.entity.GroupInfo;
@@ -33,6 +34,7 @@ import com.studywithme.entity.GroupMember;
 import com.studywithme.entity.TimeDaily;
 import com.studywithme.entity.TimeMonthly;
 import com.studywithme.entity.UserInfo;
+import com.studywithme.repository.DefaultProfileImgRepository;
 import com.studywithme.repository.GroupMemberRepository;
 import com.studywithme.repository.GroupRepository;
 import com.studywithme.repository.TimeDailyRepository;
@@ -63,6 +65,9 @@ public class GroupController {
 	@Autowired
 	TimeMonthlyRepository timeMonthlyRepository;
 	
+	@Autowired
+	DefaultProfileImgRepository defaultProfileImgRepository;
+	
 	
 	@PostMapping("")
 	@ApiOperation(value="그룹 생성",notes="바디로 받은 group으로 그룹생성에 성공하면 true 반환")
@@ -76,6 +81,7 @@ public class GroupController {
 		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(user.isPresent()) {
 			group.setGroupMasterNickname(nickname);
+			group.setGroupProfileImg(defaultProfileImgRepository.findById(2).get().getDefaultProfileImgData());
 			GroupInfo savedGroup=groupRepository.save(group);
 			
 			Optional<GroupMember> groupMember=groupMemberRepository.findByGroupMemberUserNicknameAndGroupMemberGroupId(nickname, savedGroup.getGroupId());
@@ -91,7 +97,8 @@ public class GroupController {
 				groupMemberRepository.save(groupMember.get());
 			}
 			result.clear();
-			result.put("success",true);			
+			result.put("success",true);		
+			result.put("createdGroupId",savedGroup.getGroupId());
 		}
 		return result;
 	}
@@ -137,7 +144,23 @@ public class GroupController {
 			List<GroupInfo> groupList=groupRepository.findAll();
 			if(groupList!=null) {
 				result.clear();
+				List<GroupProfileDto> groupProfileList=new ArrayList<>();
+				
+				for(int i=0;i<groupList.size();i++) {
+					try {
+						GroupProfileDto gpd=new GroupProfileDto();
+						gpd.setGroupId(groupList.get(i).getGroupId());
+						gpd.setGroupProfileImg(groupList.get(i).getGroupProfileImg().getBytes(1l, (int)groupList.get(i).getGroupProfileImg().length()));
+						groupProfileList.add(gpd);
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					groupList.get(i).setGroupProfileImg(null);
+				}
+				
 				result.put("groupList",groupList);
+				result.put("groupProfileList",groupProfileList);
 			}
 		}		
 		return result;
@@ -170,7 +193,12 @@ public class GroupController {
 								
 						UserDto curUser=new UserDto();
 						curUser.setNickname(curUserOpt.get().getUserNickname());
-						curUser.setProfileImg(curUserOpt.get().getUserProfileImg());
+						try {
+							curUser.setProfileImg(curUserOpt.get().getUserProfileImg().getBytes(1l, (int)curUserOpt.get().getUserProfileImg().length()));
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						curUser.setStudying(curUserOpt.get().isUserIsStudying());
 						if(curTimeDaily.isPresent())
 							curUser.setTodayStudyTime(curTimeDaily.get().getTimeDailyTime());
@@ -182,6 +210,13 @@ public class GroupController {
 					
 					result.put("groupMemberList",userList);
 					result.clear();
+					try {
+						result.put("groupProfileImg",group.get().getGroupProfileImg().getBytes(1l, (int)group.get().getGroupProfileImg().length()));
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					group.get().setGroupProfileImg(null);
 					result.put("groupInfo",group.get());
 				}
 			}
@@ -216,8 +251,12 @@ public class GroupController {
 					
 					UserDto userDto=new UserDto();
 					userDto.setNickname(curUser.get().getUserNickname());
-					userDto.setProfileImg(curUser.get().getUserProfileImg());
-					
+					try {
+						userDto.setProfileImg(curUser.get().getUserProfileImg().getBytes(1l, (int)curUser.get().getUserProfileImg().length()));
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					if(curTimeDaily.isPresent()) 
 						userDto.setTodayStudyTime(curTimeDaily.get().getTimeDailyTime());
 					else
@@ -238,7 +277,12 @@ public class GroupController {
 					if(curUser.isPresent()) {
 						UserDto userDto=new UserDto();
 						userDto.setNickname(curUser.get().getUserNickname());
-						userDto.setProfileImg(curUser.get().getUserProfileImg());
+						try {
+							userDto.setProfileImg(curUser.get().getUserProfileImg().getBytes(1l, (int)curUser.get().getUserProfileImg().length()));
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						int sum=0;
 						for(String s: dates) {
 							Optional<TimeDaily> timeDailyEach=timeDailyRepository.findByTimeDailyUserNicknameAndTimeDailyYearMonthDayAndTimeDailyAction(nickname, s,0);
@@ -261,7 +305,12 @@ public class GroupController {
 					
 					UserDto userDto=new UserDto();
 					userDto.setNickname(curUser.get().getUserNickname());
-					userDto.setProfileImg(curUser.get().getUserProfileImg());
+					try {
+						userDto.setProfileImg(curUser.get().getUserProfileImg().getBytes(1l, (int)curUser.get().getUserProfileImg().length()));
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					
 					if(monthlyList.isPresent()) 
 						userDto.setTodayStudyTime(monthlyList.get().getTimeMonthlyTime());
@@ -329,13 +378,26 @@ public class GroupController {
 		if(user.isPresent()) {
 			Optional<List<GroupMember>> groupMemberList=groupMemberRepository.findByGroupMemberUserNickname(nickname);
 			List<GroupInfo> groupList=new ArrayList<>();
+			List<GroupProfileDto> groupProfileList=new ArrayList<>();
 			for(GroupMember gm : groupMemberList.get()) {
 				Optional<GroupInfo> group=groupRepository.findById(gm.getGroupMemberGroupId());
-				if(group.isPresent()) 
+				if(group.isPresent()) {
+					try {
+						GroupProfileDto gpd=new GroupProfileDto();
+						gpd.setGroupId(group.get().getGroupId());
+						gpd.setGroupProfileImg(group.get().getGroupProfileImg().getBytes(1l, (int)group.get().getGroupProfileImg().length()));
+						groupProfileList.add(gpd);
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					group.get().setGroupProfileImg(null);
 					groupList.add(group.get());
+				}
 			}
 			result.clear();
 			result.put("groupListThatIAm",groupList);
+			result.put("groupProfileList",groupProfileList);
 		}
 		return result;
 	}

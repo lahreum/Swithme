@@ -17,6 +17,7 @@ import JoinAgree from '@/views/user/JoinAgree.vue';
 import JoinAuth from '@/views/user/JoinAuth.vue';
 import JoinCreate from '@/views/user/JoinCreate.vue';
 import JoinComplete from '@/views/user/JoinComplete.vue';
+import JoinLogin from '@/views/user/JoinLogin.vue';
 import Token from '@/views/social/Token.vue';
 import Nickname from '@/views/social/Nickname.vue';
 import NoAccess from '@/views/NoAccess.vue';
@@ -91,6 +92,11 @@ export default [
         path: 'join-complete',
         name: 'JoinComplete',
         component: JoinComplete,
+      },
+      {
+        path: 'join-login',
+        name: 'JoinLogin',
+        component: JoinLogin,
       },
     ],
   },

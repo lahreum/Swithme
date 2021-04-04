@@ -41,6 +41,8 @@ import HomeSecond from "../components/include/HomeSecond.vue";
 import HomeThird from "../components/include/HomeThird.vue";
 import HomeFourth from "../components/include/HomeFourth.vue";
 import StudyBtn from "../components/common/StudyBtn.vue";
+// import axios from "axios";
+// const storage = window.sessionStorage;
 
 export default {
   components: {
@@ -59,6 +61,7 @@ export default {
       },
       isDarkmode: true,
       isTop: true,
+      userInfo: [],
     };
   },
   methods: {
@@ -87,6 +90,8 @@ export default {
       }
     },
   },
+
+  created() {},
 };
 </script>
 

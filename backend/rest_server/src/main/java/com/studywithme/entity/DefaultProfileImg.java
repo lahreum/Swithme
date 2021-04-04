@@ -1,6 +1,7 @@
 package com.studywithme.entity;
 
-import javax.persistence.Column;
+import java.sql.Blob;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,12 +18,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Attendance {
-
+public class DefaultProfileImg {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int attendanceId;
-	
-	private String attendanceUserNickname;
-	private String attendanceDate;
+	private int defaultProfileImgId;
+	private Blob defaultProfileImgData;
 }

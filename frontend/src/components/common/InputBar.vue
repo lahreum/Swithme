@@ -1,15 +1,31 @@
 <template>
   <v-text-field
     :placeholder="placeholder"
-    outlined 
+    :type="type"
+    :disabled="isDisabled"
+    :rules="rules"
+    outlined
     color="#673fb4"
+    v-model="input"
+    @input="passEvent"
+    @change="passEvent"
   ></v-text-field>
 </template>
 
 <script>
 export default {
   name: 'InputBar',
-  props: ['placeholder'],
+  props: ['placeholder', 'type', 'isDisabled', 'rules'],
+  data: function() {
+    return {
+      input: '',
+    };
+  },
+  methods: {
+    passEvent: function() {
+      this.$emit('pass-input', this.input);
+    },
+  },
 };
 </script>
 
