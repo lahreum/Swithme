@@ -152,8 +152,9 @@ public class CommunityController {
 			String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
 			Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 			if(user.isPresent()&&boardBefore.get().getBoardWriter().equals(nickname)) {
-				boardAfter.setBoardWriter(nickname);
-				boardRepository.save(boardAfter);
+				boardBefore.get().setBoardTitle(boardAfter.getBoardTitle());
+				boardBefore.get().setBoardContent(boardAfter.getBoardContent());
+				boardRepository.save(boardBefore.get());
 				
 				result.clear();
 				result.put("success",true);
