@@ -24,6 +24,5 @@ public class Attendance {
 	private int attendanceId;
 	
 	private String attendanceUserNickname;
-	@Column(insertable=false, updatable=false)
 	private String attendanceDate;
 }
