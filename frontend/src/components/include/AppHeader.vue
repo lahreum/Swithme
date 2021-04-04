@@ -102,6 +102,7 @@
             <template v-slot:activator="{ on }">
               <!-- 이 위치에 프로필 사진 컴포넌트 넣어야 함 -->
               <v-col
+                style="cursor: pointer;"
                 align="center"
                 v-on="on"
                 :class="{ 'white-text': darkmode, 'black-text': !darkmode }"
@@ -111,12 +112,12 @@
             </template>
             <v-list>
               <v-list-item>
-                <v-list-item-title @click="goMyPage">
+                <v-list-item-title style="cursor: pointer;" @click="goMyPage">
                   마이페이지
                 </v-list-item-title>
               </v-list-item>
               <v-list-item>
-                <v-list-item-title @click="signOut">
+                <v-list-item-title style="cursor: pointer;" @click="signOut">
                   로그아웃
                 </v-list-item-title>
               </v-list-item>
