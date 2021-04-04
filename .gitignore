@@ -2,7 +2,7 @@
 logs/
 
 # Weights / Checkpoints
-data/
+backend/ai_server/contents/data/raw
 checkpoints/
 
 # Datasets
