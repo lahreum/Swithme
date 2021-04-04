@@ -148,6 +148,53 @@ public class UserController {
 		return result;
 	}
 	
+	@GetMapping("/email")
+	@ApiOperation(value="회원가입시 이메일 인증",notes="이메일을 파라미터로 받아 메일로 링크 발송하고 response로 반환\n인터셉터에서 제외")
+	public Object emailVaild(@RequestParam("userEmail") String userEmail) throws AddressException, MessagingException {
+		Map<String,Object> result=new HashMap<>();
+		String host="smtp.naver.com";
+		final String username="swithmedev";
+		final String password="swithme103";
+		int port=465;
+		
+		Optional<UserInfo> user=userRepository.findById(userEmail);
+		if(user.isPresent()) {
+			String subject="회원가입 인증번호입니다.";
+					
+			int validNum=(int)(Math.random()*10000);
+			String body="다음의 인증번호를 입력해주세요!\n"+Integer.toString(validNum);
+			
+			Properties props=System.getProperties();
+			props.put("mail.smtp.host", host);
+			props.put("mail.smtp.port",port);
+			props.put("mail.smtp.auth","true");
+			props.put("mail.smtp.ssl.enable","true");
+			props.put("mail.smtp.ssl.trust",host);
+			
+			Session session=Session.getDefaultInstance(props,new javax.mail.Authenticator() {
+				String un=username;
+				String pw=password;
+				protected javax.mail.PasswordAuthentication getPasswordAuthentication(){
+					return new javax.mail.PasswordAuthentication(un,pw);
+				}
+			});
+			session.setDebug(true);
+			Message mimeMessage=new MimeMessage(session);
+			mimeMessage.setFrom(new InternetAddress("swithmedev@naver.com"));
+			mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(userEmail));
+			
+			mimeMessage.setSubject(subject);
+			mimeMessage.setText(body);
+			Transport.send(mimeMessage);
+			
+			result.put("success",true);
+			result.put("validNum",validNum);
+		}
+		else
+			result.put("success",false);
+		return result;
+	}
+	
 	@PostMapping("/password")
 	@ApiOperation(value="비밀번호 분실",notes="이메일을 파라미터로 받아 메일로 링크 발송\n인터셉터에서 제외")
 	public Object sendEmail(@RequestParam("userEmail") String userEmail) throws AddressException, MessagingException {
