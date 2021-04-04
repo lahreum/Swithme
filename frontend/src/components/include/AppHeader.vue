@@ -248,21 +248,13 @@ export default {
       userNickname: "",
     };
   },
-  watch: {
-    userInfo: function() {
-      this.checkLogin();
-    },
-  },
-  created() {
-    console.log("크리에이티드됨?");
-    this.getUserInfo(storage.getItem("jwt-auth-token"));
-  },
 
   mounted() {
     console.log("마운티드됨?");
     if (storage.getItem("jwt-auth-token")) {
       this.isLogin = true;
       this.getUserInfo(storage.getItem("jwt-auth-token"));
+      console.log(storage.getItem("jwt-auth-token"));
     }
   },
 
@@ -281,6 +273,7 @@ export default {
       alert("로그아웃!!!!");
       this.isLogin = false;
       storage.removeItem("jwt-auth-token");
+      this.$store.commit("userInit");
       this.$router.push("/");
     },
     goMyPage: function() {
@@ -301,9 +294,12 @@ export default {
         })
         .get("user")
         .then((res) => {
+          console.log(res);
           this.userInfo = res.data.data;
+          console.log(this.userInfo);
           this.$store.commit("LOGIN", this.userInfo);
           this.userNickname = this.$store.getters.getUserNickname;
+          console.log(this.userNickname);
           console.log("무야호", this.userInfo);
         })
         .catch((err) => {
@@ -324,12 +320,13 @@ export default {
           if (res.data.success === true) {
             this.dialog = false;
             this.isLogin = true;
+            console.log(res);
             this.getUserInfo(res.headers["jwt-auth-token"]);
             storage.setItem("jwt-auth-token", res.headers["jwt-auth-token"]);
 
-            console.log(this.userNickname);
+            console.log("유저닉네임", this.userNickname);
             console.log(this.$store.state.user);
-            this.userNickname = this.$store.getters.getUserNickname;
+
             console.log("스토어", this.userNickname);
           } else {
             alert("아이디 또는 비밀번호를 잘못 입력하였습니다.");

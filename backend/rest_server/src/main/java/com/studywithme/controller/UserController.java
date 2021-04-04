@@ -221,7 +221,7 @@ public class UserController {
 		Map<String,Object> result=new HashMap<>();
 
 		String id=commonMethods.getUserId(req.getHeader("jwt-auth-token"));
-
+		
 		Optional<UserInfo> user=userRepository.findById(id);
 		if(user.isPresent()) {
 			user.get().setUserPassword(null);
@@ -229,6 +229,7 @@ public class UserController {
 		}
 		else
 			result.put("data",null);
+		
 		return result;
 	}
 	

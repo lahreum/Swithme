@@ -43,5 +43,8 @@ export const store = new Vuex.Store({
     MOVETOBOARDDETAIL(state, id) {
       state.boardDetailId = id;
     },
+    userInit(state){
+      state.user = {};
+    }
   },
 });
