@@ -175,6 +175,9 @@ export default {
       isAgree2: false,
     };
   },
+  created: function() {
+    this.$emit('move-step', 1);
+  },
   computed: {
     allAgree: {
       // getter

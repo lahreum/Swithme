@@ -89,6 +89,9 @@ export default {
     'email-input': EmailInput,
     'app-btn-middle': AppBtnMiddle,
   },
+  created: function() {
+    this.$emit('move-step', 2);
+  },
   data: function() {
     return {
       emailFront: '',
@@ -103,6 +106,7 @@ export default {
   methods: {
     goRouting() {
       if (this.isValid) {
+        this.$emit('move-forward');
         this.$router.push(
           '/join/join-create?emailF=' +
             this.emailFront +

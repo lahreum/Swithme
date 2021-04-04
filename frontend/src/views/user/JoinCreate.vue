@@ -113,8 +113,6 @@
         ></app-btn-middle>
       </div>
     </div>
-    <!-- <v-row v-if="isMounted"> isAllValid: {{ isAllValid }} </v-row>
-    <v-row> isduplComplete: {{ isduplComplete }} </v-row> -->
   </div>
 </template>
 
@@ -130,8 +128,7 @@ export default {
     'app-btn-middle': AppBtnMiddle,
   },
   created: function() {
-    // console.log(this.$route.query.emailF);
-    // console.log(this.$route.query.emailB);
+    this.$emit('move-step', 3);
     let emailF = this.$route.query.emailF;
     let emailB = this.$route.query.emailB;
     this.email = emailF + '@' + emailB;
@@ -206,6 +203,7 @@ export default {
           })
           .then((response) => {
             if (response.data.success) {
+              this.$emit('move-forward');
               this.$router.push('/join/join-complete');
               console.log('회원가입 성공!');
             } else {
