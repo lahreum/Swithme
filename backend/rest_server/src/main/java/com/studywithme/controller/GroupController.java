@@ -209,7 +209,7 @@ public class GroupController {
 					}
 					
 					result.put("groupMemberList",userList);
-					result.clear();
+//					result.clear();
 					try {
 						result.put("groupProfileImg",group.get().getGroupProfileImg().getBytes(1l, (int)group.get().getGroupProfileImg().length()));
 					} catch (SQLException e) {
