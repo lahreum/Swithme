@@ -78,7 +78,7 @@ const storage = window.sessionStorage;
     },
     methods: {
       createBoard() {
-        this.$Axios
+        this.$Axios     // request body에 담김. params로 보내면 request params로 꺼내옴
         .post('community/board',{
           boardCategory: this.board.boardCategory,
           boardContent: this.content,
@@ -111,7 +111,6 @@ const storage = window.sessionStorage;
           if(this.items[i] === this.selected){
             var j= i*1;
             this.board.boardCategory = j+1;
-            console.log('boardCategoryNum is = ', this.board.boardCategory);
           }
         }
       },

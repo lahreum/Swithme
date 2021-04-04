@@ -83,7 +83,7 @@ const storage = window.sessionStorage;
         replyCnt: 0,
         newReply: '',
         curPageNum: 1,
-        dataPerPage: 3,
+        dataPerPage: 5,
       }
     },
     created() {
@@ -199,16 +199,20 @@ const storage = window.sessionStorage;
         })
       },
       addComment() {
-        console.log(this.newReply);
-        this.$Axios
-        .post('community/reply?boardId=' + `${this.$store.state.boardDetailId}` + '&content=' + this.newReply,{
+        let params = new URLSearchParams();
+        params.append('boardId', this.board.boardId);
+        params.append('content', this.newReply);
+
+        this.$Axios   // 칸별로 띄워져 있는 post는 반드시 params에 담아서 보내야함
+        .post('community/reply', params,{
           headers: {
             "jwt-auth-token": storage.getItem("jwt-auth-token"),
           }
         })
         .then((res)=>{
           if(res.data.success) {
-            console.log('댓글 입력 성공!');
+            window.location.reload();
+            this.newReply = '';
           } else {
             console.log('댓글 입력 실패');
           }
@@ -217,13 +221,6 @@ const storage = window.sessionStorage;
           console.log(error);
         })
       },
-      // getWriterInfo() {
-      //   if(`${this.$store.state.user.userNickname}` ===  this.board.boardWriter){
-      //     this.isWriter = true;
-      //   } else {
-      //     this.isWriter = false;
-      //   }
-      // },
       deleteBoard() {
         this.$Axios
         .delete('/community/board/' + `${this.$store.state.boardDetailId}`,{
