@@ -144,8 +144,7 @@ export default {
                           );
 
                           // 이미지 출력
-                          img.src = 'data:image/png;base64,' + response.data;
-                          // img.src = canvas.toDataURL();
+                          img.src = canvas.toDataURL();
 
                           // 0.005초씩 카운트
                           cnt += period;
