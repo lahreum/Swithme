@@ -14,8 +14,8 @@ export default {
   },
   mounted() {
     // Element 생성
+    let img = document.querySelector('#stream');
     let canvas = document.createElement('canvas');
-    let img = document.getElementById('stream');
 
     // 제약 조건 정의
     let constaints = {
@@ -39,8 +39,11 @@ export default {
         this.track
           .applyConstraints(constaints)
           .then(() => {
-            // 이미지 캡처 주기 설정
-            let period = 200;
+            // 이미지 캡처 주기 설정(0.05초)
+            let period = 50;
+
+            // 1초마다 서버 요청을 하기 위한 카운트 생성
+            let cnt = 0;
 
             // 이미지를 캡처하기 위한 객체 생성
             let imageCapture = new ImageCapture(this.track);
@@ -59,22 +62,39 @@ export default {
                   // canvas에 이미지 등록
                   ctx.drawImage(imageBitmap, 0, 0);
 
-                  // canvas에서 이미지를 데이터로 변환
-                  canvas.toBlob((blob) => {
-                    // 폼에 데이터 추가
-                    data.append('data', blob);
+                  // 카운트가 1초가 되었을 경우 서버 요청
+                  if (cnt != 1000) {
+                    // 이미지 출력
+                    img.src = canvas.toDataURL();
 
-                    // 집중 여부 판단을 위해 이미지를 인공지능 서버로 전송
-                    axios
-                      .post('http://localhost:8000/predict', data)
-                      .then((response) => {
-                        // <img>에 출력하도록 Data URL 연결
-                        img.src = 'data:image/png;base64,' + response.data;
-                      })
-                      .catch((error) => {
-                        console.log(error);
-                      });
-                  });
+                    // 0.005초씩 카운트
+                    cnt += period;
+                  } else {
+                    cnt = 0;
+
+                    // canvas에서 이미지를 데이터로 변환
+                    canvas.toBlob((blob) => {
+                      // 폼에 데이터 추가
+                      data.append('data', blob);
+
+                      // 집중 여부 판단을 위해 이미지를 인공지능 서버로 전송
+                      axios
+                        .post('http://localhost:8000/predict', data)
+                        .then((response) => {
+                          // 집중 여부 판단 결과
+                          console.log(response);
+
+                          // 이미지 출력
+                          img.src = canvas.toDataURL();
+
+                          // 0.005초씩 카운트
+                          cnt += period;
+                        })
+                        .catch((error) => {
+                          console.log(error);
+                        });
+                    });
+                  }
                 })
                 .catch(() => {});
             }, period);

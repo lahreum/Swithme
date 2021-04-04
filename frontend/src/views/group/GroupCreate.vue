@@ -28,6 +28,8 @@
                 hidden
                 @change="onChangeImages"
               />
+              <!-- <v-file-input v-model="fileList" @change="onChangeImages">
+              </v-file-input> -->
             </v-col>
             <v-row
               style="height:150px; width:100%; border-bottom: 1px solid black"
@@ -43,6 +45,7 @@
                   color="black"
                   label="그룹이름을 입력하세요"
                   required
+                  v-model="groupName"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -55,15 +58,16 @@
                 카테고리
               </v-col>
               <v-col cols="9">
+                <!-- :error-messages="errors" -->
+                <!-- v-model="select" -->
+                <!-- data-vv-name="select" -->
                 <v-select
-                  v-model="select"
                   :items="items"
-                  :error-messages="errors"
                   outlined
                   color="black"
                   label="스터디를 대표할수 있는 카테고리를 선택하세요."
-                  data-vv-name="select"
                   required
+                  v-model="groupCategory"
                 ></v-select>
               </v-col>
             </v-row>
@@ -81,6 +85,8 @@
                   outlined
                   label="최대그룹원수를 지정하세요"
                   required
+                  min="1"
+                  v-model="groupMaxMemberCount"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -120,6 +126,7 @@
                   outlined
                   label="그룹 비밀번호를 입력하세요"
                   required
+                  v-model="groupPassword"
                 ></v-text-field
               ></v-col>
             </v-row>
@@ -136,6 +143,7 @@
                   outlined
                   :counter="50"
                   placeholder="이 그룹을 나타내는 소개글을 멋지게 써주세요."
+                  v-model="groupNotice"
                 ></v-textarea>
               </v-col>
             </v-row>
@@ -153,6 +161,7 @@
                   outlined
                   label="날짜를 등록하세요"
                   required
+                  v-model="groupGoalDate"
                 ></v-text-field>
                 <v-text-field
                   :counter="20"
@@ -160,24 +169,29 @@
                   color="black"
                   label="D-Day제목을 등록하세요"
                   required
+                  v-model="groupGoalTitle"
                 ></v-text-field>
               </v-col>
             </v-row>
           </v-row>
           <div style="text-align:center;">
-            <app-btn-middle
-              style="margin:5%;"
-              :btnColor="'#FAFAFA'"
-              :btnName="'취소'"
-              :btnNameColor="'#424242'"
-            ></app-btn-middle>
-            <app-btn-middle
-              style="margin:5%;"
-              @click="ToGroupMain"
-              :btnColor="'#424242'"
-              :btnName="'만들기'"
-              :btnNameColor="'white'"
-            ></app-btn-middle>
+            <div
+              style="display:inline-block; margin:5%"
+              @click="$router.go(-1)"
+            >
+              <app-btn-middle
+                :btnColor="'#FAFAFA'"
+                :btnName="'취소'"
+                :btnNameColor="'#424242'"
+              ></app-btn-middle>
+            </div>
+            <div style="display:inline-block;margin:5%" @click="ToGroupMain">
+              <app-btn-middle
+                :btnColor="'#424242'"
+                :btnName="'만들기'"
+                :btnNameColor="'white'"
+              ></app-btn-middle>
+            </div>
           </div>
         </v-col>
 
@@ -188,8 +202,10 @@
 </template>
 
 <script>
-import AppBtnMiddle from "../components/common/AppBtnMiddle.vue";
-import MiddleNav from "../components/include/MiddleNav.vue";
+import AppBtnMiddle from "@/components/common/AppBtnMiddle.vue";
+import MiddleNav from "@/components/include/MiddleNav.vue";
+import axios from "axios";
+const storage = window.sessionStorage;
 
 export default {
   components: {
@@ -198,6 +214,14 @@ export default {
   },
   data() {
     return {
+      groupName: "",
+      groupCategory: "",
+      groupMaxMemberCount: 0,
+      groupPassword: "",
+      groupNotice: "",
+      groupGoalDate: "",
+      groupGoalTitle: "",
+      fileList: [],
       navInfo: [
         "sample2.png",
         "그룹",
@@ -205,7 +229,17 @@ export default {
         "목표로 가는 길이 덜 힘들고, 더욱 든든해질 거예요",
       ],
       imageUrl: null,
-      items: ["정보처리기사", "토익", "임용고시", "공무원"],
+      items: [
+        "초중고",
+        "수능",
+        "대학교",
+        "대학원",
+        "취업",
+        "공무원시험",
+        "자격증",
+        "어학",
+        "기타",
+      ],
       radios: null,
     };
   },
@@ -217,9 +251,57 @@ export default {
       console.log(e.target.files);
       const file = e.target.files[0]; // Get first index in files
       this.imageUrl = URL.createObjectURL(file); // Create File URL
+      this.fileList = e.target.files;
     },
     ToGroupMain() {
-      this.$router.push("/");
+      // params.append("groupCategory", this.items.indexOf(this.groupCategory));
+      // params.append("groupMaxMemberCount", this.groupMaxMemberCount);
+      // params.append("groupGoalDate", this.groupGoalDate);
+      // params.append("groupGoalTitle", this.groupGoalTitle);
+      // params.append("groupNotice", this.groupNotice);
+      // params.append("groupName", this.groupName);
+      // params.append("groupPassword", this.groupPassword);
+
+      axios
+        .create({
+          headers: {
+            "jwt-auth-token": storage.getItem("jwt-auth-token"),
+          },
+        })
+        .post("group", {
+          groupCategory: this.items.indexOf(this.groupCategory) + 1,
+          groupMaxMemberCount: this.groupMaxMemberCount,
+          groupGoalDate: this.groupGoalDate,
+          groupGoalTitle: this.groupGoalTitle,
+          groupNotice: this.groupNotice,
+          groupName: this.groupName,
+          groupPasswor: this.groupPassword,
+        })
+        .then((res) => {
+          console.log(res);
+
+          // console.log("파일리스트", this.fileList);
+          // console.log("받아온그룹아이디", res.data.createdGroupId);
+          console.log(this.fileList);
+          var params = new FormData();
+          params.append("groupId", res.data.createdGroupId);
+          // if (this.fileList.length === 0){
+          //   this.fileList[0] =
+          // }
+          params.append("file", this.fileList[0]);
+
+          console.log(this.fileList[0]);
+          axios
+            .create({
+              headers: {
+                "Content-Type": "multipart/form-data",
+                "jwt-auth-token": storage.getItem("jwt-auth-token"),
+              },
+            })
+            .put("group/profile-img", params)
+            .then((res) => console.log("해치웠나??", res));
+          // this.$router.push("/");
+        });
     },
   },
 };
