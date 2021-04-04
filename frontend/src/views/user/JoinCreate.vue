@@ -197,7 +197,25 @@ export default {
     },
     joinRequest: function() {
       if (this.isAllValid) {
-        this.$router.push('/join/join-complete');
+        axios
+          .post('http://localhost:9999/user/signup', {
+            userId: this.email,
+            userMessage: '',
+            userNickname: this.userNickname,
+            userPassword: this.password,
+          })
+          .then((response) => {
+            if (response.data.success) {
+              this.$router.push('/join/join-complete');
+              console.log('회원가입 성공!');
+            } else {
+              alert('회원가입 도중 문제가 생겼습니다.');
+              this.$router.push('/');
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       }
       // if (this.$refs.form.validate()) {
       //   alert(this.$refs.form.validate());

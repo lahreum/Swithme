@@ -13,15 +13,20 @@
         <v-col class="formLetter" cols="2">이메일</v-col>
         <v-col cols="3">
           <input-bar
+            :isDisabled="isValid"
             :placeholder="'이메일 입력'"
             @pass-input="getEmailFront"
           ></input-bar>
         </v-col>
         <v-col cols="3" style="padding-left: 0;">
-          <email-input @pass-input="getEmailBack"></email-input>
+          <email-input
+            :isDisabled="isValid"
+            @pass-input="getEmailBack"
+          ></email-input>
         </v-col>
         <v-col cols="3" align-self="center" align="center" @click="getAuthNum">
           <app-btn-middle
+            :isDisabled="isValid"
             :btnColor="'#673fb4'"
             :btnName="'인증번호 받기'"
             :btnNameColor="'#ffffff'"
@@ -91,16 +96,20 @@ export default {
       myAuthNum: 0,
       realAuthNum: 1234,
       isValid: false,
+      // isDisabled 쓰는 이유... 버튼이 component라서 @click을 바로 못 주니까 임시방편으로 플래그 만든거임 ㅜ
+      isDisabled: false,
     };
   },
   methods: {
     goRouting() {
-      this.$router.push(
-        '/join/join-create?emailF=' +
-          this.emailFront +
-          '&emailB=' +
-          this.emailBack
-      );
+      if (this.isValid) {
+        this.$router.push(
+          '/join/join-create?emailF=' +
+            this.emailFront +
+            '&emailB=' +
+            this.emailBack
+        );
+      }
     },
     getEmailFront(value) {
       this.emailFront = value;
@@ -109,16 +118,20 @@ export default {
       this.emailBack = value;
     },
     getAuthNum() {
-      alert('1234 입력');
+      if (!this.isDisabled) {
+        alert('1234 입력');
+      }
     },
     getMyAuthNum(value) {
       this.myAuthNum = value;
     },
     compareAuthNum() {
-      if (this.myAuthNum == this.realAuthNum) {
-        alert('통과!');
+      if (!this.isDisabled && this.myAuthNum == this.realAuthNum) {
+        alert('이메일 인증이 완료되었습니다.');
+        this.isDisabled = true;
         this.isValid = true;
-      } else {
+      } else if (this.myAuthNum != this.realAuthNum) {
+        alert('인증번호를 정확히 입력해주세요.');
         this.isValid = false;
       }
     },

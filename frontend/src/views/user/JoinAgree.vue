@@ -12,16 +12,21 @@
         ><br />
       </p>
       <div class="agreeAll">
-        <input type="checkbox" id="check" name="check" v-model="allAgree" />
-        <label for="check"> 모두 동의합니다</label>
+        <input
+          type="checkbox"
+          id="checkAll"
+          name="checkAll"
+          v-model="allAgree"
+        />
+        <label for="checkAll"> 모두 동의합니다</label>
       </div>
     </div>
     <hr style="width:70%;border:solid 1px #BDBDBD;margin:auto;" />
     <div class="contract1">
       <p>이용약관(필수)</p>
       <div class="agreeAll">
-        <input type="checkbox" id="check" name="check" v-model="isAgree1" />
-        <label for="check"> 동의합니다</label>
+        <input type="checkbox" id="check1" name="check1" v-model="isAgree1" />
+        <label for="check1"> 동의합니다</label>
       </div>
       <div class="contract2">
         제 1 장 총칙<br /><br />
@@ -102,8 +107,8 @@
       </div>
       <p><br />개인정보수집및이용(필수)</p>
       <div class="agreeAll">
-        <input type="checkbox" id="check" name="check" v-model="isAgree2" />
-        <label for="check"> 동의합니다</label>
+        <input type="checkbox" id="check2" name="check2" v-model="isAgree2" />
+        <label for="check2"> 동의합니다</label>
       </div>
       <div class="contract2">
         ‘주식회사 스윗미'는 (이하 '회사'라 합니다.) 고객님의 개인정보를
@@ -144,8 +149,9 @@
           :btnNameColor="'#424242'"
         ></app-btn-middle>
       </div>
-      <div class="oneBtn" @click="isValid">
+      <div class="oneBtn" @click="goRouting">
         <app-btn-middle
+          :isDisabled="!allAgree"
           :btnColor="'#424242'"
           :btnName="'다음'"
           :btnNameColor="'white'"
@@ -171,10 +177,11 @@ export default {
   },
   computed: {
     allAgree: {
-      //   getter
+      // getter
       get: function() {
         return this.isAgree1 && this.isAgree2;
       },
+      // setter
       set: function(value) {
         if (value) {
           this.isAgree1 = true;
@@ -187,11 +194,9 @@ export default {
     },
   },
   methods: {
-    isValid: function() {
+    goRouting: function() {
       if (this.allAgree) {
         this.$router.push('/join/join-auth');
-      } else {
-        alert('모두 동의해야 다음 단계로 진행할 수 있어요.');
       }
     },
   },
