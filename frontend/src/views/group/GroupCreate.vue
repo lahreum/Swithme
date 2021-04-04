@@ -248,7 +248,7 @@ export default {
       this.$refs.imageInput.click();
     },
     onChangeImages(e) {
-      console.log(e.target.files);
+      // console.log(e.target.files);
       const file = e.target.files[0]; // Get first index in files
       this.imageUrl = URL.createObjectURL(file); // Create File URL
       this.fileList = e.target.files;
@@ -282,13 +282,13 @@ export default {
 
           // console.log("파일리스트", this.fileList);
           // console.log("받아온그룹아이디", res.data.createdGroupId);
-          console.log(this.fileList);
+          // console.log(this.fileList);
           var params = new FormData();
           params.append("groupId", res.data.createdGroupId);
 
           params.append("file", this.fileList[0]);
 
-          console.log(this.fileList[0]);
+          // console.log(this.fileList[0]);
           axios
             .create({
               headers: {
