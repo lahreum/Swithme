@@ -195,7 +195,7 @@ export default {
     joinRequest: function() {
       if (this.isAllValid) {
         axios
-          .post('http://localhost:9999/user/signup', {
+          .post('user/signup', {
             userId: this.email,
             userMessage: '',
             userNickname: this.userNickname,
@@ -224,10 +224,7 @@ export default {
     duplChk: function() {
       if (this.isValidNickname) {
         axios
-          .get(
-            'http://localhost:9999/user/nickname?userNickname=' +
-              this.userNickname
-          )
+          .get('user/nickname?userNickname=' + this.userNickname)
           .then((response) => {
             if (response.data.isPresent) {
               alert('이미 존재하는 닉네임입니다.');
