@@ -32,7 +32,7 @@ import com.studywithme.entity.Group;
 import com.studywithme.entity.GroupMember;
 import com.studywithme.entity.TimeDaily;
 import com.studywithme.entity.TimeMonthly;
-import com.studywithme.entity.User;
+import com.studywithme.entity.UserInfo;
 import com.studywithme.repository.GroupMemberRepository;
 import com.studywithme.repository.GroupRepository;
 import com.studywithme.repository.TimeDailyRepository;
@@ -73,7 +73,7 @@ public class GroupController {
 		
 		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
 		
-		Optional<User> user=userRepository.findByUserNickname(nickname);
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(user.isPresent()) {
 			group.setGroupMasterNickname(nickname);
 			Group savedGroup=groupRepository.save(group);
@@ -105,7 +105,7 @@ public class GroupController {
 		
 		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
 		
-		Optional<User> user=userRepository.findByUserNickname(nickname);
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(user.isPresent()) {
 			Optional<Group> group=groupRepository.findById(groupId);
 			if(group.isPresent()&&group.get().getGroupMasterNickname().equals(nickname)) {
@@ -132,7 +132,7 @@ public class GroupController {
 		
 		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
 		
-		Optional<User> user=userRepository.findByUserNickname(nickname);
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(user.isPresent()) {
 			List<Group> groupList=groupRepository.findAll();
 			if(groupList!=null) {
@@ -153,7 +153,7 @@ public class GroupController {
 		
 		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
 		
-		Optional<User> user=userRepository.findByUserNickname(nickname);
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(user.isPresent()) {
 			Optional<GroupMember> groupMember=groupMemberRepository.findByGroupMemberUserNicknameAndGroupMemberGroupId(nickname,groupId);
 			if(groupMember.isPresent()) {
@@ -162,7 +162,7 @@ public class GroupController {
 					Optional<List<GroupMember>> groupMembers=groupMemberRepository.findByGroupMemberGroupId(groupId);
 					List<UserDto> userList=new ArrayList<>();
 					for(GroupMember gm:groupMembers.get()) {
-						Optional<User> curUserOpt=userRepository.findByUserNickname(gm.getGroupMemberUserNickname());
+						Optional<UserInfo> curUserOpt=userRepository.findByUserNickname(gm.getGroupMemberUserNickname());
 						
 						datetime=datetime.substring(2,10);
 						datetime=datetime.replaceAll("-", "");
@@ -198,7 +198,7 @@ public class GroupController {
 		
 		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
 		
-		Optional<User> user=userRepository.findByUserNickname(nickname);
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		Optional<Group> group=groupRepository.findById(groupId);
 		Optional<GroupMember> groupMember=groupMemberRepository.findByGroupMemberUserNicknameAndGroupMemberGroupId(nickname, groupId);
 		if(user.isPresent()&&group.isPresent()&&groupMember.isPresent()) {
@@ -211,7 +211,7 @@ public class GroupController {
 				
 				Optional<List<GroupMember>> groupMemberList=groupMemberRepository.findByGroupMemberGroupId(groupId);
 				for(GroupMember gm:groupMemberList.get()) {
-					Optional<User> curUser=userRepository.findByUserNickname(gm.getGroupMemberUserNickname());
+					Optional<UserInfo> curUser=userRepository.findByUserNickname(gm.getGroupMemberUserNickname());
 					Optional<TimeDaily> curTimeDaily=timeDailyRepository.findByTimeDailyUserNicknameAndTimeDailyYearMonthDayAndTimeDailyAction(nickname, datetime,0);
 					
 					UserDto userDto=new UserDto();
@@ -234,7 +234,7 @@ public class GroupController {
 				}
 				Optional<List<GroupMember>> groupMemberWeekly=groupMemberRepository.findByGroupMemberGroupId(groupId);
 				for(GroupMember gm:groupMemberWeekly.get()) {
-					Optional<User> curUser=userRepository.findByUserNickname(gm.getGroupMemberUserNickname());
+					Optional<UserInfo> curUser=userRepository.findByUserNickname(gm.getGroupMemberUserNickname());
 					if(curUser.isPresent()) {
 						UserDto userDto=new UserDto();
 						userDto.setNickname(curUser.get().getUserNickname());
@@ -257,7 +257,7 @@ public class GroupController {
 				Optional<List<GroupMember>> groupMemberListMonthly=groupMemberRepository.findByGroupMemberGroupId(groupId);
 				for(GroupMember gm: groupMemberListMonthly.get()) {
 					Optional<TimeMonthly> monthlyList=timeMonthlyRepository.findByTimeMonthlyUserNicknameAndTimeMonthlyYearMonth(gm.getGroupMemberUserNickname(), datetime);
-					Optional<User> curUser=userRepository.findByUserNickname(gm.getGroupMemberUserNickname());
+					Optional<UserInfo> curUser=userRepository.findByUserNickname(gm.getGroupMemberUserNickname());
 					
 					UserDto userDto=new UserDto();
 					userDto.setNickname(curUser.get().getUserNickname());
@@ -286,7 +286,7 @@ public class GroupController {
 		
 		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
 		
-		Optional<User> user=userRepository.findByUserNickname(nickname);
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(user.isPresent()) {
 			Optional<Group> group=groupRepository.findById(groupId);
 			if(group.isPresent()) {
@@ -325,7 +325,7 @@ public class GroupController {
 		
 		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
 		
-		Optional<User> user=userRepository.findByUserNickname(nickname);
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(user.isPresent()) {
 			Optional<List<GroupMember>> groupMemberList=groupMemberRepository.findByGroupMemberUserNickname(nickname);
 			List<Group> groupList=new ArrayList<>();
@@ -349,7 +349,7 @@ public class GroupController {
 		
 		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
 		
-		Optional<User> user=userRepository.findByUserNickname(nickname);
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(user.isPresent()) {
 			Optional<Group> group=groupRepository.findById(groupId);
 			if(group.isPresent()&&group.get().getGroupCurMemberCount()<group.get().getGroupMaxMemberCount()) {
@@ -382,7 +382,7 @@ public class GroupController {
 		
 		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
 		
-		Optional<User> user=userRepository.findByUserNickname(nickname);
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(user.isPresent()) {
 			Optional<Group> group=groupRepository.findById(groupId);
 			if(group.isPresent()&&!group.get().getGroupMasterNickname().equals(nickname)) {
@@ -410,9 +410,9 @@ public class GroupController {
 		
 		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
 		
-		Optional<User> user=userRepository.findByUserNickname(nickname);
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(user.isPresent()) {
-			Optional<User> userToChange=userRepository.findByUserNickname(toChangeNickname);
+			Optional<UserInfo> userToChange=userRepository.findByUserNickname(toChangeNickname);
 			if(userToChange.isPresent()) {
 				Optional<Group> group=groupRepository.findById(groupId);
 				if(group.isPresent()&&group.get().getGroupMasterNickname().equals(nickname)) {
@@ -446,7 +446,7 @@ public class GroupController {
 		
 		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
 		
-		Optional<User> user=userRepository.findByUserNickname(nickname);
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(user.isPresent()) {
 			Optional<Group> groupBefore=groupRepository.findById(group.getGroupId());
 			if(groupBefore.isPresent()&&groupBefore.get().getGroupMasterNickname().equals(nickname)&&
@@ -479,7 +479,7 @@ public class GroupController {
 		
 		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
 		
-		Optional<User> user=userRepository.findByUserNickname(nickname);
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(user.isPresent()) {
 			Optional<Group> group=groupRepository.findById(groupId);
 			if(group.isPresent()&&group.get().getGroupMasterNickname().equals(nickname)) {

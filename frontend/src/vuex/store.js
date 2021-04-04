@@ -6,7 +6,10 @@ import mutations from './mutations';
 
 Vue.use(Vuex);
 
-const state = {};
+const state = {
+  awayTime: 0,
+  phoneTime: 0,
+};
 
 export default new Vuex.Store({
   state,
