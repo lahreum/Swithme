@@ -33,6 +33,7 @@ import com.studywithme.entity.GroupMember;
 import com.studywithme.entity.TimeDaily;
 import com.studywithme.entity.TimeMonthly;
 import com.studywithme.entity.UserInfo;
+import com.studywithme.repository.DefaultProfileImgRepository;
 import com.studywithme.repository.GroupMemberRepository;
 import com.studywithme.repository.GroupRepository;
 import com.studywithme.repository.TimeDailyRepository;
@@ -63,6 +64,9 @@ public class GroupController {
 	@Autowired
 	TimeMonthlyRepository timeMonthlyRepository;
 	
+	@Autowired
+	DefaultProfileImgRepository defaultProfileImgRepository;
+	
 	
 	@PostMapping("")
 	@ApiOperation(value="그룹 생성",notes="바디로 받은 group으로 그룹생성에 성공하면 true 반환")
@@ -76,6 +80,7 @@ public class GroupController {
 		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(user.isPresent()) {
 			group.setGroupMasterNickname(nickname);
+			group.setGroupProfileImg(defaultProfileImgRepository.findById(2).get().getDefaultProfileImgData());
 			GroupInfo savedGroup=groupRepository.save(group);
 			
 			Optional<GroupMember> groupMember=groupMemberRepository.findByGroupMemberUserNicknameAndGroupMemberGroupId(nickname, savedGroup.getGroupId());
