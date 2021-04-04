@@ -2,13 +2,21 @@
   <div>
     <middle-nav v-bind:propsdata="navInfo"></middle-nav>
     <v-container>
-      <v-row>
+      <v-row style="margin-top:50px">
         <v-col cols="2"></v-col>
         <v-col>
-          <h1 style="margin:50px 0">{{ groupInfo.groupName }}</h1>
+          <v-row
+            ><span style="font:bold;font-size:2.5rem;margin-right:2%">{{
+              groupInfo.groupName
+            }}</span>
+            <v-icon @click="toGroupModify" v-if="IsGM === true" x-large
+              >mdi-cog-outline</v-icon
+            ></v-row
+          >
+
           <v-row
             justify="space-between"
-            style="font-size:1.5rem; margin-bottom:50px;"
+            style="font-size:1.5rem; margin:50px 0;"
           >
             {{ groupInfo.groupIntroduce }}
             <span
@@ -18,13 +26,13 @@
           </v-row>
 
           <v-row justify="space-around" style="margin-bottom:50px;">
-            <v-btn icon color="black" x-large @click="ToHome"
+            <v-btn icon color="black" x-large @click="toHome"
               ><v-icon>mdi-home</v-icon> 홈</v-btn
             >
-            <v-btn icon color="black" x-large @click="ToGroupRanking"
+            <v-btn icon color="black" x-large @click="toGroupRanking"
               ><v-icon>mdi-poll</v-icon> 랭킹</v-btn
             >
-            <v-btn icon color="black" x-large @click="ToGroupAttendance"
+            <v-btn icon color="black" x-large @click="toGroupAttendance"
               ><v-icon>mdi-calendar-month</v-icon> 출석부</v-btn
             >
           </v-row>
@@ -74,13 +82,14 @@
 </template>
 
 <script>
-import ProfileStudying from "../components/common/ProfileStudying.vue";
-import MiddleNav from "../components/include/MiddleNav.vue";
+import ProfileStudying from "@/components/common/ProfileStudying.vue";
+import MiddleNav from "@/components/include/MiddleNav.vue";
 export default {
   data() {
     return {
       studying: [],
       notStudying: [],
+      IsGM: false,
       navInfo: [
         "sample2.png",
         "그룹",
@@ -165,6 +174,14 @@ export default {
         this.notStudying.push(this.groupers[i]);
       }
     }
+
+    for (i = 0; i < this.groupers.length; i++) {
+      if (this.groupers[i].name === this.groupInfo.groupMaster) {
+        this.IsGM = true;
+        break;
+      }
+    }
+
     console.log("dfasdf", this.studying);
     console.log(this.notStudying);
   },
@@ -173,14 +190,17 @@ export default {
     ProfileStudying,
   },
   methods: {
-    ToGroupHome() {
+    toGroupHome() {
       this.$router.push("/group-detail");
     },
-    ToGroupRanking() {
+    toGroupRanking() {
       this.$router.push("/group-ranking");
     },
-    ToGroupAttendance() {
+    toGroupAttendance() {
       this.$router.push("/group-attendance");
+    },
+    toGroupModify() {
+      this.$router.push("/group-modify");
     },
   },
 };

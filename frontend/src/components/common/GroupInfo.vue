@@ -8,7 +8,7 @@
         </div>
       </v-img>
     </div>
-    <div>
+    <div style="padding:5% 1%">
       <span class="groupName">{{ groupName }}</span
       ><br />
       <span class="groupDesc">{{ groupDesc }}</span>
@@ -24,11 +24,14 @@ export default {
 
 <style>
 .groupCnt {
-  color: #635f5f;
-  padding-top: 85%;
-  font-size: 15px;
-  font-weight: 500;
-  padding-left: 5%;
+  color: black;
+
+  font-size: 20px;
+  font-weight: 1000;
+
+  position: absolute;
+  bottom: 5%;
+  left: 5%;
 }
 .groupName {
   font-weight: 600px;

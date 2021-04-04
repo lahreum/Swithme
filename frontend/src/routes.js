@@ -4,13 +4,12 @@ import MyPageAccess from '@/views/MyPageAccess.vue';
 import MyPageModify from '@/views/MyPageModify.vue';
 import MyPage from '@/views/MyPage.vue';
 import Ranking from '@/views/Ranking.vue';
-import GroupMain from '@/views/GroupMain.vue';
-import GroupCreate from '@/views/GroupCreate.vue';
-import GroupDetail from '@/views/GroupDetail.vue';
-import GroupRanking from '@/views/GroupRanking.vue';
-import GroupAttendance from '@/views/GroupAttendance.vue';
-import GroupModify from '@/views/GroupModify.vue';
-import Community from '@/views/Community.vue';
+import GroupMain from '@/views/group/GroupMain.vue';
+import GroupCreate from '@/views/group/GroupCreate.vue';
+import GroupDetail from '@/views/group/GroupDetail.vue';
+import GroupRanking from '@/views/group/GroupRanking.vue';
+import GroupAttendance from '@/views/group/GroupAttendance.vue';
+import GroupModify from '@/views/group/GroupModify.vue';
 import Home from '@/views/Home.vue';
 import Timer from '@/views/timer/Timer.vue';
 import Join from '@/views/user/Join.vue';
@@ -22,6 +21,11 @@ import Token from '@/views/social/Token.vue';
 import Nickname from '@/views/social/Nickname.vue';
 import NoAccess from '@/views/NoAccess.vue';
 import FindPw from '@/views/user/FindPw.vue';
+import Community from '@/views/community/Community.vue';
+import CommunityList from '@/views/community/CommunityList.vue';
+import CommunityCreate from '@/views/community/CommunityCreate.vue';
+import CommunityDetail from '@/views/community/CommunityDetail.vue';
+import CommunityModify from '@/views/community/CommunityModify.vue';
 
 export default [
   {
@@ -33,6 +37,33 @@ export default [
     path: '/find-pw',
     name: 'FindPw',
     component: FindPw,
+  },
+  {
+    path: '/community',
+    name: 'Community',
+    component: Community,
+    children: [
+      {
+        path: '/',
+        name: 'CommunityList',
+        component: CommunityList,
+      },
+      {
+        path: 'community-create',
+        name: 'CommunityCreate',
+        component: CommunityCreate,
+      },
+      {
+        path: 'community-detail',
+        name: 'CommunityDetail',
+        component: CommunityDetail,
+      },
+      {
+        path: 'community-modify',
+        name: 'CommunityModify',
+        component: CommunityModify,
+      },
+    ]
   },
   {
     path: '/join',

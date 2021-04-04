@@ -1,0 +1,10 @@
+matplotlib
+scikit-learn
+tqdm
+scipy
+numpy
+tensorflow
+django
+django-cors-headers
+django-sslserver
+opencv-python

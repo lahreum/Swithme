@@ -1,6 +1,6 @@
 <template>
   <!-- 댓글 입력창 부분 -->
-    <v-app id="app">
+  <div>
         <v-container class="comment">
             <v-textarea
             v-model="input"
@@ -19,7 +19,7 @@
                 </template>
             </v-textarea>
         </v-container>
-    </v-app>
+    </div>
 </template>
 
 <script>

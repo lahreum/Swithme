@@ -27,6 +27,7 @@ export default {
       if (this.searchItem !== "") {
         // 무언가 입력되었을때
         console.log(this.searchItem);
+        this.$emit("searchThing", this.searchItem);
         this.clearInput();
       } else {
         console.log("아무것도 입력되지 않았습니다");
