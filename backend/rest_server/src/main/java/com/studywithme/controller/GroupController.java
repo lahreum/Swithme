@@ -97,7 +97,8 @@ public class GroupController {
 				groupMemberRepository.save(groupMember.get());
 			}
 			result.clear();
-			result.put("success",true);			
+			result.put("success",true);		
+			result.put("createdGroupId",savedGroup.getGroupId());
 		}
 		return result;
 	}
