@@ -212,7 +212,7 @@ public class CommunityController {
 		
 		result.put("success",false);
 		
-		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-writer"));
+		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
 		
 		Optional<Reply> reply=replyRepository.findById(replyId);
 		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);

@@ -11,6 +11,8 @@ const state = {
   user: {},
   host: 'http://localhost:9999/',
   boardDetailId: 0,
+  categoryId: 1,
+  categoryName: '',
   isLogin: false,
   awayTime: 0,
   phoneTime: 0,

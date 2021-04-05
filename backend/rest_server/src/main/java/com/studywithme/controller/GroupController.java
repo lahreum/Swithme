@@ -29,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.studywithme.DtoOnlyReturn.GroupProfileDto;
 import com.studywithme.DtoOnlyReturn.UserDto;
 import com.studywithme.config.CommonMethods;
+import com.studywithme.entity.Category;
 import com.studywithme.entity.GroupInfo;
 import com.studywithme.entity.GroupMember;
 import com.studywithme.entity.TimeDaily;
@@ -130,6 +131,51 @@ public class GroupController {
 		return result;
 	}
 	
+
+	@GetMapping("/search")
+	@ApiOperation(value="특정 카테고리 번호의 그룹들 받기",notes="db에서 해당 카테고리 번호들에 해당하는 카테고리의 그룹들을 받는다")
+	public Object getCategoryNames(@RequestParam("category-list") String categoryList) {
+		Map<String,Object> result=new HashMap<>();
+		
+		result.put("searchedGroupList",null);
+
+		
+		categoryList=categoryList.replaceAll("\\[", "");
+		categoryList=categoryList.replaceAll("\\]", "");
+		categoryList=categoryList.replace(" ", "");
+	
+		String[] categoryArr=categoryList.split(",");
+
+		List<Integer> categoryListInt=new ArrayList<>();
+		for(String s:categoryArr)
+			categoryListInt.add(Integer.parseInt(s));
+		
+		Optional<List<GroupInfo>> list=groupRepository.findAllByGroupCategoryIn(categoryListInt);
+		if(list.isPresent()) {
+			List<GroupProfileDto> profileList=new ArrayList<>();
+			
+			for(int i=0;i<list.get().size();i++) {
+				GroupProfileDto gpd=new GroupProfileDto();
+				gpd.setGroupId(list.get().get(i).getGroupId());
+				try {
+					gpd.setGroupProfileImg(list.get().get(i).getGroupProfileImg().getBytes(1l, (int)list.get().get(i).getGroupProfileImg().length()));
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				profileList.add(gpd);
+				list.get().get(i).setGroupProfileImg(null);
+			}
+			
+			result.clear();
+			result.put("searchedGroupList",list);
+			result.put("groupProfileList",profileList);
+		}
+		
+		return result;
+	}
+	
+	
 	@GetMapping("")
 	@ApiOperation(value="모든 그룹리스트 받기",notes="모든 그룹리스트를 받아온다")
 	public Object getGroupList(HttpServletRequest req) {
@@ -178,48 +224,47 @@ public class GroupController {
 		
 		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(user.isPresent()) {
-			Optional<GroupMember> groupMember=groupMemberRepository.findByGroupMemberUserNicknameAndGroupMemberGroupId(nickname,groupId);
-			if(groupMember.isPresent()) {
-				Optional<GroupInfo> group=groupRepository.findById(groupId);
-				if(group.isPresent()) {
-					Optional<List<GroupMember>> groupMembers=groupMemberRepository.findByGroupMemberGroupId(groupId);
-					List<UserDto> userList=new ArrayList<>();
-					for(GroupMember gm:groupMembers.get()) {
-						Optional<UserInfo> curUserOpt=userRepository.findByUserNickname(gm.getGroupMemberUserNickname());
-						
-						datetime=datetime.substring(2,10);
-						datetime=datetime.replaceAll("-", "");
-						Optional<TimeDaily> curTimeDaily=timeDailyRepository.findByTimeDailyUserNicknameAndTimeDailyYearMonthDayAndTimeDailyAction(nickname, datetime,0);
-								
-						UserDto curUser=new UserDto();
-						curUser.setNickname(curUserOpt.get().getUserNickname());
-						try {
-							curUser.setProfileImg(curUserOpt.get().getUserProfileImg().getBytes(1l, (int)curUserOpt.get().getUserProfileImg().length()));
-						} catch (SQLException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						curUser.setStudying(curUserOpt.get().isUserIsStudying());
-						if(curTimeDaily.isPresent())
-							curUser.setTodayStudyTime(curTimeDaily.get().getTimeDailyTime());
-						else
-							curUser.setTodayStudyTime(0);
-						
-						userList.add(curUser);
-					}
-					
-					result.put("groupMemberList",userList);
-//					result.clear();
+			Optional<GroupInfo> group=groupRepository.findById(groupId);
+			if(group.isPresent()) {
+				Optional<List<GroupMember>> groupMembers=groupMemberRepository.findByGroupMemberGroupId(groupId);
+				List<UserDto> userList=new ArrayList<>();
+
+				datetime=datetime.substring(2,10);
+				datetime=datetime.replaceAll("-", "");
+				
+				for(GroupMember gm:groupMembers.get()) {
+					Optional<UserInfo> curUserOpt=userRepository.findByUserNickname(gm.getGroupMemberUserNickname());
+					Optional<TimeDaily> curTimeDaily=timeDailyRepository.findByTimeDailyUserNicknameAndTimeDailyYearMonthDayAndTimeDailyAction(nickname, datetime,0);
+							
+					UserDto curUser=new UserDto();
+					curUser.setNickname(curUserOpt.get().getUserNickname());
 					try {
-						result.put("groupProfileImg",group.get().getGroupProfileImg().getBytes(1l, (int)group.get().getGroupProfileImg().length()));
+						curUser.setProfileImg(curUserOpt.get().getUserProfileImg().getBytes(1l, (int)curUserOpt.get().getUserProfileImg().length()));
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					group.get().setGroupProfileImg(null);
-					result.put("groupInfo",group.get());
+					curUser.setStudying(curUserOpt.get().isUserIsStudying());
+					if(curTimeDaily.isPresent())
+						curUser.setTodayStudyTime(curTimeDaily.get().getTimeDailyTime());
+					else
+						curUser.setTodayStudyTime(0);
+						
+					userList.add(curUser);
 				}
+				
+				result.clear();
+				result.put("groupMemberList",userList);
+				try {
+					result.put("groupProfileImg",group.get().getGroupProfileImg().getBytes(1l, (int)group.get().getGroupProfileImg().length()));
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				group.get().setGroupProfileImg(null);
+				result.put("groupInfo",group.get());
 			}
+			
 		}
 		return result;
 	}
@@ -512,16 +557,19 @@ public class GroupController {
 		if(user.isPresent()) {
 			Optional<GroupInfo> groupBefore=groupRepository.findById(group.getGroupId());
 			if(groupBefore.isPresent()&&groupBefore.get().getGroupMasterNickname().equals(nickname)&&
-					groupBefore.get().getGroupCurMemberCount()<group.getGroupMaxMemberCount()) {
+					(group.getGroupMaxMemberCount()==0||groupBefore.get().getGroupCurMemberCount()<group.getGroupMaxMemberCount())) {
 				Optional<GroupMember> groupMember=groupMemberRepository.findByGroupMemberUserNicknameAndGroupMemberGroupId(nickname, group.getGroupId());
 				if(groupMember.isPresent()&&groupMember.get().isGroupMemberIsMaster()) {
-					groupBefore.get().setGroupCategory(group.getGroupCategory());
-					groupBefore.get().setGroupName(group.getGroupName());
-					groupBefore.get().setGroupDailyGoal(group.getGroupDailyGoal());
-					groupBefore.get().setGroupMaxMemberCount(group.getGroupMaxMemberCount());
-					groupBefore.get().setGroupPassword(commonMethods.getHashed(group.getGroupPassword()));
+					
+					if(group.getGroupMaxMemberCount()!=0)
+						groupBefore.get().setGroupMaxMemberCount(group.getGroupMaxMemberCount());
+					if(group.getGroupPassword()!=null)
+						groupBefore.get().setGroupPassword(commonMethods.getHashed(group.getGroupPassword()));
+					else
+						groupBefore.get().setGroupPassword(null);
 					groupBefore.get().setGroupNotice(group.getGroupNotice());
 					groupBefore.get().setGroupGoalDate(group.getGroupGoalDate());
+					groupBefore.get().setGroupGoalTitle(group.getGroupGoalTitle());
 					groupRepository.save(groupBefore.get());
 					
 					result.clear();

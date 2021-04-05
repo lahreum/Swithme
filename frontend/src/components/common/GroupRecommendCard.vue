@@ -1,9 +1,14 @@
 <template>
-  <v-card class="mx-auto elevation-6" max-width="300" color="#efefef">
+  <v-card
+    @click="clickRecommend"
+    class="mx-auto elevation-6"
+    max-width="300"
+    color="#efefef"
+  >
     <v-img
       class="white--text align-end"
       height="250px"
-      :src="require(`@/assets/img/${groupImg}`)"
+      :src="groupImg"
       gradient="to bottom left, rgba(200,70,150,.2), rgba(0,0,0,.7)"
     >
       <v-card-title style="font-size: 1.5rem; letter-spacing: -1px;">
@@ -40,12 +45,17 @@
 <script>
 export default {
   props: [
-    'groupImg',
-    'groupName',
-    'groupDesc',
-    'groupMaster',
-    'groupMemberCnt',
+    "groupImg",
+    "groupName",
+    "groupDesc",
+    "groupMaster",
+    "groupMemberCnt",
   ],
+  methods: {
+    clickRecommend() {
+      this.$emit("clickRecommend");
+    },
+  },
 };
 </script>
 

@@ -9,10 +9,13 @@
             ><span style="font:bold;font-size:2.5rem;margin-right:2%">{{
               groupInfo.groupName
             }}</span>
-            <v-icon @click="toGroupModify" v-if="IsGM === true" x-large
+            <v-icon
+              @click="toGroupModify(groupInfo.groupId)"
+              v-if="IsGM === true"
+              x-large
               >mdi-cog-outline</v-icon
-            ></v-row
-          >
+            >
+          </v-row>
 
           <v-row
             justify="space-between"
@@ -42,11 +45,11 @@
             <v-col cols="3" style="font-size:1.5rem;"
               >지금 {{ studying.length }}명이 열공중!</v-col
             >
-            <v-col
-              ><v-chip outlined>
+            <v-col>
+              <v-chip v-if="groupInfo.groupGoalTitle !== NULL" outlined>
                 D-{{ Dday }} {{ groupInfo.groupGoalTitle }}
-              </v-chip></v-col
-            >
+              </v-chip>
+            </v-col>
           </v-row>
 
           <v-row style="margin-bottom:50px;">
@@ -131,7 +134,7 @@ export default {
           "jwt-auth-token": storage.getItem("jwt-auth-token"),
         },
       })
-      .get(`group/${this.$route.params.groupId}?datetime=${datetime}`)
+      .get(`group/${this.$route.query.groupId}?datetime=${datetime}`)
       .then((res) => {
         console.log("디테일만들어질때", res);
         this.groupInfo = res.data.groupInfo;
@@ -181,8 +184,8 @@ export default {
     toGroupAttendance() {
       this.$router.push("/group-attendance");
     },
-    toGroupModify() {
-      this.$router.push("/group-modify");
+    toGroupModify(g) {
+      this.$router.push({ name: "GroupModify", query: { groupId: g } });
     },
   },
 };
