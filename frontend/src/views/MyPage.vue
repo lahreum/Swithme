@@ -14,7 +14,7 @@
       <!-- 프로필 사진 -->
       <v-row no-gutters justify="center" style="margin-top: 40px;">
         <profile-large
-          :src="require(`@/assets/img/avatars/iu.jpg`)"
+          :src="'data:image/png;base64,' + user.profileImg"
         ></profile-large>
       </v-row>
       <!-- 기타 정보 -->
@@ -29,7 +29,7 @@
         <v-row class="mypage-item">
           <v-col class="mypage-key" cols="3">아이디(이메일)</v-col>
           <v-col class="mypage-value">
-            {{ user.email }}
+            {{ user.userId }}
           </v-col>
         </v-row>
         <hr style="border: 0; height: 1px; background-color: #d9d9d9; " />
@@ -59,11 +59,28 @@ import MiddleNav from '../components/include/MiddleNav.vue';
 import ProfileLarge from '@/components/common/ProfileLarge.vue';
 import AppBtnLarge from '@/components/common/AppBtnLarge.vue';
 
+const storage = window.sessionStorage;
 export default {
   components: {
     'middle-nav': MiddleNav,
     'profile-large': ProfileLarge,
     'app-btn-large': AppBtnLarge,
+  },
+  created: function() {
+    this.$Axios
+      .create({
+        headers: { 'jwt-auth-token': storage.getItem('jwt-auth-token') },
+      })
+      .get('user')
+      .then((response) => {
+        this.user.nickname = response.data.data.userNickname;
+        this.user.userId = response.data.data.userId;
+        this.user.message = response.data.data.userMessage;
+        this.user.profileImg = response.data.profileImg;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   },
   data: function() {
     return {
@@ -74,9 +91,10 @@ export default {
         '두번째 문장입니다~! 두번째 문장입니다~! 두번째 문장입니다~! 두번째',
       ],
       user: {
-        nickname: 'default',
-        email: 'default@default.com',
-        message: 'default, default, default.',
+        nickname: '',
+        userId: '',
+        message: '',
+        profileImg: '',
       },
     };
   },
