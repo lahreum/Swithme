@@ -66,7 +66,7 @@
                   outlined
                   label="최대그룹원수를 지정하세요"
                   required
-                  :value="groupInfo.groupMaxMemberCount"
+                  :min="minNum"
                   v-model="groupInfo.groupMaxMemberCount"
                 ></v-text-field>
               </v-col>
@@ -107,7 +107,7 @@
                   outlined
                   label="그룹 비밀번호를 입력하세요"
                   required
-                  v-model="groupInfo.groupPassword"
+                  v-model="groupPassword"
                 ></v-text-field
               ></v-col>
             </v-row>
@@ -142,17 +142,15 @@
                   outlined
                   label="날짜를 등록하세요"
                   required
-                  :value="groupInfo.groupGoalDate.slice(0, 10)"
-                  v-model="groupInfo.groupGoalDate"
+                  v-model="groupGoalDate"
                 ></v-text-field>
                 <v-text-field
                   :counter="20"
                   outlined
                   color="black"
                   label="D-Day제목을 등록하세요"
-                  :value="groupInfo.groupGoalTitle"
                   required
-                  v-model="groupInfo.groupGoalTitle"
+                  v-model="groupGoalTitle"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -168,13 +166,14 @@
                 :btnNameColor="'#424242'"
               ></app-btn-middle>
             </div>
-            <div style="display:inline-block;margin:5%" @click="ToGroupMain">
+            <div style="display:inline-block;margin:5%" @click="groupModify">
               <app-btn-middle
                 :btnColor="'#424242'"
                 :btnName="'수정하기'"
                 :btnNameColor="'white'"
               ></app-btn-middle>
             </div>
+            <v-btn @click="deleteGroup">그룹삭제</v-btn>
           </div>
         </v-col>
 
@@ -207,6 +206,7 @@ export default {
       groupNotice: "",
       groupGoalDate: "",
       groupGoalTitle: "",
+      minNum: 0,
       fileList: [],
       imageUrl: null,
       items: ["정보처리기사", "토익", "임용고시", "공무원"],
@@ -248,14 +248,17 @@ export default {
         console.log("수정페이지만들어질때", res);
         this.groupInfo = res.data.groupInfo;
         this.imageUrl = res.data.groupProfileImg;
-
+        this.minNum = this.groupInfo.groupMaxMemberCount;
         console.log(res.data.groupInfo.groupGoalTitle);
-        if (this.groupInfo.groupGoalDate === undefined) {
-          this.groupInfo["groupGoalDate"] = "";
-          this.groupInfo["groupGoalTitle"] = "";
+        if (this.groupInfo.groupGoalDate !== undefined) {
+          // this.groupInfo["groupGoalDate"] = "";
+          // this.groupInfo["groupGoalTitle"] = "";
+          this.groupGoalDate = this.groupInfo.groupGoalDate.slice(0, 10);
+          this.groupGoalTitle = this.groupInfo.groupGoalTitle;
         }
-        if (this.groupInfo.groupPassword === undefined) {
-          this.groupInfo["groupPassword"] = "";
+        if (this.groupInfo.groupPassword !== undefined) {
+          // this.groupInfo["groupPassword"] = "";
+          this.groupPassword = this.groupInfo.groupPassword;
         }
         console.log(this.groupInfo);
       })
@@ -276,13 +279,23 @@ export default {
       this.imageUrl = URL.createObjectURL(file); // Create File URL
       this.fileList = e.target.files;
     },
-    ToGroupMain() {
+    groupModify() {
       if (this.groupGoalDate === "") {
         this.groupGoalDate = null;
       }
       if (this.groupGoalTitle === "") {
         this.groupGoalTitle = null;
       }
+      if (this.groupPassword === "") {
+        this.groupProfileImg = null;
+      }
+      console.log("============");
+      console.log(this.groupInfo);
+      console.log(this.groupInfo.groupMaxMemberCount);
+      console.log(this.groupGoalDate);
+      console.log(this.groupGoalTitle);
+      console.log(this.groupInfo.groupNotice);
+      console.log(this.groupPassword);
       axios
         .create({
           headers: {
@@ -290,15 +303,15 @@ export default {
           },
         })
         .put("group", {
-          groupMaxMemberCount: this.groupInfo.MaxMemberCount,
-          groupGoalDate: this.groupInfo.groupGoalDate,
-          groupGoalTitle: this.groupInfo.groupGoalTitle,
+          groupId: this.groupInfo.groupId,
+          groupMaxMemberCount: this.groupInfo.groupMaxMemberCount,
+          groupGoalDate: this.groupGoalDate,
+          groupGoalTitle: this.groupGoalTitle,
           groupNotice: this.groupInfo.groupNotice,
-
-          groupPassword: this.groupInfo.groupPassword,
+          groupPassword: this.groupPassword,
         })
         .then((res) => {
-          console.log(res);
+          console.log("put보냄", res);
 
           // console.log("파일리스트", this.fileList);
           // console.log("받아온그룹아이디", res.data.createdGroupId);
@@ -324,6 +337,20 @@ export default {
           }
           // this.$router.push("/group");
           console.log("수정한다", this.groupInfo);
+        });
+    },
+    deleteGroup() {
+      axios
+        .create({
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "jwt-auth-token": storage.getItem("jwt-auth-token"),
+          },
+        })
+        .delete(`group?groupId=${this.groupInfo.groupId}`)
+        .then((res) => {
+          console.log(res);
+          this.$router.push("/group");
         });
     },
   },

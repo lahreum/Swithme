@@ -5,16 +5,18 @@
       <v-row style="margin-top:50px">
         <v-col cols="2"></v-col>
         <v-col>
-          <v-row
-            ><span style="font:bold;font-size:2.5rem;margin-right:2%">{{
+          <v-row align="center">
+            <span style="font:bold;font-size:2.5rem;margin-right:2%">{{
               groupInfo.groupName
             }}</span>
             <v-icon
               @click="toGroupModify(groupInfo.groupId)"
-              v-if="IsGM === true"
+              v-if="IsGM"
               x-large
               >mdi-cog-outline</v-icon
             >
+            <v-btn @click="joinGroup" style="margin-left:35%">가입하기</v-btn>
+            <v-btn @click="leaveGroup">탈퇴하기</v-btn>
           </v-row>
 
           <v-row
@@ -94,6 +96,7 @@
 <script>
 import ProfileStudying from "@/components/common/ProfileStudying.vue";
 import MiddleNav from "@/components/include/MiddleNav.vue";
+import date from "@/date.js";
 import axios from "axios";
 const storage = window.sessionStorage;
 
@@ -118,15 +121,9 @@ export default {
   // props: ["groupId"],
   created() {
     let today = new Date();
-    let year = today.getFullYear();
-    let month = today.getMonth() + 1;
-    let date = today.getDate();
-    let hours = today.getHours();
-    let min = today.getMinutes();
-    let sec = today.getSeconds();
-    let datetime =
-      year + "-" + month + "-" + date + " " + hours + ":" + min + ":" + sec;
-    console.log(datetime);
+    let day = date.dateFunc(today).datetime;
+
+    console.log("내가만든함수", day);
 
     axios
       .create({
@@ -134,7 +131,7 @@ export default {
           "jwt-auth-token": storage.getItem("jwt-auth-token"),
         },
       })
-      .get(`group/${this.$route.query.groupId}?datetime=${datetime}`)
+      .get(`group/${this.$route.query.groupId}?datetime=${day}`)
       .then((res) => {
         console.log("디테일만들어질때", res);
         this.groupInfo = res.data.groupInfo;
@@ -154,13 +151,11 @@ export default {
         this.Dday = Math.abs(Goal.getTime() - today.getTime());
         this.Dday = Math.ceil(this.Dday / (1000 * 3600 * 24));
 
-        for (i = 0; i < this.groupers.length; i++) {
-          if (
-            this.groupers[i].nickname === this.groupInfo.groupMasterNickname
-          ) {
-            this.IsGM = true;
-            break;
-          }
+        if (
+          this.$store.getters.getUserNickname ===
+          this.groupInfo.groupMasterNickname
+        ) {
+          this.IsGM = true;
         }
       })
       .catch((err) => {
@@ -176,7 +171,10 @@ export default {
   },
   methods: {
     toGroupHome() {
-      this.$router.push("/group-detail");
+      this.$router.push({
+        name: "GroupDetail",
+        query: { groupId: this.groupInfo.groupId },
+      });
     },
     toGroupRanking() {
       this.$router.push("/group-ranking");
@@ -186,6 +184,26 @@ export default {
     },
     toGroupModify(g) {
       this.$router.push({ name: "GroupModify", query: { groupId: g } });
+    },
+    joinGroup() {
+      axios
+        .create({
+          headers: {
+            "jwt-auth-token": storage.getItem("jwt-auth-token"),
+          },
+        })
+        .post(`group/${this.groupInfo.groupId}`)
+        .then((res) => console.log(res));
+    },
+    leaveGroup() {
+      axios
+        .create({
+          headers: {
+            "jwt-auth-token": storage.getItem("jwt-auth-token"),
+          },
+        })
+        .delete(`group/${this.groupInfo.groupId}`)
+        .then((res) => console.log(res));
     },
   },
 };
