@@ -287,7 +287,7 @@ export default {
         this.groupGoalTitle = null;
       }
       if (this.groupPassword === "") {
-        this.groupProfileImg = null;
+        this.groupPassword = null;
       }
       console.log("============");
       console.log(this.groupInfo);
@@ -332,10 +332,10 @@ export default {
               .put("group/profile-img", params)
               .then((res) => {
                 console.log("해치웠나??", res);
-                // this.$router.push("/group");
+                this.$router.push("/group");
               });
           }
-          // this.$router.push("/group");
+          this.$router.push("/group");
           console.log("수정한다", this.groupInfo);
         });
     },
