@@ -549,6 +549,7 @@ public class GroupController {
 	public Object changeGroupInfo(@RequestBody GroupInfo group,HttpServletRequest req) {
 		Map<String,Object> result=new HashMap<>();
 		
+		System.out.println(group.toString());
 		result.put("success",false);
 		
 		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
@@ -560,13 +561,18 @@ public class GroupController {
 					groupBefore.get().getGroupCurMemberCount()<group.getGroupMaxMemberCount()) {
 				Optional<GroupMember> groupMember=groupMemberRepository.findByGroupMemberUserNicknameAndGroupMemberGroupId(nickname, group.getGroupId());
 				if(groupMember.isPresent()&&groupMember.get().isGroupMemberIsMaster()) {
-					groupBefore.get().setGroupCategory(group.getGroupCategory());
-					groupBefore.get().setGroupName(group.getGroupName());
-					groupBefore.get().setGroupDailyGoal(group.getGroupDailyGoal());
-					groupBefore.get().setGroupMaxMemberCount(group.getGroupMaxMemberCount());
-					groupBefore.get().setGroupPassword(commonMethods.getHashed(group.getGroupPassword()));
-					groupBefore.get().setGroupNotice(group.getGroupNotice());
-					groupBefore.get().setGroupGoalDate(group.getGroupGoalDate());
+					if(group.getGroupMaxMemberCount()!=0)
+						groupBefore.get().setGroupMaxMemberCount(group.getGroupMaxMemberCount());
+					if(group.getGroupPassword()!=null)
+						groupBefore.get().setGroupPassword(commonMethods.getHashed(group.getGroupPassword()));
+					else
+						groupBefore.get().setGroupPassword(null);
+					if(group.getGroupNotice()!=null)
+						groupBefore.get().setGroupNotice(group.getGroupNotice());
+					if(group.getGroupGoalDate()!=null)
+						groupBefore.get().setGroupGoalDate(group.getGroupGoalDate());
+					if(group.getGroupGoalTitle()!=null)
+						groupBefore.get().setGroupGoalTitle(group.getGroupGoalTitle());
 					groupRepository.save(groupBefore.get());
 					
 					result.clear();
