@@ -38,7 +38,8 @@ public class GoogleOauth implements SocialOauth {
 				.queryParam("redirect_uri", redirectUri)
 				.queryParam("response_type", "code")
 				.queryParam("scope", "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile")
-				.queryParam("access_type", "offline");
+				.queryParam("access_type", "offline")
+				.queryParam("prompt", "select_account");
 		
 		return uriBuilder.toUriString();
 	}
