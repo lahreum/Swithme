@@ -336,6 +336,7 @@ export default {
     },
   },
   created() {
+    console.log("그룹메인크리에이티드됨???");
     axios
       .create({
         headers: {

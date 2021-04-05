@@ -327,8 +327,11 @@ export default {
     };
   },
   methods: {
-    ToGroupHome() {
-      this.$router.push("/group-detail");
+    toGroupHome() {
+      this.$router.push({
+        name: "GroupDetail",
+        query: { groupId: this.groupInfo.groupId },
+      });
     },
     ToGroupRanking() {
       this.$router.push("/group-ranking");
