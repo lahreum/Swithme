@@ -288,7 +288,49 @@ export default {
         this.caseNum = 6;
       }
     },
-    filteringGroup() {},
+    filteringGroup(li) {
+      console.log(li);
+      if (li.length === 0) {
+        axios
+          .create({
+            headers: {
+              "jwt-auth-token": storage.getItem("jwt-auth-token"),
+            },
+          })
+          .get("group")
+          .then((res) => {
+            // console.log("그룹메인created될때", res);
+            this.groups = res.data.groupList;
+            for (var i = 0; i < this.groups.length; i++) {
+              this.groups[i]["src"] =
+                res.data.groupProfileList[i].groupProfileImg;
+            }
+            // console.log(this.groups);
+            this.AllGroup = this.groups.slice(0, 12);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
+        axios
+          .create({
+            headers: {
+              "jwt-auth-token": storage.getItem("jwt-auth-token"),
+            },
+          })
+          .get(`group/search?category-list=${li}`)
+          .then((res) => {
+            console.log("카테고리", res);
+            this.groups = res.data.searchedGroupList;
+            for (var i = 0; i < this.groups.length; i++) {
+              this.groups[i]["src"] =
+                res.data.groupProfileList[i].groupProfileImg;
+            }
+            this.AllGroup = this.groups.slice(0, 12);
+          })
+          .catch((err) => console.log(err));
+      }
+    },
     toGroupDetail(g) {
       this.$router.push({ name: "GroupDetail", params: { groupId: g } });
     },
