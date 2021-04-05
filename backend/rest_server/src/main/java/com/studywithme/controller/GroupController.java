@@ -228,11 +228,12 @@ public class GroupController {
 			if(group.isPresent()) {
 				Optional<List<GroupMember>> groupMembers=groupMemberRepository.findByGroupMemberGroupId(groupId);
 				List<UserDto> userList=new ArrayList<>();
+
+				datetime=datetime.substring(2,10);
+				datetime=datetime.replaceAll("-", "");
+				
 				for(GroupMember gm:groupMembers.get()) {
 					Optional<UserInfo> curUserOpt=userRepository.findByUserNickname(gm.getGroupMemberUserNickname());
-				
-					datetime=datetime.substring(2,10);
-					datetime=datetime.replaceAll("-", "");
 					Optional<TimeDaily> curTimeDaily=timeDailyRepository.findByTimeDailyUserNicknameAndTimeDailyYearMonthDayAndTimeDailyAction(nickname, datetime,0);
 							
 					UserDto curUser=new UserDto();
@@ -252,8 +253,8 @@ public class GroupController {
 					userList.add(curUser);
 				}
 				
-				result.put("groupMemberList",userList);
 				result.clear();
+				result.put("groupMemberList",userList);
 				try {
 					result.put("groupProfileImg",group.get().getGroupProfileImg().getBytes(1l, (int)group.get().getGroupProfileImg().length()));
 				} catch (SQLException e) {
