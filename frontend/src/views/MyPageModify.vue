@@ -112,7 +112,7 @@
               >
                 <input-bar
                   :type="'password'"
-                  :placeholder="'비밀번호'"
+                  :placeholder="'새로운 비밀번호'"
                   :rules="passwordRules"
                   @pass-input="getNewPassword"
                 ></input-bar>
@@ -283,7 +283,7 @@ export default {
       alert('사진 수정!!!!!!');
     },
     getNewNickname(value) {
-      this.new.userNickname = value;
+      this.new.nickname = value;
     },
     getNewPassword(value) {
       this.new.password = value;
@@ -346,9 +346,10 @@ export default {
     nicknameRequest() {
       if (this.$refs.nickname.validate()) {
         this.$Axios
-          .get('user/nickname')
+          .get('user/nickname?userNickname=' + this.new.nickname)
           .then((response) => {
             if (!response.data.isPresent) {
+              console.log('여기까진 들어옵니다.');
               this.nicknameRequest2();
             } else {
               alert('중복인 닉네임 입니다. 다른 닉네임을 입력해주세요.');
@@ -361,8 +362,9 @@ export default {
       }
     },
     nicknameRequest2() {
+      console.log(this.new.nickname);
       let params = new URLSearchParams();
-      params.append('userNickname', this.new.nickname);
+      params.append('newNickname', this.new.nickname);
 
       this.$Axios
         .create({
@@ -372,9 +374,14 @@ export default {
         })
         .put('user/nickname', params)
         .then((response) => {
+          console.log('여기까지도 들어옵니다!');
           if (response.data.success) {
             alert('새로운 닉네임으로 변경되었습니다.');
             this.user.nickname = this.new.nickname;
+            storage.setItem(
+              'jwt-auth-token',
+              response.headers['jwt-auth-token']
+            );
             // this.new.nickname = '';
           } else {
             alert('닉네임 변경 도중 오류가 발생했습니다. (2)');
@@ -382,7 +389,7 @@ export default {
         })
         .catch((error) => {
           console.log(error);
-          alert('닉네임 변경 도중 오류가 발생했습니다. (3');
+          alert('닉네임 변경 도중 오류가 발생했습니다. (3)');
         });
     },
   },

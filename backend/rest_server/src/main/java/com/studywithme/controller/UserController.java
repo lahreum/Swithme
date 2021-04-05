@@ -92,12 +92,18 @@ public class UserController {
 		
 		String nickname = map.get("nickname");
 		String token = map.get("token");
+	
+		UserInfo userNew = new ObjectMapper().convertValue(jwtService.get(token).get("User"), UserInfo.class);
+		UserInfo user=new UserInfo();
 		
-		UserInfo user = new ObjectMapper().convertValue(jwtService.get(token).get("User"), UserInfo.class);
 		user.setUserNickname(nickname);
-		String jwtToken = jwtService.create(user);
+		user.setUserId(userNew.getUserId());
+		user.setUserType(userNew.getUserType());
+
+		user.setUserProfileImg(defaultProfileImgRepository.findById(1).get().getDefaultProfileImgData());
 		
-		userRepository.save(user);
+		UserInfo userInfo=userRepository.save(user);
+		String jwtToken = jwtService.create(userInfo);
 		result.put("success", true);
 		result.put("token", jwtToken);
 		
