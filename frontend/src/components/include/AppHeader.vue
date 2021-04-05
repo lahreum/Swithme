@@ -100,14 +100,15 @@
             bottom
           >
             <template v-slot:activator="{ on }">
-              <v-col>
+              <v-col cols="2">
                 <profile-small
                   :src="'data:image/png;base64,' + userInfo.profileImg"
                 ></profile-small>
               </v-col>
               <v-col
                 style="cursor: pointer;"
-                align="center"
+                align="start"
+                align-self="center"
                 v-on="on"
                 :class="{ 'white-text': darkmode, 'black-text': !darkmode }"
               >
