@@ -100,7 +100,11 @@
             bottom
           >
             <template v-slot:activator="{ on }">
-              <!-- 이 위치에 프로필 사진 컴포넌트 넣어야 함 -->
+              <v-col>
+                <profile-small
+                  :src="'data:image/png;base64,' + userInfo.profileImg"
+                ></profile-small>
+              </v-col>
               <v-col
                 style="cursor: pointer"
                 align="center"
@@ -236,6 +240,7 @@
 import '@/views/user/user.css';
 import AppBtnLarge from '@/components/common/AppBtnLarge.vue';
 import InputBar from '@/components/common/InputBar.vue';
+import ProfileSmall from '@/components/common/ProfileSmall.vue';
 import axios from 'axios';
 
 const storage = window.sessionStorage;
@@ -244,6 +249,7 @@ export default {
   components: {
     'app-btn-large': AppBtnLarge,
     'input-bar': InputBar,
+    'profile-small': ProfileSmall,
   },
   data: function () {
     return {
@@ -303,12 +309,15 @@ export default {
         .get('user')
         .then((res) => {
           // console.log(res);
+          // this.userInfo = res.data;
           this.userInfo = res.data.data;
-          // console.log(this.userInfo);
+          this.userInfo.profileImg = res.data.profileImg;
           this.$store.commit('LOGIN', this.userInfo);
           this.userNickname = this.$store.getters.getUserNickname;
           // console.log(this.userNickname);
-          // console.log("무야호", this.userInfo);
+          console.log('무야호', this.userInfo);
+          this.profileImg = this.$store.getters.getUserImage;
+          console.log(this.$store.getters.getUserImage);
         })
         .catch((err) => {
           console.log(err);
