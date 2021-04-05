@@ -171,6 +171,7 @@
                 <v-col class="middleLetter formLetter" cols="3">비밀번호</v-col>
                 <v-col cols="9"
                   ><input-bar
+                    :type="'password'"
                     @pass-input="getPw"
                     placeholder="비밀번호"
                   ></input-bar
@@ -257,7 +258,7 @@ export default {
   },
 
   mounted() {
-    console.log('마운티드됨?');
+    // console.log('마운티드됨?');
     if (storage.getItem('jwt-auth-token')) {
       this.isLogin = true;
       this.getUserInfo(storage.getItem('jwt-auth-token'));
@@ -277,7 +278,7 @@ export default {
       this.isLogin = true;
     },
     signOut: function() {
-      alert('로그아웃!!!!');
+      alert('성공적으로 로그아웃 했습니다. 안녕히!');
       this.isLogin = false;
       storage.removeItem('jwt-auth-token');
       this.$store.commit('userInit');
