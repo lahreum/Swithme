@@ -9,7 +9,7 @@
           <hr />
 
           <div style="height:430px; margin:5% 0;">
-            <group-recommend></group-recommend>
+            <group-recommend :groups="this.groups"></group-recommend>
           </div>
 
           <div>
@@ -336,8 +336,6 @@ export default {
     },
   },
   created() {
-    // const nickName = storage.getItem('nickName')
-
     axios
       .create({
         headers: {
