@@ -42,21 +42,15 @@ public class NaverOauth implements SocialOauth {
 	    
 		UriComponentsBuilder uriBuilder = null;
 		
-		uriBuilder = UriComponentsBuilder.fromHttpUrl(authUri)
-				.queryParam("client_id", clientId)
-				.queryParam("redirect_uri", redirectUri)
-				.queryParam("response_type", "code")
-				.queryParam("state", state);
-		
-//		try {
-//			uriBuilder = UriComponentsBuilder.fromHttpUrl(authUri)
-//					.queryParam("client_id", clientId)
-//					.queryParam("redirect_uri", URLEncoder.encode(redirectUri, "UTF-8"))
-//					.queryParam("response_type", "code")
-//					.queryParam("state", state);
-//		} catch (UnsupportedEncodingException e) {
-//			e.printStackTrace();
-//		}
+		try {
+			uriBuilder = UriComponentsBuilder.fromHttpUrl(authUri)
+					.queryParam("client_id", clientId)
+					.queryParam("redirect_uri", URLEncoder.encode(redirectUri, "UTF-8"))
+					.queryParam("response_type", "code")
+					.queryParam("state", state);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		
 		return uriBuilder.toUriString();
 	}
