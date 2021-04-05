@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 
 import com.studywithme.oauth.GoogleOauth;
+import com.studywithme.oauth.NaverOauth;
 import com.studywithme.oauth.Token;
 import com.studywithme.oauth.TokenInfo;
 
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OauthService {
 	private final GoogleOauth googleOauth;
+	private final NaverOauth naverOauth;
 	private final HttpServletResponse response;
 	
 	public void requestAuth(String type) {
@@ -24,6 +26,9 @@ public class OauthService {
 		switch (type) {
 		case "google":
 			redirectUri = googleOauth.requestAuth();
+			break;
+		case "naver":
+			redirectUri = naverOauth.requestAuth();
 			break;
 		default:
 			throw new IllegalArgumentException("오류가 발생하였습니다.");
