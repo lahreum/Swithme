@@ -23,9 +23,9 @@ const dateFunc=(today)=>{
       }
 
     let datetime = `${year}-${month}-${date} ${hours}:${min}:${sec}`;
-    return{
-        datetime
-    }
+    return datetime
+        
+
 }
 const date = {dateFunc}
 

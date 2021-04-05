@@ -121,7 +121,7 @@ export default {
   // props: ["groupId"],
   created() {
     let today = new Date();
-    let day = date.dateFunc(today).datetime;
+    let day = date.dateFunc(today);
 
     console.log("내가만든함수", day);
 
