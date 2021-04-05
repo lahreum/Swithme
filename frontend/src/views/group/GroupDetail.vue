@@ -42,11 +42,11 @@
             <v-col cols="3" style="font-size:1.5rem;"
               >지금 {{ studying.length }}명이 열공중!</v-col
             >
-            <v-col
-              ><v-chip outlined>
+            <v-col>
+              <v-chip v-if="groupInfo.groupGoalTitle !== NULL" outlined>
                 D-{{ Dday }} {{ groupInfo.groupGoalTitle }}
-              </v-chip></v-col
-            >
+              </v-chip>
+            </v-col>
           </v-row>
 
           <v-row style="margin-bottom:50px;">

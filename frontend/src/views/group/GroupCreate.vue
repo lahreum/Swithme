@@ -187,6 +187,7 @@
             </div>
             <div style="display:inline-block;margin:5%" @click="ToGroupMain">
               <app-btn-middle
+                :isDisabled="active"
                 :btnColor="'#424242'"
                 :btnName="'만들기'"
                 :btnNameColor="'white'"
@@ -202,9 +203,9 @@
 </template>
 
 <script>
-import AppBtnMiddle from '@/components/common/AppBtnMiddle.vue';
-import MiddleNav from '@/components/include/MiddleNav.vue';
-import axios from 'axios';
+import AppBtnMiddle from "@/components/common/AppBtnMiddle.vue";
+import MiddleNav from "@/components/include/MiddleNav.vue";
+import axios from "axios";
 const storage = window.sessionStorage;
 
 export default {
@@ -214,34 +215,53 @@ export default {
   },
   data() {
     return {
-      groupName: '',
-      groupCategory: '',
+      groupName: "",
+      groupCategory: "",
       groupMaxMemberCount: 0,
-      groupPassword: '',
-      groupNotice: '',
-      groupGoalDate: '',
-      groupGoalTitle: '',
+      groupPassword: "",
+      groupNotice: "",
+      groupGoalDate: "",
+      groupGoalTitle: "",
+
       fileList: [],
       navInfo: [
-        'sample2.png',
-        '그룹',
-        '목표가 같은 사람들끼리 모여 달려보세요.',
-        '목표로 가는 길이 덜 힘들고, 더욱 든든해질 거예요',
+        "sample2.png",
+        "그룹",
+        "목표가 같은 사람들끼리 모여 달려보세요.",
+        "목표로 가는 길이 덜 힘들고, 더욱 든든해질 거예요",
       ],
       imageUrl: null,
       items: [
-        '초중고',
-        '수능',
-        '대학교',
-        '대학원',
-        '취업',
-        '공무원시험',
-        '자격증',
-        '어학',
-        '기타',
+        "초중고",
+        "수능",
+        "대학교",
+        "대학원",
+        "취업",
+        "공무원시험",
+        "자격증",
+        "어학",
+        "기타",
       ],
       radios: null,
     };
+  },
+  created() {
+    console.log(this.groupName);
+    console.log(this.groupCategory);
+    console.log(this.groupMaxMemberCount);
+  },
+  computed: {
+    active() {
+      if (
+        this.groupCategory !== "" &&
+        this.groupMaxMemberCount > 1 &&
+        this.groupNotice !== ""
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    },
   },
   methods: {
     onClickImageUpload() {
@@ -261,21 +281,27 @@ export default {
       // params.append("groupNotice", this.groupNotice);
       // params.append("groupName", this.groupName);
       // params.append("groupPassword", this.groupPassword);
-
+      if (this.groupGoalDate === "") {
+        this.groupGoalDate = null;
+      }
+      if (this.groupGoalTitle === "") {
+        this.groupGoalTitle = null;
+      }
+      console.log(this.fileList);
       axios
         .create({
           headers: {
-            'jwt-auth-token': storage.getItem('jwt-auth-token'),
+            "jwt-auth-token": storage.getItem("jwt-auth-token"),
           },
         })
-        .post('group', {
+        .post("group", {
           groupCategory: this.items.indexOf(this.groupCategory) + 1,
           groupMaxMemberCount: this.groupMaxMemberCount,
           groupGoalDate: this.groupGoalDate,
           groupGoalTitle: this.groupGoalTitle,
           groupNotice: this.groupNotice,
           groupName: this.groupName,
-          groupPasswor: this.groupPassword,
+          groupPassword: this.groupPassword,
         })
         .then((res) => {
           console.log(res);
@@ -283,24 +309,26 @@ export default {
           // console.log("파일리스트", this.fileList);
           // console.log("받아온그룹아이디", res.data.createdGroupId);
           // console.log(this.fileList);
-          var params = new FormData();
-          params.append('groupId', res.data.createdGroupId);
+          if (this.fileList.length !== 0) {
+            var params = new FormData();
+            params.append("groupId", res.data.createdGroupId);
+            params.append("file", this.fileList[0]);
 
-          params.append('file', this.fileList[0]);
-
-          // console.log(this.fileList[0]);
-          axios
-            .create({
-              headers: {
-                'Content-Type': 'multipart/form-data',
-                'jwt-auth-token': storage.getItem('jwt-auth-token'),
-              },
-            })
-            .put('group/profile-img', params)
-            .then((res) => {
-              console.log('해치웠나??', res);
-              this.$router.push('/group');
-            });
+            // console.log(this.fileList[0]);
+            axios
+              .create({
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                  "jwt-auth-token": storage.getItem("jwt-auth-token"),
+                },
+              })
+              .put("group/profile-img", params)
+              .then((res) => {
+                console.log("해치웠나??", res);
+                this.$router.push("/group");
+              });
+          }
+          this.$router.push("/group");
         });
     },
   },
