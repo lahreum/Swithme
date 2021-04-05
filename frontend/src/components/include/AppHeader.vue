@@ -68,7 +68,7 @@
           style="margin-left: 60px"
         >
           <div
-            style="cursor: pointer;"
+            style="cursor: pointer"
             class="login-item"
             @click="openLogin"
             :class="{ 'white-text': darkmode, 'black-text': !darkmode }"
@@ -102,7 +102,7 @@
             <template v-slot:activator="{ on }">
               <!-- 이 위치에 프로필 사진 컴포넌트 넣어야 함 -->
               <v-col
-                style="cursor: pointer;"
+                style="cursor: pointer"
                 align="center"
                 v-on="on"
                 :class="{ 'white-text': darkmode, 'black-text': !darkmode }"
@@ -112,12 +112,12 @@
             </template>
             <v-list>
               <v-list-item>
-                <v-list-item-title style="cursor: pointer;" @click="goMyPage">
+                <v-list-item-title style="cursor: pointer" @click="goMyPage">
                   마이페이지
                 </v-list-item-title>
               </v-list-item>
               <v-list-item>
-                <v-list-item-title style="cursor: pointer;" @click="signOut">
+                <v-list-item-title style="cursor: pointer" @click="signOut">
                   로그아웃
                 </v-list-item-title>
               </v-list-item>
@@ -190,7 +190,7 @@
                   :btnNameColor="'white'"
                 ></app-btn-large>
               </div>
-              <!-- <a href="http://j4b103.p.ssafy.io/service/oauth/google"> -->
+              <!-- <a href="https://j4b103.p.ssafy.io/service/oauth/google"> -->
               <a href="http://localhost:9999/oauth/google">
                 <v-img
                   @click="dialog = false"
@@ -245,7 +245,7 @@ export default {
     'app-btn-large': AppBtnLarge,
     'input-bar': InputBar,
   },
-  data: function() {
+  data: function () {
     return {
       isLogin: false,
       username: 'default',
@@ -274,20 +274,20 @@ export default {
         this.isLogin = true;
       }
     },
-    signIn: function() {
+    signIn: function () {
       this.isLogin = true;
     },
-    signOut: function() {
+    signOut: function () {
       alert('성공적으로 로그아웃 했습니다. 안녕히!');
       this.isLogin = false;
       storage.removeItem('jwt-auth-token');
       this.$store.commit('userInit');
       this.$router.push('/');
     },
-    goMyPage: function() {
+    goMyPage: function () {
       this.$router.push('/my-page-access');
     },
-    goMain: function() {
+    goMain: function () {
       this.$router.push('/');
     },
     openLogin() {
