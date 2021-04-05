@@ -16,14 +16,12 @@ Vue.use(VueRouter);
 Vue.use(VueFullPage);
 Vue.use(Carousel3d);
 
-axios.defaults.baseURL = 'http://j4b103.p.ssafy.io/service';
-
 const router = new VueRouter({
   mode: 'history',
   routes,
 });
 
-axios.defaults.baseURL = 'http://j4b103.p.ssafy.io/service/';
+axios.defaults.baseURL = 'https://j4b103.p.ssafy.io/service/';
 // axios.defaults.baseURL = 'http://localhost:9999/';
 
 new Vue({

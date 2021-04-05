@@ -189,7 +189,7 @@
                   :btnNameColor="'white'"
                 ></app-btn-large>
               </div>
-              <a href="http://j4b103.p.ssafy.io/service/oauth/google"
+              <a href="https://j4b103.p.ssafy.io/service/oauth/google"
                 ><v-img
                   @click="dialog = false"
                   src="@/assets/img/google_long.png"
@@ -243,7 +243,7 @@ export default {
     'app-btn-large': AppBtnLarge,
     'input-bar': InputBar,
   },
-  data: function () {
+  data: function() {
     return {
       isLogin: false,
       username: 'default',
