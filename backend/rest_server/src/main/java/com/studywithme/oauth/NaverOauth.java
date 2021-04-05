@@ -31,8 +31,7 @@ public class NaverOauth implements SocialOauth {
 	private final String clientId = "Lo8etmLBsy1kZMSWYz0x";
 	private final String clientSecret = "lszt2PW8oK";
 	private final String authUri = "https://nid.naver.com/oauth2.0/authorize";
-//	private final String redirectUri = "https://j4b103.p.ssafy.io/service/oauth/naver/callback";
-	private final String redirectUri = "http://localhost:9999/oauth/naver/callback";
+	private final String redirectUri = "https://j4b103.p.ssafy.io/service/oauth/naver/callback";
 	private final String tokenUri = "https://oauth2.googleapis.com/token";
 	private final String tokenInfoUri = "https://oauth2.googleapis.com/tokeninfo";
 	
@@ -43,15 +42,21 @@ public class NaverOauth implements SocialOauth {
 	    
 		UriComponentsBuilder uriBuilder = null;
 		
-		try {
-			uriBuilder = UriComponentsBuilder.fromHttpUrl(authUri)
-					.queryParam("client_id", clientId)
-					.queryParam("redirect_uri", URLEncoder.encode(redirectUri, "UTF-8"))
-					.queryParam("response_type", "code")
-					.queryParam("state", state);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
+		uriBuilder = UriComponentsBuilder.fromHttpUrl(authUri)
+				.queryParam("client_id", clientId)
+				.queryParam("redirect_uri", redirectUri)
+				.queryParam("response_type", "code")
+				.queryParam("state", state);
+		
+//		try {
+//			uriBuilder = UriComponentsBuilder.fromHttpUrl(authUri)
+//					.queryParam("client_id", clientId)
+//					.queryParam("redirect_uri", URLEncoder.encode(redirectUri, "UTF-8"))
+//					.queryParam("response_type", "code")
+//					.queryParam("state", state);
+//		} catch (UnsupportedEncodingException e) {
+//			e.printStackTrace();
+//		}
 		
 		return uriBuilder.toUriString();
 	}
