@@ -273,7 +273,7 @@ public class UserController {
 		Optional<UserInfo> user=userRepository.findByUserNickname(oldNickname);
 		if(user.isPresent()) {
 			user.get().setUserNickname(newNickname);
-			
+			userRepository.save(user.get());
 			String jwt=jwtService.create(user.get());
 			
 			resp.setHeader("jwt-auth-token", jwt);
