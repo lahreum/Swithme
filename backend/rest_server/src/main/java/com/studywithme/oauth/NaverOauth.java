@@ -47,7 +47,7 @@ public class NaverOauth implements SocialOauth {
 					.queryParam("client_id", clientId)
 					.queryParam("redirect_uri", URLEncoder.encode(redirectUri, "UTF-8"))
 					.queryParam("response_type", "code")
-					.queryParam("state", URLEncoder.encode(state, "UTF-8"));
+					.queryParam("state", state);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
