@@ -138,12 +138,7 @@ export default {
     },
     getAuthNum() {
       this.$Axios
-        .get(
-          'http://localhost:9999/user/email?userEmail=' +
-            this.emailFront +
-            '@' +
-            this.emailBack
-        )
+        .get('user/email?userEmail=' + this.emailFront + '@' + this.emailBack)
         .then((response) => {
           if (response.data.success) {
             this.realAuthNum = response.data.validNum;
