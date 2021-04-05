@@ -18,15 +18,16 @@
             justify="space-between"
             style="font-size:1.5rem; margin:50px 0;"
           >
-            {{ groupInfo.groupIntroduce }}
+            {{ groupInfo.groupNotice }}
             <span
               ><v-icon>mdi-account</v-icon>{{ groupers.length }}
-              <v-icon>mdi-crown</v-icon>{{ groupInfo.groupMaster }}</span
+              <v-icon>mdi-crown</v-icon
+              >{{ groupInfo.groupMasterNickname }}</span
             >
           </v-row>
 
           <v-row justify="space-around" style="margin-bottom:50px;">
-            <v-btn icon color="black" x-large @click="toHome"
+            <v-btn icon color="black" x-large @click="toGroupHome"
               ><v-icon>mdi-home</v-icon> 홈</v-btn
             >
             <v-btn icon color="black" x-large @click="toGroupRanking"
@@ -41,36 +42,42 @@
             <v-col cols="3" style="font-size:1.5rem;"
               >지금 {{ studying.length }}명이 열공중!</v-col
             >
-            <v-col
-              ><v-chip outlined>
-                D-39 정보처리기사 실기
-              </v-chip></v-col
-            >
+            <v-col>
+              <v-chip v-if="groupInfo.groupGoalTitle !== NULL" outlined>
+                D-{{ Dday }} {{ groupInfo.groupGoalTitle }}
+              </v-chip>
+            </v-col>
           </v-row>
 
           <v-row style="margin-bottom:50px;">
-            <v-col cols="12" sm="2" v-for="grouper in studying" :key="grouper"
+            <v-col
+              cols="12"
+              sm="2"
+              v-for="(grouper, idx) in studying"
+              :key="'studying' + idx"
               ><div class="GroupStudyUser">
                 <ProfileStudying
-                  :src="grouper.profile"
-                  :IsStudying="grouper.IsStudying"
+                  :src="grouper.profileImg"
+                  :IsStudying="grouper.studying"
                 />
-                <h2 style="margin:30px 0 0 0">{{ grouper.name }}</h2>
-                <h3>{{ grouper.time }}</h3>
+                <h2 style="margin:30px 0 0 0">{{ grouper.nickname }}</h2>
+                <h3 v-if="grouper.todayStudyTime === 0">00:00:00</h3>
+                <h3 v-else>{{ grouper.todayStudyTime }}</h3>
               </div></v-col
             >
             <v-col
               cols="12"
               sm="2"
-              v-for="grouper in notStudying"
-              :key="grouper"
+              v-for="(grouper, idx) in notStudying"
+              :key="'notStudying' + idx"
               ><div class="GroupStudyUser">
                 <ProfileStudying
-                  :src="grouper.profile"
-                  :IsStudying="grouper.IsStudying"
+                  :src="'data:image/png;base64,' + grouper.profileImg"
+                  :IsStudying="grouper.studying"
                 />
-                <h2 style="margin:30px 0 0 0">{{ grouper.name }}</h2>
-                <h3>{{ grouper.time }}</h3>
+                <h2 style="margin:30px 0 0 0">{{ grouper.nickname }}</h2>
+                <h3 v-if="grouper.todayStudyTime === 0">00:00:00</h3>
+                <h3 v-else>{{ grouper.todayStudyTime }}</h3>
               </div></v-col
             >
           </v-row>
@@ -84,106 +91,81 @@
 <script>
 import ProfileStudying from "@/components/common/ProfileStudying.vue";
 import MiddleNav from "@/components/include/MiddleNav.vue";
+import axios from "axios";
+const storage = window.sessionStorage;
+
 export default {
   data() {
     return {
       studying: [],
       notStudying: [],
       IsGM: false,
+      Dday: 0,
+
       navInfo: [
         "sample2.png",
         "그룹",
         "목표가 같은 사람들끼리 모여 달려보세요.",
         "목표로 가는 길이 덜 힘들고, 더욱 든든해질 거예요",
       ],
-      groupInfo: {
-        groupName: "정처기 합격가즈아",
-        groupIntroduce: "정처기 원콤을 목표로 하는 스터디입니다.",
-        groupMaster: "dldkfma",
-      },
-      groupers: [
-        {
-          name: "dldkfma",
-          time: "03:13:24",
-          profile: "https://ifh.cc/g/wyakuA.jpg",
-          IsStudying: true,
-        },
-        {
-          name: "빛봉현",
-          time: "03:53:26",
-          profile: "https://ifh.cc/g/wyakuA.jpg",
-          IsStudying: false,
-        },
-        {
-          name: "녹용파는사슴",
-          time: "03:12:21",
-          profile: "https://ifh.cc/g/wyakuA.jpg",
-          IsStudying: false,
-        },
-        {
-          name: "별빛지현",
-          time: "01:13:24",
-          profile: "https://ifh.cc/g/wyakuA.jpg",
-          IsStudying: true,
-        },
-        {
-          name: "dddddut",
-          time: "05:13:54",
-          profile: "https://ifh.cc/g/wyakuA.jpg",
-          IsStudying: true,
-        },
-        {
-          name: "정qqweeut",
-          time: "05:13:54",
-          profile: "https://ifh.cc/g/wyakuA.jpg",
-          IsStudying: false,
-        },
-        {
-          name: "정처기out",
-          time: "05:13:54",
-          profile: "https://ifh.cc/g/wyakuA.jpg",
-          IsStudying: false,
-        },
-        {
-          name: "정hohout",
-          time: "05:13:54",
-          profile: "https://ifh.cc/g/wyakuA.jpg",
-          IsStudying: true,
-        },
-        {
-          name: "정처기기기",
-          time: "05:13:54",
-          profile: "https://ifh.cc/g/wyakuA.jpg",
-          IsStudying: false,
-        },
-        {
-          name: "aaa정처at",
-          time: "05:13:54",
-          profile: "https://ifh.cc/g/wyakuA.jpg",
-          IsStudying: true,
-        },
-      ],
+      groupInfo: [],
+      groupers: [],
     };
   },
+  // props: ["groupId"],
   created() {
-    var i = 0;
-    for (i; i < this.groupers.length; i++) {
-      if (this.groupers[i].IsStudying) {
-        this.studying.push(this.groupers[i]);
-      } else {
-        this.notStudying.push(this.groupers[i]);
-      }
-    }
+    let today = new Date();
+    let year = today.getFullYear();
+    let month = today.getMonth() + 1;
+    let date = today.getDate();
+    let hours = today.getHours();
+    let min = today.getMinutes();
+    let sec = today.getSeconds();
+    let datetime =
+      year + "-" + month + "-" + date + " " + hours + ":" + min + ":" + sec;
+    console.log(datetime);
 
-    for (i = 0; i < this.groupers.length; i++) {
-      if (this.groupers[i].name === this.groupInfo.groupMaster) {
-        this.IsGM = true;
-        break;
-      }
-    }
+    axios
+      .create({
+        headers: {
+          "jwt-auth-token": storage.getItem("jwt-auth-token"),
+        },
+      })
+      .get(`group/${this.$route.params.groupId}?datetime=${datetime}`)
+      .then((res) => {
+        console.log("디테일만들어질때", res);
+        this.groupInfo = res.data.groupInfo;
+        this.groupers = res.data.groupMemberList;
 
-    console.log("dfasdf", this.studying);
-    console.log(this.notStudying);
+        for (var i = 0; i < this.groupers.length; i++) {
+          if (this.groupers[i].Studying) {
+            this.studying.push(this.groupers[i]);
+          } else {
+            this.notStudying.push(this.groupers[i]);
+          }
+        }
+        console.log(this.groupInfo);
+        console.log(this.groupers);
+        console.log("공부중아닌그룹원들", this.notStudying);
+        let Goal = new Date(this.groupInfo.groupGoalDate);
+        this.Dday = Math.abs(Goal.getTime() - today.getTime());
+        this.Dday = Math.ceil(this.Dday / (1000 * 3600 * 24));
+
+        for (i = 0; i < this.groupers.length; i++) {
+          if (
+            this.groupers[i].nickname === this.groupInfo.groupMasterNickname
+          ) {
+            this.IsGM = true;
+            break;
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    // console.log("받아왓니", this.$route.params.groupId);
+    // console.log("dfasdf", this.studying);
+    // console.log(this.notStudying);
   },
   components: {
     MiddleNav,

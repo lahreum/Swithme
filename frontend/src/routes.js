@@ -17,6 +17,7 @@ import JoinAgree from '@/views/user/JoinAgree.vue';
 import JoinAuth from '@/views/user/JoinAuth.vue';
 import JoinCreate from '@/views/user/JoinCreate.vue';
 import JoinComplete from '@/views/user/JoinComplete.vue';
+import JoinLogin from '@/views/user/JoinLogin.vue';
 import Token from '@/views/social/Token.vue';
 import Nickname from '@/views/social/Nickname.vue';
 import NoAccess from '@/views/NoAccess.vue';
@@ -26,6 +27,8 @@ import CommunityList from '@/views/community/CommunityList.vue';
 import CommunityCreate from '@/views/community/CommunityCreate.vue';
 import CommunityDetail from '@/views/community/CommunityDetail.vue';
 import CommunityModify from '@/views/community/CommunityModify.vue';
+
+const storage = window.sessionStorage;
 
 export default [
   {
@@ -63,7 +66,7 @@ export default [
         name: 'CommunityModify',
         component: CommunityModify,
       },
-    ]
+    ],
   },
   {
     path: '/join',
@@ -90,6 +93,11 @@ export default [
         name: 'JoinComplete',
         component: JoinComplete,
       },
+      {
+        path: 'join-login',
+        name: 'JoinLogin',
+        component: JoinLogin,
+      },
     ],
   },
   {
@@ -101,6 +109,10 @@ export default [
     path: '/timer',
     name: 'Timer',
     component: Timer,
+    beforeEnter: (to, from, next) => {
+      if (storage.getItem('jwt-auth-token') != null) next();
+      else alert('로그인이 필요한 서비스입니다.');
+    },
   },
   {
     path: '/my-study',

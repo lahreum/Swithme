@@ -5,8 +5,8 @@
     <!-- 카테고리명, 정렬박스 -->
     <v-container>
       <v-row>
-        <v-col cols="10"><p class="letter subTitle">{{ categoryName }} <v-icon>mdi-arrow-down-drop-circle-outline</v-icon></p></v-col>
-        <v-col cols="2"><SelectBox style="padding-top:10px;"/></v-col>
+        <v-col cols="10"><p class="letter subTitle">{{ category.categoryName }} <v-icon>mdi-arrow-down-drop-circle-outline</v-icon></p></v-col>
+        <v-col cols="2"><SelectBox @filterInfo="sortByFilter" style="padding-top:10px;"/></v-col>
       </v-row>
     </v-container>
     <hr class="lineStyle">
@@ -25,6 +25,12 @@
               작성자
             </th>
             <th class="text-center">
+              좋아요
+            </th>
+            <th class="text-center">
+              조회수
+            </th>
+            <th class="text-center">
               등록일
             </th>
           </tr>
@@ -37,6 +43,8 @@
             <td class="text-center">{{ board.boardId }}</td>
             <td class="text-center">{{ board.boardTitle }}</td>
             <td class="text-center">{{ board.boardWriter }}</td>
+            <td class="text-center">{{ board.boardLiked }}</td>
+            <td class="text-center">{{ board.boardView }}</td>
             <td class="text-center">{{ board.boardDate }}</td>
           </tr>
         </tbody>
@@ -59,6 +67,7 @@ import SelectBox from '@/components/common/SelectBox.vue';
 import AppBtnSmall from '@/components/common/AppBtnSmall.vue';
 import "./community.css";
 import "../user/user.css";
+const storage = window.sessionStorage;
 
 export default {
     components: {
@@ -68,21 +77,24 @@ export default {
     },
     data: function() {
       return {
-        categoryNum: 1,
-        categoryName: '초중고',
-        boardList: [
-          
-          ],
+        filter: '',
+        category: {
+          categoryNum: 1,
+          categoryName: '초중고',
+        },
+        boardList: [],
         curPageNum: 1,
         dataPerPage: 5,
       };
     },
     created() {
+      this.category.categoryNum = `${this.$store.state.categoryId}`;
+      this.category.categoryName = `${this.$store.state.categoryName}`;
       this.getBoardList(); 
     },
     watch: {
       categoryNum: function() {
-        this.getBoardList();
+        this.$store.commit("MOVETOBOARDCATEGORY", this.category);
       }
     },
     computed: {
@@ -101,15 +113,21 @@ export default {
     },
     methods: {
       getCategory: function(value){
-        this.categoryName = value.name; 
-        this.categoryNum = value.value;
+        this.category.categoryName = value.name; 
+        this.category.categoryNum = value.value;
+        this.$store.commit("MOVETOBOARDCATEGORY", value);
+        this.getBoardList();
       },
       getBoardList() { 
         this.$Axios
-        .get(`community/board?categoryId=`+ this.categoryNum)
+        .get(`community/board?categoryId=`+ this.category.categoryNum,{
+          headers: {
+            "jwt-auth-token": storage.getItem("jwt-auth-token"),
+          }
+        })
         .then((res) => {
           if(Object.keys(res.data.boardList).length > 0) {
-            this.boardList = res.data.boardList;
+            this.boardList = res.data.boardList.reverse();
           } else {
             this.boardList = [];
           }
@@ -121,8 +139,60 @@ export default {
       moveToBoardDetail(board) {
         this.$store.commit("MOVETOBOARDDETAIL", board.boardId);
         this.$router.push("/community/community-detail");
-      }
-    },
+      },
+      sortByFilter(value){
+        this.filter = value;
+        console.log('filter is ', value);
+        // 필터순으로 다시 this.boardList 정렬하기
+        if(value === '오래된 순') {
+          // sort by boardList[i].boardDate
+          this.boardList.sort(function(a,b){
+            if(a.boardDate > b.boardDate) {
+              return 1;
+            } 
+            if(a.boardDate < b.boardDate) {
+              return -1;
+            } 
+            return 0;
+            // a === b 일때
+          })
+        } else if(value === '좋아요 순') {
+          // sort by boardList[i].boardLiked
+          this.boardList.sort(function(a,b){
+            if(a.boardLiked < b.boardLiked) {
+              return 1;
+            } 
+            if(a.boardLiked > b.boardLiked) {
+              return -1;
+            } 
+            return 0;
+          })
+        } else if(value === '조회수 순') {
+          // sort by boardList[i].boardView
+          this.boardList.sort(function(a,b){
+            if(a.boardView < b.boardView) {
+              return 1;
+            } 
+            if(a.boardView > b.boardView) {
+              return -1;
+            } 
+            return 0;
+          })
+        } else if(value === '최신 순'){
+          // sort by boardList[i].boardDate
+          this.boardList.sort(function(a,b){
+            if(a.boardDate < b.boardDate) {
+              return 1;
+            } 
+            if(a.boardDate > b.boardDate) {
+              return -1;
+            } 
+            return 0;
+            // a === b 일때
+          })
+        }
+      },
+    }
 }
 </script>
 

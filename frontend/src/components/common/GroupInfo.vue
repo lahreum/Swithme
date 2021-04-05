@@ -1,5 +1,5 @@
 <template>
-  <div class="groupInfo">
+  <div class="groupInfo" @click="clickGroupInfo">
     <div>
       <v-img class="groupInfoImg" :src="src" style="border-radius:10px;">
         <div class="groupCnt">
@@ -19,6 +19,11 @@
 <script>
 export default {
   props: ["src", "groupName", "groupDesc", "groupCnt", "groupTotalCnt"],
+  methods: {
+    clickGroupInfo() {
+      this.$emit("clickGroupInfo");
+    },
+  },
 };
 </script>
 

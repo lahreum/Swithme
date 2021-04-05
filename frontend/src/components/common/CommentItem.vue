@@ -1,60 +1,57 @@
 <template>
   <div class="talk">
-    <!-- 댓글 갯수 -->
-    <p class="commentInfo"><span class="countNumber" style="padding-bottom:20px;"> 5 </span> 개의 댓글</p>
-    <v-divider></v-divider><br>
-    <!-- 댓글리스트 -->
     <div class="box">
       <article class="media">
           <div class="content">
             <!-- 닉네임 -->
             <p>
-              <strong>녹용파는 사슴</strong>
+              <strong>{{ talk.replyWriter }}</strong>
             </p>
             <!-- 댓글 내용 -->
-            <p v-if="!modifying">애자일 맞아요</p>
-            <!-- 댓글 작성자와 로그인 정보가 같을때 댓글 수정가능 -->
+            <p v-if="!modifying">{{ talk.replyContent }}</p>
             <div v-if="modifying">
-              <v-col cols="12" md="6">
                 <v-textarea
-                  v-if="false"
-                  rows="1"
-                  row-height="5"
+                  rows="5"
+                  height="100"
+                  style="width:60vw"
                   auto-grow
                   v-model="modifyContent"
-                ></v-textarea>
-              </v-col>
+                >{{ talk.replyContent }}</v-textarea>
             </div>
+            <p style="color:#BDBDBD;">{{ talk.replyDate }}</p>
+            <!-- 댓글 작성자와 로그인 정보가 같을때 댓글 수정가능 -->
             <!-- 수정중 아닐때, 수정 | 삭제 메뉴보임 -->
-            <div v-if="!modifying">
+            <div v-if="isWriter&&!modifying">
               <span
-                class="option"
-                >수정</span>
+                class="option" @click="toggleModify"
+                >수정</span> 
               <span
-                class="option"
+                class="option" style="padding-left:10px;" @click="deleteComment"
                 >삭제</span>
             </div>
             <!-- 수정중일때, 저장 취소 버튼 -->
-            <div v-if="modifying">
-              <span
-                @click="modifyComment(modifyNumber, modifyContent)"
-                v-if="talk.userNickname == nickname"
+            <div v-if="isWriter&&modifying">
+              <p
+                @click="modifyComment"
                 class="option"
-                >저장</span>
+                >저장 
               <span
-                @click="toggleModify"
-                v-if="talk.userNickname == nickname"
-                class="option"
-                >취소</span>
+                @click="cancelComment"
+                class="option" style="padding-left:10px;"
+                >취소</span></p>
             </div>
           </div>
       </article>
     </div>
+    <v-divider></v-divider>
   </div>
 </template>
 
 <script>
+const storage = window.sessionStorage;
+
 export default {
+  
   props: {
     talk: Object,
   },
@@ -62,22 +59,71 @@ export default {
     return {
       modifying: false,
       modifyContent: '',
+      isWriter: false,
     }
+  },
+  created() {
+    this.modifyContent = this.talk.replyContent;
+    this.checkWriter();
   },
   methods: {
     toggleModify() {
+      console.log('toggle!!!!!!!!!');
       this.modifying = !this.modifying;
     },
-    sendCommentInfo() {
-      // 댓글 입력
-
+    checkWriter() {
+      if(this.talk.replyWriter === `${this.$store.state.user.userNickname}`) {
+        this.isWriter = true;
+      } else {
+        this.isWriter = false;
+      }
+    },  
+    deleteComment() {
+      this.$Axios
+      .delete('community/reply?replyId=' + this.talk.replyId,{
+        headers: {
+            'jwt-auth-token': storage.getItem('jwt-auth-token'),
+          },
+      })
+      .then((res)=>{
+        if(res.data.success) {
+          alert('댓글 삭제 성공');
+          window.location.reload();
+        } else {
+          alert('댓글 삭제 실패');
+        }
+      })
+      .catch((error)=>{
+        console.log(error);
+      })
     },
     modifyComment() {
-      // 댓글 수정
-      this.toggleModify();
+      let params = new URLSearchParams();
+      params.append('content', this.modifyContent);
+      params.append('replyId', this.talk.replyId);
+
+      this.$Axios
+      .put('community/reply', params, {
+        headers: {
+          'jwt-auth-token': storage.getItem('jwt-auth-token'),
+        },
+      })
+      .then((res)=>{
+        if(res.data.success) {
+          console.log('수정 성공');
+          this.toggleModify();
+          this.$emit('modified', true);
+        } else {
+          console.log('수정 실패');
+        }
+      })
+      .catch((error)=>{
+        console.log(error);
+      })
     },
-    deleteComment() {
-      // 댓글 삭제
+    cancelComment(){
+      this.toggleModify();
+      this.modifyContent = this.talk.replyContent;
     }
   }
 }

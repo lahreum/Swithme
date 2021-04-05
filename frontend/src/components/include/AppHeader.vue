@@ -1,6 +1,6 @@
 <template>
   <header>
-    <v-row no-gutters align="center" style="height: 100px;">
+    <v-row no-gutters align="center" style="height: 100px">
       <v-col cols="2" class="logo-header">
         <img
           :src="
@@ -8,7 +8,7 @@
               ? require('@/assets/img/logo_wh.png')
               : require('@/assets/img/logo_bl.png')
           "
-          style="width: 75%; height: auto;"
+          style="width: 75%; height: auto"
           alt="swithme-logo"
           @click="goMain"
         />
@@ -65,9 +65,10 @@
           no-gutters
           v-if="!isLogin"
           justify="center"
-          style="margin-left: 60px;"
+          style="margin-left: 60px"
         >
           <div
+            style="cursor: pointer"
             class="login-item"
             @click="openLogin"
             :class="{ 'white-text': darkmode, 'black-text': !darkmode }"
@@ -90,7 +91,7 @@
           </router-link>
         </v-row>
 
-        <v-row no-gutters v-else style="margin-left: 60px;">
+        <v-row no-gutters v-else style="margin-left: 60px">
           <v-menu
             open-on-hover
             close-on-click
@@ -99,19 +100,29 @@
             bottom
           >
             <template v-slot:activator="{ on }">
-              <!-- 이 위치에 프로필 사진 컴포넌트 넣어야 함 -->
-              <v-col align="center" v-on="on">
+              <v-col cols="2">
+                <profile-small
+                  :src="'data:image/png;base64,' + userInfo.profileImg"
+                ></profile-small>
+              </v-col>
+              <v-col
+                style="cursor: pointer;"
+                align="start"
+                align-self="center"
+                v-on="on"
+                :class="{ 'white-text': darkmode, 'black-text': !darkmode }"
+              >
                 {{ userNickname }}님, 안녕하세요!
               </v-col>
             </template>
             <v-list>
               <v-list-item>
-                <v-list-item-title @click="goMyPage">
+                <v-list-item-title style="cursor: pointer" @click="goMyPage">
                   마이페이지
                 </v-list-item-title>
               </v-list-item>
               <v-list-item>
-                <v-list-item-title @click="signOut">
+                <v-list-item-title style="cursor: pointer" @click="signOut">
                   로그아웃
                 </v-list-item-title>
               </v-list-item>
@@ -121,7 +132,7 @@
       </v-col>
     </v-row>
     <!-- 로그인 모달팝업 -->
-    <div style="width:50%;" @click="openLogin">
+    <div style="width: 50%" @click="openLogin">
       <!-- 버튼도 v-dialog와 동시에 출력되도록 수정필요 -->
       <!-- <v-btn
         fab
@@ -147,8 +158,8 @@
             <p class="headLine">LOGIN</p>
           </v-card-title>
           <!-- 이메일, 비밀번호 입력란 -->
-          <v-card-text style="padding-bottom:0px;">
-            <hr style="border:solid 1px #E0E0E0" />
+          <v-card-text style="padding-bottom: 0px">
+            <hr style="border: solid 1px #e0e0e0" />
             <br />
 
             <v-container>
@@ -165,6 +176,7 @@
                 <v-col class="middleLetter formLetter" cols="3">비밀번호</v-col>
                 <v-col cols="9"
                   ><input-bar
+                    :type="'password'"
                     @pass-input="getPw"
                     placeholder="비밀번호"
                   ></input-bar
@@ -173,7 +185,7 @@
             </v-container>
           </v-card-text>
 
-          <v-card-actions style="padding-bottom:0px;padding-top:0px;">
+          <v-card-actions style="padding-bottom: 0px; padding-top: 0px">
             <div class="buttonGroup">
               <div @click="login">
                 <app-btn-large
@@ -183,11 +195,12 @@
                   :btnNameColor="'white'"
                 ></app-btn-large>
               </div>
-              <a href="http://localhost:9999/oauth/google"
-                ><v-img
+              <!-- <a href="https://j4b103.p.ssafy.io/service/oauth/google"> -->
+              <a href="http://localhost:9999/oauth/google">
+                <v-img
                   @click="dialog = false"
                   src="@/assets/img/google_long.png"
-                  style="margin-top:5px;"
+                  style="margin-top: 5px"
                   width="380"
                 ></v-img
               ></a>
@@ -195,25 +208,25 @@
                 @click="dialog = false"
                 src="@/assets/img/naver_long.png"
                 width="380"
-                style="margin-bottom:100px;"
+                style="margin-bottom: 100px"
               ></v-img>
               <div class="bottomOption">
                 <v-img
                   src="@/assets/img/pattern.jpg"
-                  style="width:100%;"
+                  style="width: 100%"
                 ></v-img>
                 <router-link
                   to="/find-pw"
-                  style="text-decoration: none; color:#616161;"
-                  ><span style="margin-right:40px;"
+                  style="text-decoration: none; color: #616161"
+                  ><span style="margin-right: 40px"
                     >비밀번호 찾기</span
                   ></router-link
                 >
                 <span>|</span>
                 <router-link
                   to="/join"
-                  style="text-decoration: none; color:#616161;"
-                  ><span style="margin-left:40px;">회원가입</span></router-link
+                  style="text-decoration: none; color: #616161"
+                  ><span style="margin-left: 40px">회원가입</span></router-link
                 >
               </div>
             </div>
@@ -225,36 +238,38 @@
 </template>
 
 <script>
-import "@/views/user/user.css";
-import AppBtnLarge from "@/components/common/AppBtnLarge.vue";
-import InputBar from "@/components/common/InputBar.vue";
-import axios from "axios";
+import '@/views/user/user.css';
+import AppBtnLarge from '@/components/common/AppBtnLarge.vue';
+import InputBar from '@/components/common/InputBar.vue';
+import ProfileSmall from '@/components/common/ProfileSmall.vue';
+import axios from 'axios';
 
 const storage = window.sessionStorage;
 export default {
-  props: ["darkmode"],
+  props: ['darkmode'],
   components: {
-    "app-btn-large": AppBtnLarge,
-    "input-bar": InputBar,
+    'app-btn-large': AppBtnLarge,
+    'input-bar': InputBar,
+    'profile-small': ProfileSmall,
   },
-  data: function() {
+  data: function () {
     return {
       isLogin: false,
-      username: "default",
+      username: 'default',
       dialog: false,
       userInfo: {},
-      email: "",
-      pw: "",
-      userNickname: "",
+      email: '',
+      pw: '',
+      userNickname: '',
     };
   },
 
   mounted() {
-    console.log("마운티드됨?");
-    if (storage.getItem("jwt-auth-token")) {
+    // console.log('마운티드됨?');
+    if (storage.getItem('jwt-auth-token')) {
       this.isLogin = true;
-      this.getUserInfo(storage.getItem("jwt-auth-token"));
-      console.log(storage.getItem("jwt-auth-token"));
+      this.getUserInfo(storage.getItem('jwt-auth-token'));
+      // console.log(storage.getItem("jwt-auth-token"));
     }
   },
 
@@ -266,21 +281,21 @@ export default {
         this.isLogin = true;
       }
     },
-    signIn: function() {
+    signIn: function () {
       this.isLogin = true;
     },
-    signOut: function() {
-      alert("로그아웃!!!!");
+    signOut: function () {
+      alert('성공적으로 로그아웃 했습니다. 안녕히!');
       this.isLogin = false;
-      storage.removeItem("jwt-auth-token");
-      this.$store.commit("userInit");
-      this.$router.push("/");
+      storage.removeItem('jwt-auth-token');
+      this.$store.commit('userInit');
+      this.$router.push('/');
     },
-    goMyPage: function() {
-      this.$router.push("/my-page-access");
+    goMyPage: function () {
+      this.$router.push('/my-page-access');
     },
-    goMain: function() {
-      this.$router.push("/");
+    goMain: function () {
+      this.$router.push('/');
     },
     openLogin() {
       this.dialog = true;
@@ -289,18 +304,21 @@ export default {
       axios
         .create({
           headers: {
-            "jwt-auth-token": token,
+            'jwt-auth-token': token,
           },
         })
-        .get("user")
+        .get('user')
         .then((res) => {
-          console.log(res);
+          // console.log(res);
+          // this.userInfo = res.data;
           this.userInfo = res.data.data;
-          console.log(this.userInfo);
-          this.$store.commit("LOGIN", this.userInfo);
+          this.userInfo.profileImg = res.data.profileImg;
+          this.$store.commit('LOGIN', this.userInfo);
           this.userNickname = this.$store.getters.getUserNickname;
-          console.log(this.userNickname);
-          console.log("무야호", this.userInfo);
+          // console.log(this.userNickname);
+          console.log('무야호', this.userInfo);
+          this.profileImg = this.$store.getters.getUserImage;
+          console.log(this.$store.getters.getUserImage);
         })
         .catch((err) => {
           console.log(err);
@@ -308,33 +326,33 @@ export default {
     },
 
     login() {
-      console.log("로그인버튼눌럿다!");
+      // console.log('로그인버튼눌럿다!');
 
       var params = new URLSearchParams();
-      params.append("userId", this.email);
-      params.append("userPassword", this.pw);
+      params.append('userId', this.email);
+      params.append('userPassword', this.pw);
       axios
-        .post("user/login", params)
+        .post('user/login', params)
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           if (res.data.success === true) {
             this.dialog = false;
             this.isLogin = true;
-            console.log(res);
-            this.getUserInfo(res.headers["jwt-auth-token"]);
-            storage.setItem("jwt-auth-token", res.headers["jwt-auth-token"]);
+            // console.log(res);
+            this.getUserInfo(res.headers['jwt-auth-token']);
+            storage.setItem('jwt-auth-token', res.headers['jwt-auth-token']);
 
-            console.log("유저닉네임", this.userNickname);
-            console.log(this.$store.state.user);
+            // console.log("유저닉네임", this.userNickname);
+            // console.log(this.$store.state.user);
 
-            console.log("스토어", this.userNickname);
+            // console.log("스토어", this.userNickname);
           } else {
-            alert("아이디 또는 비밀번호를 잘못 입력하였습니다.");
+            alert('아이디 또는 비밀번호를 잘못 입력하였습니다.');
           }
         })
         .catch((err) => console.log(err));
-      console.log(this.email);
-      console.log(this.pw);
+      // console.log(this.email);
+      // console.log(this.pw);
     },
     getEmail(parm) {
       this.email = parm;
@@ -369,6 +387,7 @@ export default {
 .logo-header {
   display: flex;
   justify-content: center;
+  cursor: pointer;
 }
 .v-text-field.v-text-field--enclosed .v-text-field__details {
   display: none !important;

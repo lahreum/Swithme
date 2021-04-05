@@ -10,6 +10,8 @@ export default {
     return {
       track: null,
       interval: null,
+      awayCnt: 0,
+      phoneCnt: 0,
     };
   },
   mounted() {
@@ -75,14 +77,72 @@ export default {
                     // canvas에서 이미지를 데이터로 변환
                     canvas.toBlob((blob) => {
                       // 폼에 데이터 추가
-                      data.append('data', blob);
+                      data.append('image', blob);
 
-                      // 집중 여부 판단을 위해 이미지를 인공지능 서버로 전송
+                      // 객체 감지를 위해 이미지를 인공지능 서버로 전송
                       axios
+                        // .post('https://j4b103.p.ssafy.io/aipredict', data)
                         .post('http://localhost:8000/predict', data)
                         .then((response) => {
-                          // 집중 여부 판단 결과
-                          console.log(response);
+                          // 객체 감지 결과
+                          let detectResult = response.data;
+                          let isPerson = false;
+                          let isPhone = false;
+
+                          for (let i = 0; i < detectResult.length; i++) {
+                            if (detectResult[i] == 'person') isPerson = true;
+                            else if (detectResult[i] == 'phone') {
+                              isPhone = true;
+                              this.phoneCnt++;
+                            }
+                          }
+
+                          if (!isPerson) this.awayCnt++;
+                          else {
+                            if (this.awayCnt >= 20) this.$emit('resumeTimer');
+                            this.awayCnt = 0;
+                          }
+
+                          if (!isPhone) {
+                            if (this.phoneCnt >= 5) this.$emit('resumeTimer');
+                            this.phoneCnt = 0;
+                          }
+
+                          console.log(
+                            '자리비움 카운트: ' +
+                              this.awayCnt +
+                              ' 핸드폰 카운트: ' +
+                              this.phoneCnt
+                          );
+
+                          if (this.awayCnt == 20) {
+                            // 20초동안 자리를 비워 타이머 중지
+                            this.$store.commit('setAwayTime');
+                            this.$emit('pauseTimer');
+                          } else if (this.awayCnt > 20) {
+                            // 이후부터는 자리비움 시간 누적
+                            this.$store.commit('setAwayTime');
+                          }
+
+                          // 5초 이상 핸드폰이 감지되었을 경우
+                          if (this.phoneCnt == 5) {
+                            // 5초동안 자리를 비워 타이머 중지
+                            this.$store.commit('setPhoneTime');
+                            this.$emit('pauseTimer');
+                          } else if (this.phoneCnt > 5) {
+                            // 이후부터는 핸드폰 시간 누적
+                            this.$store.commit('setPhoneTime');
+                          }
+
+                          console.log(
+                            '자리비움 누적 시간: ' +
+                              this.$store.getters.getAwayTime
+                          );
+
+                          console.log(
+                            '핸드폰 누적 시간: ' +
+                              this.$store.getters.getPhoneTime
+                          );
 
                           // 이미지 출력
                           img.src = canvas.toDataURL();

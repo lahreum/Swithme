@@ -4,7 +4,7 @@
       <v-row no-gutters>
         <!-- 왼쪽 스트리밍 화면 -->
         <v-col cols="9">
-          <image-stream />
+          <image-stream @pauseTimer="pauseTimer" @resumeTimer="resumeTimer" />
           <!-- <v-img src="https://ifh.cc/g/GribTx.jpg" max-width="800" style="background-size: contain;"></v-img> -->
           <v-img class="timerLogo" src="@/assets/img/logo_bl.png"></v-img>
           <time-bar class="timer"></time-bar>
@@ -65,6 +65,14 @@ export default {
     'profile-normal': ProfileNormal,
     'app-btn-large': AppBtnLarge,
     'time-bar': TimeBar,
+  },
+  methods: {
+    pauseTimer() {
+      console.log('pauseTimer');
+    },
+    resumeTimer() {
+      console.log('resumeTimer');
+    },
   },
 };
 </script>

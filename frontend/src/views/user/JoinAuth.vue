@@ -24,7 +24,7 @@
             @pass-input="getEmailBack"
           ></email-input>
         </v-col>
-        <v-col cols="3" align-self="center" align="center" @click="getAuthNum">
+        <v-col cols="3" align-self="center" align="center" @click="getdoubleck">
           <app-btn-middle
             :isDisabled="isValid"
             :btnColor="'#673fb4'"
@@ -98,7 +98,7 @@ export default {
       emailFront: '',
       emailBack: '',
       myAuthNum: 0,
-      realAuthNum: 1234,
+      realAuthNum: 0,
       isValid: false,
       // isDisabled 쓰는 이유... 버튼이 component라서 @click을 바로 못 주니까 임시방편으로 플래그 만든거임 ㅜ
       isDisabled: false,
@@ -122,23 +122,36 @@ export default {
     getEmailBack(value) {
       this.emailBack = value;
     },
-    getAuthNum() {
+    getdoubleck() {
       if (!this.isDisabled) {
         axios
-          .get(
-            'http://localhost:9999/user/id?userId=' +
-              this.emailFront +
-              '@' +
-              this.emailBack
-          )
+          .get('user/id?userId=' + this.emailFront + '@' + this.emailBack)
           .then((response) => {
             if (response.data.isPresent) {
               alert('중복된 이메일 입니다. 다른 이메일 주소를 입력해주세요.');
             } else {
-              alert('인증번호: 1234');
+              this.getAuthNum();
+              alert('입력하신 이메일로 인증번호를 발송했습니다.');
             }
           });
       }
+    },
+    getAuthNum() {
+      this.$Axios
+        .get(
+          'http://localhost:9999/user/email?userEmail=' +
+            this.emailFront +
+            '@' +
+            this.emailBack
+        )
+        .then((response) => {
+          if (response.data.success) {
+            this.realAuthNum = response.data.validNum;
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     getMyAuthNum(value) {
       this.myAuthNum = value;

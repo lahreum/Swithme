@@ -103,6 +103,7 @@ def draw_outputs(img, outputs, class_names):
     boxes, objectness, classes, nums = outputs
     boxes, objectness, classes, nums = boxes[0], objectness[0], classes[0], nums[0]
     wh = np.flip(img.shape[0:2])
+
     for i in range(nums):
         x1y1 = tuple((np.array(boxes[i][0:2]) * wh).astype(np.int32))
         x2y2 = tuple((np.array(boxes[i][2:4]) * wh).astype(np.int32))
@@ -110,22 +111,22 @@ def draw_outputs(img, outputs, class_names):
         img = cv2.putText(img, '{} {:.4f}'.format(
             class_names[int(classes[i])], objectness[i]),
             x1y1, cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0, 0, 255), 2)
+
     return img
 
 
-def draw_labels(x, y, class_names):
-    img = x.numpy()
-    boxes, classes = tf.split(y, (4, 1), axis=-1)
-    classes = classes[..., 0]
-    wh = np.flip(img.shape[0:2])
-    for i in range(len(boxes)):
-        x1y1 = tuple((np.array(boxes[i][0:2]) * wh).astype(np.int32))
-        x2y2 = tuple((np.array(boxes[i][2:4]) * wh).astype(np.int32))
-        img = cv2.rectangle(img, x1y1, x2y2, (255, 0, 0), 2)
-        img = cv2.putText(img, class_names[classes[i]],
-                          x1y1, cv2.FONT_HERSHEY_COMPLEX_SMALL,
-                          1, (0, 0, 255), 2)
-    return img
+def detect_result(outputs, class_names, detect_cnt):
+    boxes, objectness, classes, nums = outputs
+    boxes, objectness, classes, nums = boxes[0], objectness[0], classes[0], nums[0]
+
+    result = []
+
+    for i in range(nums):
+        if objectness[i] >= 0.7:
+            class_name = class_names[int(classes[i])]
+            result.append(class_name)
+
+    return result
 
 
 def freeze_all(model, frozen=True):
