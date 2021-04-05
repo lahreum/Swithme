@@ -71,8 +71,8 @@ export default {
           if (s2 === true) {
             this.categoryIdxList.push(i + 1);
           } else {
-            var j = this.categoryIdxList.indexOf(i) + 1;
-            this.categoryIdxList.splice(j);
+            var j = this.categoryIdxList.indexOf(i + 1);
+            this.categoryIdxList.splice(j, 1);
           }
         }
       }
