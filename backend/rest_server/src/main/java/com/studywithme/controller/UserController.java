@@ -261,6 +261,28 @@ public class UserController {
 		
 		return result;
 	}
+	
+	@PutMapping("/nickname")
+	@ApiOperation(value="닉네임 변경",notes="파라미터로 변경할 닉네임을 받아 수정하고 jwt토큰 반환")
+	public Object changeNickname(@RequestParam String newNickname,HttpServletRequest req,HttpServletResponse resp) {
+		Map<String,Object> result=new HashMap<>();
+		result.put("success",false);
+		
+		String oldNickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
+		
+		Optional<UserInfo> user=userRepository.findByUserNickname(oldNickname);
+		if(user.isPresent()) {
+			user.get().setUserNickname(newNickname);
+			
+			String jwt=jwtService.create(user.get());
+			
+			resp.setHeader("jwt-auth-token", jwt);
+			result.clear();
+			result.put("success",true);
+		}
+		
+		return result;
+	}
 
 	@GetMapping("")
 	@ApiOperation(value="본인정보 받아오기",notes="헤더의 jwt를 기반으로 사용자 정보 반환")
