@@ -224,48 +224,46 @@ public class GroupController {
 		
 		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(user.isPresent()) {
-			Optional<GroupMember> groupMember=groupMemberRepository.findByGroupMemberUserNicknameAndGroupMemberGroupId(nickname,groupId);
-			if(groupMember.isPresent()) {
-				Optional<GroupInfo> group=groupRepository.findById(groupId);
-				if(group.isPresent()) {
-					Optional<List<GroupMember>> groupMembers=groupMemberRepository.findByGroupMemberGroupId(groupId);
-					List<UserDto> userList=new ArrayList<>();
-					for(GroupMember gm:groupMembers.get()) {
-						Optional<UserInfo> curUserOpt=userRepository.findByUserNickname(gm.getGroupMemberUserNickname());
-						
-						datetime=datetime.substring(2,10);
-						datetime=datetime.replaceAll("-", "");
-						Optional<TimeDaily> curTimeDaily=timeDailyRepository.findByTimeDailyUserNicknameAndTimeDailyYearMonthDayAndTimeDailyAction(nickname, datetime,0);
-								
-						UserDto curUser=new UserDto();
-						curUser.setNickname(curUserOpt.get().getUserNickname());
-						try {
-							curUser.setProfileImg(curUserOpt.get().getUserProfileImg().getBytes(1l, (int)curUserOpt.get().getUserProfileImg().length()));
-						} catch (SQLException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						curUser.setStudying(curUserOpt.get().isUserIsStudying());
-						if(curTimeDaily.isPresent())
-							curUser.setTodayStudyTime(curTimeDaily.get().getTimeDailyTime());
-						else
-							curUser.setTodayStudyTime(0);
-						
-						userList.add(curUser);
-					}
-					
-					result.put("groupMemberList",userList);
-//					result.clear();
+			Optional<GroupInfo> group=groupRepository.findById(groupId);
+			if(group.isPresent()) {
+				Optional<List<GroupMember>> groupMembers=groupMemberRepository.findByGroupMemberGroupId(groupId);
+				List<UserDto> userList=new ArrayList<>();
+				for(GroupMember gm:groupMembers.get()) {
+					Optional<UserInfo> curUserOpt=userRepository.findByUserNickname(gm.getGroupMemberUserNickname());
+				
+					datetime=datetime.substring(2,10);
+					datetime=datetime.replaceAll("-", "");
+					Optional<TimeDaily> curTimeDaily=timeDailyRepository.findByTimeDailyUserNicknameAndTimeDailyYearMonthDayAndTimeDailyAction(nickname, datetime,0);
+							
+					UserDto curUser=new UserDto();
+					curUser.setNickname(curUserOpt.get().getUserNickname());
 					try {
-						result.put("groupProfileImg",group.get().getGroupProfileImg().getBytes(1l, (int)group.get().getGroupProfileImg().length()));
+						curUser.setProfileImg(curUserOpt.get().getUserProfileImg().getBytes(1l, (int)curUserOpt.get().getUserProfileImg().length()));
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					group.get().setGroupProfileImg(null);
-					result.put("groupInfo",group.get());
+					curUser.setStudying(curUserOpt.get().isUserIsStudying());
+					if(curTimeDaily.isPresent())
+						curUser.setTodayStudyTime(curTimeDaily.get().getTimeDailyTime());
+					else
+						curUser.setTodayStudyTime(0);
+						
+					userList.add(curUser);
 				}
+				
+				result.put("groupMemberList",userList);
+				result.clear();
+				try {
+					result.put("groupProfileImg",group.get().getGroupProfileImg().getBytes(1l, (int)group.get().getGroupProfileImg().length()));
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				group.get().setGroupProfileImg(null);
+				result.put("groupInfo",group.get());
 			}
+			
 		}
 		return result;
 	}
