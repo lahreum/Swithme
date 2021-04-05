@@ -12,7 +12,7 @@
               <v-img
                 class="groupImgUpload"
                 v-if="imageUrl"
-                :src="imageUrl"
+                :src="'data:image/png;base64,' + imageUrl"
               ></v-img>
               <v-img
                 class="groupImgUpload"
@@ -37,7 +37,7 @@
                 그룹이름
               </v-col>
               <v-col cols="9" style="font-size: 2rem;">
-                {{ group.name }}
+                {{ groupInfo.groupName }}
               </v-col>
             </v-row>
 
@@ -49,7 +49,7 @@
                 카테고리
               </v-col>
               <v-col cols="9" style="font-size: 2rem;">
-                {{ group.category }}
+                {{ category[groupInfo.groupCategory - 1].title }}
               </v-col>
             </v-row>
 
@@ -66,7 +66,8 @@
                   outlined
                   label="최대그룹원수를 지정하세요"
                   required
-                  :value="group.total"
+                  :value="groupInfo.groupMaxMemberCount"
+                  v-model="groupInfo.groupMaxMemberCount"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -106,6 +107,7 @@
                   outlined
                   label="그룹 비밀번호를 입력하세요"
                   required
+                  v-model="groupInfo.groupPassword"
                 ></v-text-field
               ></v-col>
             </v-row>
@@ -122,7 +124,8 @@
                   outlined
                   :counter="50"
                   placeholder="이 그룹을 나타내는 소개글을 멋지게 써주세요."
-                  :value="group.info"
+                  :value="groupInfo.groupNotice"
+                  v-model="groupInfo.groupNotice"
                 ></v-textarea>
               </v-col>
             </v-row>
@@ -139,15 +142,17 @@
                   outlined
                   label="날짜를 등록하세요"
                   required
-                  :value="group.DdayDate"
+                  :value="groupInfo.groupGoalDate.slice(0, 10)"
+                  v-model="groupInfo.groupGoalDate"
                 ></v-text-field>
                 <v-text-field
                   :counter="20"
                   outlined
                   color="black"
                   label="D-Day제목을 등록하세요"
-                  :value="group.DdayName"
+                  :value="groupInfo.groupGoalTitle"
                   required
+                  v-model="groupInfo.groupGoalTitle"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -182,7 +187,8 @@
 <script>
 import AppBtnMiddle from "@/components/common/AppBtnMiddle.vue";
 import MiddleNav from "@/components/include/MiddleNav.vue";
-
+import axios from "axios";
+const storage = window.sessionStorage;
 export default {
   components: {
     MiddleNav,
@@ -196,20 +202,69 @@ export default {
         "목표가 같은 사람들끼리 모여 달려보세요.",
         "목표로 가는 길이 덜 힘들고, 더욱 든든해질 거예요",
       ],
+      groupMaxMemberCount: 0,
+      groupPassword: "",
+      groupNotice: "",
+      groupGoalDate: "",
+      groupGoalTitle: "",
+      fileList: [],
       imageUrl: null,
       items: ["정보처리기사", "토익", "임용고시", "공무원"],
       radios: null,
-      group: {
-        groupImg: "https://ifh.cc/g/yuecDg.jpg",
-        name: "정처기합격가즈아",
-        category: "자격증",
-        total: 10,
-        public: true,
-        info: "정처기 원콤을 목표로 하는 스터디입니다.",
-        DdayDate: "2021-04-25",
-        DdayName: "정보처리기사",
-      },
+      groupInfo: { groupGoalDate: "", groupGoalTitle: "" },
+      category: [
+        { title: "초중고", icon: "mdi-baby-face-outline" },
+        { title: "수능", icon: "mdi-pen" },
+        { title: "대학교", icon: "mdi-school-outline" },
+        { title: "대학원", icon: "mdi-school" },
+        { title: "취업", icon: "mdi-domain" },
+        { title: "공무원시험", icon: "mdi-briefcase" },
+        { title: "자격증", icon: "mdi-medal-outline" },
+        { title: "어학", icon: "mdi-alphabetical" },
+        { title: "기타", icon: "mdi-guitar-acoustic" },
+      ],
     };
+  },
+  created() {
+    let today = new Date();
+    let year = today.getFullYear();
+    let month = today.getMonth() + 1;
+    let date = today.getDate();
+    let hours = today.getHours();
+    let min = today.getMinutes();
+    let sec = today.getSeconds();
+    let datetime =
+      year + "-" + month + "-" + date + " " + hours + ":" + min + ":" + sec;
+    console.log(datetime);
+
+    this.$Axios
+      .create({
+        headers: {
+          "jwt-auth-token": storage.getItem("jwt-auth-token"),
+        },
+      })
+      .get(`group/${this.$route.query.groupId}?datetime=${datetime}`)
+      .then((res) => {
+        console.log("수정페이지만들어질때", res);
+        this.groupInfo = res.data.groupInfo;
+        this.imageUrl = res.data.groupProfileImg;
+
+        console.log(res.data.groupInfo.groupGoalTitle);
+        if (this.groupInfo.groupGoalDate === undefined) {
+          this.groupInfo["groupGoalDate"] = "";
+          this.groupInfo["groupGoalTitle"] = "";
+        }
+        if (this.groupInfo.groupPassword === undefined) {
+          this.groupInfo["groupPassword"] = "";
+        }
+        console.log(this.groupInfo);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    // console.log("받아왓니", this.$route.params.groupId);
+    // console.log("dfasdf", this.studying);
+    // console.log(this.notStudying);
   },
   methods: {
     onClickImageUpload() {
@@ -219,9 +274,57 @@ export default {
       console.log(e.target.files);
       const file = e.target.files[0]; // Get first index in files
       this.imageUrl = URL.createObjectURL(file); // Create File URL
+      this.fileList = e.target.files;
     },
     ToGroupMain() {
-      this.$router.push("/group");
+      if (this.groupGoalDate === "") {
+        this.groupGoalDate = null;
+      }
+      if (this.groupGoalTitle === "") {
+        this.groupGoalTitle = null;
+      }
+      axios
+        .create({
+          headers: {
+            "jwt-auth-token": storage.getItem("jwt-auth-token"),
+          },
+        })
+        .put("group", {
+          groupMaxMemberCount: this.groupInfo.MaxMemberCount,
+          groupGoalDate: this.groupInfo.groupGoalDate,
+          groupGoalTitle: this.groupInfo.groupGoalTitle,
+          groupNotice: this.groupInfo.groupNotice,
+
+          groupPassword: this.groupInfo.groupPassword,
+        })
+        .then((res) => {
+          console.log(res);
+
+          // console.log("파일리스트", this.fileList);
+          // console.log("받아온그룹아이디", res.data.createdGroupId);
+          // console.log(this.fileList);
+          if (this.fileList.length !== 0) {
+            var params = new FormData();
+            params.append("groupId", res.data.createdGroupId);
+            params.append("file", this.fileList[0]);
+
+            // console.log(this.fileList[0]);
+            axios
+              .create({
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                  "jwt-auth-token": storage.getItem("jwt-auth-token"),
+                },
+              })
+              .put("group/profile-img", params)
+              .then((res) => {
+                console.log("해치웠나??", res);
+                // this.$router.push("/group");
+              });
+          }
+          // this.$router.push("/group");
+          console.log("수정한다", this.groupInfo);
+        });
     },
   },
 };
