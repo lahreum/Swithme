@@ -158,7 +158,7 @@ public class UserController {
 		int port=465;
 		
 		Optional<UserInfo> user=userRepository.findById(userEmail);
-		if(user.isPresent()) {
+		if(!user.isPresent()) {
 			String subject="회원가입 인증번호입니다.";
 					
 			int validNum=(int)(Math.random()*10000);
