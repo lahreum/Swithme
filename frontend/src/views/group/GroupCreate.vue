@@ -274,13 +274,6 @@ export default {
       this.fileList = e.target.files;
     },
     ToGroupMain() {
-      // params.append("groupCategory", this.items.indexOf(this.groupCategory));
-      // params.append("groupMaxMemberCount", this.groupMaxMemberCount);
-      // params.append("groupGoalDate", this.groupGoalDate);
-      // params.append("groupGoalTitle", this.groupGoalTitle);
-      // params.append("groupNotice", this.groupNotice);
-      // params.append("groupName", this.groupName);
-      // params.append("groupPassword", this.groupPassword);
       if (this.groupGoalDate === "") {
         this.groupGoalDate = null;
       }

@@ -9,7 +9,7 @@
           <hr />
 
           <div style="height:430px; margin:5% 0;">
-            <group-recommend :groups="this.groups"></group-recommend>
+            <group-recommend></group-recommend>
           </div>
 
           <div>
@@ -332,7 +332,7 @@ export default {
       }
     },
     toGroupDetail(g) {
-      this.$router.push({ name: "GroupDetail", params: { groupId: g } });
+      this.$router.push({ name: "GroupDetail", query: { groupId: g } });
     },
   },
   created() {
