@@ -62,7 +62,9 @@
               v-for="(group, index) in AllGroup"
               :key="index"
               ><GroupInfo
-                @clickGroupInfo="toGroupDetail(group.groupId)"
+                @clickGroupInfo="
+                  toGroupDetail(group.groupId, group.groupPassword)
+                "
                 :src="'data:image/png;base64,' + group.src"
                 :groupName="group.groupName"
                 :groupDesc="group.groupNotice"
@@ -171,6 +173,21 @@
 
         <v-col cols="2"></v-col>
       </v-row>
+      <v-dialog v-model="dialog" max-width="600px">
+        <v-card>
+          <v-card-title>비번치세요</v-card-title>
+          <v-card-text>
+            <v-text-field
+              label="비번치셈ㅋ"
+              v-model="enterPassword"
+            ></v-text-field>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn @click="dialog = false">닫기</v-btn>
+            <v-btn @click="enterPw">확인</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-container>
   </div>
 </template>
@@ -205,6 +222,10 @@ export default {
       HotGroup: [],
       NewGroup: [],
       SearchedGroup: [],
+      dialog: false,
+      enterPassword: "",
+      checkGId: "",
+      checkGPw: "",
 
       navInfo: [
         "sample2.png",
@@ -331,8 +352,26 @@ export default {
           .catch((err) => console.log(err));
       }
     },
-    toGroupDetail(g) {
-      this.$router.push({ name: "GroupDetail", query: { groupId: g } });
+    toGroupDetail(gId, gPw) {
+      console.log("$$$$$$4", gPw);
+      if (gPw !== undefined) {
+        this.dialog = true;
+        this.checkGId = gId;
+        this.checkGPw = gPw;
+      } else {
+        this.$router.push({ name: "GroupDetail", query: { groupId: gId } });
+      }
+    },
+    enterPw() {
+      this.dialog = false;
+      if (this.enterPassword === this.checkGPw) {
+        this.$router.push({
+          name: "GroupDetail",
+          query: { groupId: this.checkGId },
+        });
+      } else {
+        alert("비번틀림ㅋ");
+      }
     },
   },
   created() {
@@ -350,7 +389,7 @@ export default {
         for (var i = 0; i < this.groups.length; i++) {
           this.groups[i]["src"] = res.data.groupProfileList[i].groupProfileImg;
         }
-        // console.log(this.groups);
+        console.log(this.groups);
         this.AllGroup = this.groups.slice(0, 12);
       })
       .catch((err) => {
