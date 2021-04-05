@@ -29,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.studywithme.DtoOnlyReturn.GroupProfileDto;
 import com.studywithme.DtoOnlyReturn.UserDto;
 import com.studywithme.config.CommonMethods;
+import com.studywithme.entity.Category;
 import com.studywithme.entity.GroupInfo;
 import com.studywithme.entity.GroupMember;
 import com.studywithme.entity.TimeDaily;
@@ -129,6 +130,51 @@ public class GroupController {
 		}
 		return result;
 	}
+	
+
+	@GetMapping("/search")
+	@ApiOperation(value="특정 카테고리 번호의 그룹들 받기",notes="db에서 해당 카테고리 번호들에 해당하는 카테고리의 그룹들을 받는다")
+	public Object getCategoryNames(@RequestParam("category-list") String categoryList) {
+		Map<String,Object> result=new HashMap<>();
+		
+		result.put("searchedGroupList",null);
+
+		
+		categoryList=categoryList.replaceAll("\\[", "");
+		categoryList=categoryList.replaceAll("\\]", "");
+		categoryList=categoryList.replace(" ", "");
+	
+		String[] categoryArr=categoryList.split(",");
+
+		List<Integer> categoryListInt=new ArrayList<>();
+		for(String s:categoryArr)
+			categoryListInt.add(Integer.parseInt(s));
+		
+		Optional<List<GroupInfo>> list=groupRepository.findAllByGroupCategoryIn(categoryListInt);
+		if(list.isPresent()) {
+			List<GroupProfileDto> profileList=new ArrayList<>();
+			
+			for(int i=0;i<list.get().size();i++) {
+				GroupProfileDto gpd=new GroupProfileDto();
+				gpd.setGroupId(list.get().get(i).getGroupId());
+				try {
+					gpd.setGroupProfileImg(list.get().get(i).getGroupProfileImg().getBytes(1l, (int)list.get().get(i).getGroupProfileImg().length()));
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				profileList.add(gpd);
+				list.get().get(i).setGroupProfileImg(null);
+			}
+			
+			result.clear();
+			result.put("searchedGroupList",list);
+			result.put("groupProfileList",profileList);
+		}
+		
+		return result;
+	}
+	
 	
 	@GetMapping("")
 	@ApiOperation(value="모든 그룹리스트 받기",notes="모든 그룹리스트를 받아온다")
