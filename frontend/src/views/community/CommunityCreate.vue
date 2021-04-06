@@ -1,15 +1,16 @@
 <template>
   <div>
-      <p class="letter mainTitle">글쓰기</p>
+      <p class="letter mainTitle">{{ categoryName }} > 글쓰기</p>
       <hr class="lineStyle">
       <v-container style="margin-top:10px;">
         <v-row no-gutters style="margin-bottom:10px;"> 
           <v-col class="letter" cols="1">카테고리</v-col>
           <v-col cols="3">
-            <v-select
+            <v-select 
+            disabled
             :items="items" 
-            placeholder="선택"
-            outlined v-model="selected" :rules="categoryRules"
+            :placeholder=categoryName
+            outlined :rules="categoryRules"
             ></v-select>
           </v-col>
           <v-col cols="7"></v-col>
@@ -42,11 +43,6 @@
 import "./community.css";
 import AppBtnMiddle from "@/components/common/AppBtnMiddle.vue";
 
-// const options = {
-//   headers: {
-//     "jwt-auth-token": storage.getItem("jwt-auth-token"),
-//   }
-// };
 const storage = window.sessionStorage;
 
   export default {
@@ -57,7 +53,8 @@ const storage = window.sessionStorage;
       items: ['초중고', '수능', '대학교',  '대학원', '취업', '공무원시험', '자격증', '어학', '기타'],
       title: '',
       content: '',
-      selected: '',
+      categoryName: '',
+      lengthOk: false,
       textRules: [v => v.length >= 3 || '3자 이상 입력해주세요'],
       categoryRules: [(v) => !!v || '카테고리를 선택해주세요.'],
       board: {
@@ -71,50 +68,52 @@ const storage = window.sessionStorage;
         boardWriter: '',
       }
     }),
-    watch: {
-      selected: function() {
-        this.calCategoryNum();
-      }
+    created() {
+      this.categoryName = `${this.$store.state.categoryName}`;
+      console.log(this.categoryName);
     },
     methods: {
       createBoard() {
-        this.$Axios     // request body에 담김. params로 보내면 request params로 꺼내옴
-        .post('community/board',{
-          boardCategory: this.board.boardCategory,
-          boardContent: this.content,
-          boardTitle: this.title,
-          boardWriter: `${this.$store.state.user.userId}`}, 
-          {
-            headers: {
-              "jwt-auth-token": storage.getItem("jwt-auth-token")
+        this.checkLength();
+        if(this.lengthOk) {
+          this.$Axios     // request body에 담김. params로 보내면 request params로 꺼내옴
+          .post('community/board',{
+            boardCategory: `${this.$store.state.categoryId}`,
+            boardContent: this.content,
+            boardTitle: this.title,
+            boardWriter: `${this.$store.state.user.userId}`}, 
+            {
+              headers: {
+                "jwt-auth-token": storage.getItem("jwt-auth-token")
+              }
             }
-          }
-        )
-        .then((res) => {
-          if(res.data.success) {
-            alert('글 등록 성공');
-            this.$router.push('/community');
-          } else {
-            console.log('글 등록 실패')
-          }
-        })
-        .catch((error)=>{
-          console.log(error);
-        })
+          )
+          .then((res) => {
+            if(res.data.success) {
+              alert('글 등록 성공');
+              this.$router.push('/community');
+            } else {
+              alert('글 등록 실패');
+            }
+          })
+          .catch((error)=>{
+            console.log(error);
+          })
+        } else {
+          alert('제목과 내용은 3자 이상 입력해주세요.');
+        }
       },
       deleteBoard() {
         alert('작성한 글이 취소됩니다.');
         this.$router.push('/community');
       },
-      calCategoryNum() {
-        for(var i in this.items){
-          if(this.items[i] === this.selected){
-            var j= i*1;
-            this.board.boardCategory = j+1;
-          }
+      checkLength() {
+        if(this.title.length >=3 && this.content.length >=3) {
+          this.lengthOk = true;
+        } else {
+          this.lengthOk = false;
         }
-      },
-
+      }
     }
   }
 </script>

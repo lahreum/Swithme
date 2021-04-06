@@ -92,12 +92,18 @@ public class UserController {
 		
 		String nickname = map.get("nickname");
 		String token = map.get("token");
+	
+		UserInfo userNew = new ObjectMapper().convertValue(jwtService.get(token).get("User"), UserInfo.class);
+		UserInfo user=new UserInfo();
 		
-		UserInfo user = new ObjectMapper().convertValue(jwtService.get(token).get("User"), UserInfo.class);
 		user.setUserNickname(nickname);
-		String jwtToken = jwtService.create(user);
+		user.setUserId(userNew.getUserId());
+		user.setUserType(userNew.getUserType());
+
+		user.setUserProfileImg(defaultProfileImgRepository.findById(1).get().getDefaultProfileImgData());
 		
-		userRepository.save(user);
+		UserInfo userInfo=userRepository.save(user);
+		String jwtToken = jwtService.create(userInfo);
 		result.put("success", true);
 		result.put("token", jwtToken);
 		
@@ -158,7 +164,7 @@ public class UserController {
 		int port=465;
 		
 		Optional<UserInfo> user=userRepository.findById(userEmail);
-		if(user.isPresent()) {
+		if(!user.isPresent()) {
 			String subject="회원가입 인증번호입니다.";
 					
 			int validNum=(int)(Math.random()*10000);
@@ -255,6 +261,28 @@ public class UserController {
 			user.get().setUserPassword(commonMethods.getHashed(newPassword));
 			userRepository.save(user.get());
 			
+			result.clear();
+			result.put("success",true);
+		}
+		
+		return result;
+	}
+	
+	@PutMapping("/nickname")
+	@ApiOperation(value="닉네임 변경",notes="파라미터로 변경할 닉네임을 받아 수정하고 jwt토큰 반환")
+	public Object changeNickname(@RequestParam String newNickname,HttpServletRequest req,HttpServletResponse resp) {
+		Map<String,Object> result=new HashMap<>();
+		result.put("success",false);
+		
+		String oldNickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
+		
+		Optional<UserInfo> user=userRepository.findByUserNickname(oldNickname);
+		if(user.isPresent()) {
+			user.get().setUserNickname(newNickname);
+			userRepository.save(user.get());
+			String jwt=jwtService.create(user.get());
+			
+			resp.setHeader("jwt-auth-token", jwt);
 			result.clear();
 			result.put("success",true);
 		}

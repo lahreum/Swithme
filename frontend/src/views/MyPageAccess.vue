@@ -14,8 +14,17 @@
             마이페이지로 가려면 비밀번호를 다시 입력해야해요.
           </v-row>
           <v-row no-gutters style="margin-top: 20px;">
-            <v-col cols="5"> <input-bar></input-bar></v-col>
-            <v-col align="start" style="margin-left: 10px;" @click="goRouting">
+            <v-col cols="5">
+              <input-bar
+                :type="'password'"
+                @pass-input="getPassword"
+              ></input-bar
+            ></v-col>
+            <v-col
+              align="start"
+              style="margin-left: 10px;"
+              @click="routingRequest"
+            >
               <div style="width: 100px;">
                 <app-btn-large
                   v-bind:btn-color="btnColor"
@@ -37,6 +46,7 @@ import MiddleNav from '../components/include/MiddleNav.vue';
 import InputBar from '../components/common/InputBar.vue';
 import AppBtnLarge from '../components/common/AppBtnLarge.vue';
 
+const storage = window.sessionStorage;
 export default {
   components: {
     'middle-nav': MiddleNav,
@@ -54,11 +64,30 @@ export default {
       btnColor: '#673FB4',
       btnName: '확 인',
       btnNameColor: 'white',
+      password: '',
     };
   },
   methods: {
-    goRouting: function() {
-      this.$router.push('/my-page');
+    routingRequest: function() {
+      let params = new URLSearchParams();
+      params.append('userPassword', this.password);
+
+      this.$Axios
+        .post('user/mypage', params, {
+          headers: {
+            'jwt-auth-token': storage.getItem('jwt-auth-token'),
+          },
+        })
+        .then((response) => {
+          if (response.data.isCorrect) {
+            this.$router.push('/my-page');
+          } else {
+            alert('잘못된 비밀번호 입니다.');
+          }
+        });
+    },
+    getPassword: function(value) {
+      this.password = value;
     },
   },
 };

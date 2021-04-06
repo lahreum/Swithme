@@ -22,7 +22,6 @@ const router = new VueRouter({
 });
 
 axios.defaults.baseURL = 'https://j4b103.p.ssafy.io/service/';
-// axios.defaults.baseURL = 'http://localhost:9999/';
 
 new Vue({
   router,

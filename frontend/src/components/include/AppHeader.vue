@@ -68,7 +68,7 @@
           style="margin-left: 60px"
         >
           <div
-            style="cursor: pointer;"
+            style="cursor: pointer"
             class="login-item"
             @click="openLogin"
             :class="{ 'white-text': darkmode, 'black-text': !darkmode }"
@@ -100,10 +100,15 @@
             bottom
           >
             <template v-slot:activator="{ on }">
-              <!-- 이 위치에 프로필 사진 컴포넌트 넣어야 함 -->
+              <v-col cols="2">
+                <profile-small
+                  :src="'data:image/png;base64,' + userInfo.profileImg"
+                ></profile-small>
+              </v-col>
               <v-col
                 style="cursor: pointer;"
-                align="center"
+                align="start"
+                align-self="center"
                 v-on="on"
                 :class="{ 'white-text': darkmode, 'black-text': !darkmode }"
               >
@@ -112,12 +117,12 @@
             </template>
             <v-list>
               <v-list-item>
-                <v-list-item-title style="cursor: pointer;" @click="goMyPage">
+                <v-list-item-title style="cursor: pointer" @click="goMyPage">
                   마이페이지
                 </v-list-item-title>
               </v-list-item>
               <v-list-item>
-                <v-list-item-title style="cursor: pointer;" @click="signOut">
+                <v-list-item-title style="cursor: pointer" @click="signOut">
                   로그아웃
                 </v-list-item-title>
               </v-list-item>
@@ -236,6 +241,7 @@
 import '@/views/user/user.css';
 import AppBtnLarge from '@/components/common/AppBtnLarge.vue';
 import InputBar from '@/components/common/InputBar.vue';
+import ProfileSmall from '@/components/common/ProfileSmall.vue';
 import axios from 'axios';
 
 const storage = window.sessionStorage;
@@ -244,6 +250,7 @@ export default {
   components: {
     'app-btn-large': AppBtnLarge,
     'input-bar': InputBar,
+    'profile-small': ProfileSmall,
   },
   data: function() {
     return {
@@ -258,7 +265,7 @@ export default {
   },
 
   mounted() {
-    console.log('마운티드됨?');
+    // console.log('마운티드됨?');
     if (storage.getItem('jwt-auth-token')) {
       this.isLogin = true;
       this.getUserInfo(storage.getItem('jwt-auth-token'));
@@ -278,14 +285,20 @@ export default {
       this.isLogin = true;
     },
     signOut: function() {
-      alert('로그아웃!!!!');
+      alert('성공적으로 로그아웃 했습니다. 안녕히!');
       this.isLogin = false;
       storage.removeItem('jwt-auth-token');
       this.$store.commit('userInit');
-      this.$router.push('/');
+      if (this.$router.currentRoute.path != '/') {
+        this.$router.push('/');
+      }
     },
     goMyPage: function() {
-      this.$router.push('/my-page-access');
+      if (this.userInfo.userType != null) {
+        this.$router.push('/my-page');
+      } else {
+        this.$router.push('/my-page-access');
+      }
     },
     goMain: function() {
       this.$router.push('/');
@@ -303,12 +316,16 @@ export default {
         .get('user')
         .then((res) => {
           // console.log(res);
+          // this.userInfo = res.data;
+
           this.userInfo = res.data.data;
-          // console.log(this.userInfo);
+          this.userInfo.profileImg = res.data.profileImg;
           this.$store.commit('LOGIN', this.userInfo);
           this.userNickname = this.$store.getters.getUserNickname;
           // console.log(this.userNickname);
-          // console.log("무야호", this.userInfo);
+          console.log('무야호', this.userInfo);
+          this.profileImg = this.$store.getters.getUserImage;
+          console.log(this.$store.getters.getUserImage);
         })
         .catch((err) => {
           console.log(err);
@@ -326,6 +343,7 @@ export default {
         .then((res) => {
           // console.log(res);
           if (res.data.success === true) {
+            window.location.reload();
             this.dialog = false;
             this.isLogin = true;
             // console.log(res);

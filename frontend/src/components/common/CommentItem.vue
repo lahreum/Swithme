@@ -1,7 +1,5 @@
 <template>
   <div class="talk">
-    
-    <!-- 댓글리스트 -->
     <div class="box">
       <article class="media">
           <div class="content">
@@ -11,38 +9,34 @@
             </p>
             <!-- 댓글 내용 -->
             <p v-if="!modifying">{{ talk.replyContent }}</p>
-            <p style="color:#BDBDBD;">{{ talk.replyDate }}</p>
-            <!-- 댓글 작성자와 로그인 정보가 같을때 댓글 수정가능 -->
             <div v-if="modifying">
-              <v-col cols="12" md="6">
                 <v-textarea
-                  v-if="false"
-                  rows="1"
-                  row-height="5"
+                  rows="5"
+                  height="100"
+                  style="width:60vw"
                   auto-grow
                   v-model="modifyContent"
-                ></v-textarea>
-              </v-col>
+                >{{ talk.replyContent }}</v-textarea>
             </div>
+            <p style="color:#BDBDBD;">{{ talk.replyDate }}</p>
+            <!-- 댓글 작성자와 로그인 정보가 같을때 댓글 수정가능 -->
             <!-- 수정중 아닐때, 수정 | 삭제 메뉴보임 -->
-            <div v-if="!modifying">
-              <p
-                class="option"
-                >수정 
+            <div v-if="isWriter&&!modifying">
               <span
-                class="option" style="padding-left:10px;"
-                >삭제</span></p>
+                class="option" @click="toggleModify"
+                >수정</span> 
+              <span
+                class="option" style="padding-left:10px;" @click="deleteComment"
+                >삭제</span>
             </div>
             <!-- 수정중일때, 저장 취소 버튼 -->
-            <div v-if="modifying">
+            <div v-if="isWriter&&modifying">
               <p
-                @click="modifyComment(modifyNumber, modifyContent)"
-                v-if="talk.userNickname == nickname"
+                @click="modifyComment"
                 class="option"
                 >저장 
               <span
-                @click="toggleModify"
-                v-if="talk.userNickname == nickname"
+                @click="cancelComment"
                 class="option" style="padding-left:10px;"
                 >취소</span></p>
             </div>
@@ -54,7 +48,7 @@
 </template>
 
 <script>
-
+const storage = window.sessionStorage;
 
 export default {
   
@@ -65,28 +59,71 @@ export default {
     return {
       modifying: false,
       modifyContent: '',
+      isWriter: false,
     }
   },
   created() {
-    this.checkcheck();
+    this.modifyContent = this.talk.replyContent;
+    this.checkWriter();
   },
   methods: {
     toggleModify() {
+      console.log('toggle!!!!!!!!!');
       this.modifying = !this.modifying;
     },
-    sendCommentInfo() {
-      // 댓글 입력
-
+    checkWriter() {
+      if(this.talk.replyWriter === `${this.$store.state.user.userNickname}`) {
+        this.isWriter = true;
+      } else {
+        this.isWriter = false;
+      }
+    },  
+    deleteComment() {
+      this.$Axios
+      .delete('community/reply?replyId=' + this.talk.replyId,{
+        headers: {
+            'jwt-auth-token': storage.getItem('jwt-auth-token'),
+          },
+      })
+      .then((res)=>{
+        if(res.data.success) {
+          alert('댓글 삭제 성공');
+          window.location.reload();
+        } else {
+          alert('댓글 삭제 실패');
+        }
+      })
+      .catch((error)=>{
+        console.log(error);
+      })
     },
     modifyComment() {
-      // 댓글 수정
+      let params = new URLSearchParams();
+      params.append('content', this.modifyContent);
+      params.append('replyId', this.talk.replyId);
+
+      this.$Axios
+      .put('community/reply', params, {
+        headers: {
+          'jwt-auth-token': storage.getItem('jwt-auth-token'),
+        },
+      })
+      .then((res)=>{
+        if(res.data.success) {
+          console.log('수정 성공');
+          this.toggleModify();
+          this.$emit('modified', true);
+        } else {
+          console.log('수정 실패');
+        }
+      })
+      .catch((error)=>{
+        console.log(error);
+      })
+    },
+    cancelComment(){
       this.toggleModify();
-    },
-    deleteComment() {
-      // 댓글 삭제
-    },
-    checkcheck() {
-      console.log('talk is = ', this.talk);
+      this.modifyContent = this.talk.replyContent;
     }
   }
 }

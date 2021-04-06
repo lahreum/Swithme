@@ -52,7 +52,7 @@
       개의 댓글
     </p>
     <v-divider></v-divider>
-    <CommentItem
+    <CommentItem @modified="getModifyFlag"
       v-for="reply in calData"
       :talk="reply"
       v-bind:key="reply.replyId"
@@ -236,7 +236,7 @@ export default {
         )
         .then((res) => {
           if (Object.keys(res.data.replyList).length > 0) {
-            this.replyList = res.data.replyList;
+            this.replyList = res.data.replyList.reverse();
             this.replyCnt = Object.keys(res.data.replyList).length;
           } else {
             this.replyList = [];
@@ -289,6 +289,9 @@ export default {
           console.log(error);
         });
     },
+    getModifyFlag() {
+      this.getBoardReplyList();
+    }
   },
 };
 </script>

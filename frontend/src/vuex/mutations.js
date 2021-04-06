@@ -11,6 +11,10 @@ export default {
   MOVETOBOARDDETAIL(state, id) {
     state.boardDetailId = id;
   },
+  MOVETOBOARDCATEGORY(state, payload) {
+    state.categoryId = payload.value;
+    state.categoryName = payload.name;
+  },
   userInit(state) {
     state.user = {};
   },

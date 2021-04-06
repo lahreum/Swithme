@@ -1,7 +1,7 @@
 <template>
   <v-sheet class="mx-auto" max-width="100%">
-    <v-slide-group show-arrows>
-      <v-slide-item
+    <v-slide-group show-arrows mandatory v-model="model">
+      <v-slide-item 
         v-for="i in items"
         :key="i.value"
         v-slot:default="{ active, toggle }"
@@ -22,6 +22,7 @@
 export default {
   data: function() {
     return {
+      model: 1,
       items: [
         {name: '초중고', value: 1},
         {name: '수능', value: 2},
@@ -35,10 +36,10 @@ export default {
       ],
     };
   },
+  created() {
+    this.model =`${this.$store.state.categoryId}`-1;
+  },
   methods: {
-    goRouting() {
-      console.log('성공!!');
-    },
     sendCategory(i) {
         // 부모로 카테고리 정보 보냄. 
         this.$emit('categoryName',i);

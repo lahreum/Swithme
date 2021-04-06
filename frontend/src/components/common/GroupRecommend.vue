@@ -13,18 +13,19 @@
       :inverseScaling="450"
     >
       <slide
-        v-for="(group, i) in groupList"
+        v-for="(group, i) in recommendGroup"
         :index="i"
         :key="i"
         :style="{ backgroundColor: 'transparent' }"
       >
         <figure>
           <group-recommend-card
-            :groupImg="group.groupImg"
+            @clickRecommend="toGroupDetail(group.groupId)"
+            :groupImg="'data:image/png;base64,' + group.src"
             :groupName="group.groupName"
-            :groupDesc="group.groupDesc"
-            :groupMemberCnt="group.groupMemberCnt"
-            :groupMaster="group.groupMaster"
+            :groupDesc="group.groupNotice"
+            :groupMemberCnt="group.groupMaxMemberCount"
+            :groupMaster="group.groupMasterNickname"
           ></group-recommend-card>
         </figure>
       </slide>
@@ -33,54 +34,69 @@
 </template>
 
 <script>
-import GroupRecommendCard from '@/components/common/GroupRecommendCard.vue';
-import { Carousel3d, Slide } from 'vue-carousel-3d';
-
+import GroupRecommendCard from "@/components/common/GroupRecommendCard.vue";
+import { Carousel3d, Slide } from "vue-carousel-3d";
+const storage = window.sessionStorage;
 export default {
   components: {
-    'group-recommend-card': GroupRecommendCard,
-    'carousel-3d': Carousel3d,
+    "group-recommend-card": GroupRecommendCard,
+    "carousel-3d": Carousel3d,
     slide: Slide,
+  },
+  // props: ["groups"],
+  created() {
+    this.$Axios
+      .create({
+        headers: {
+          "jwt-auth-token": storage.getItem("jwt-auth-token"),
+        },
+      })
+      .get("group")
+      .then((res) => {
+        this.groups = res.data.groupList;
+        for (var i = 0; i < this.groups.length; i++) {
+          this.groups[i]["src"] = res.data.groupProfileList[i].groupProfileImg;
+        }
+
+        this.recommendGroup = this.groups.filter(
+          (group) => group.groupName.length > 4
+        );
+        this.recommendGroup = this.recommendGroup.slice(0, 6);
+        console.log(this.recommendGroup);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    // this.$Axios
+    //   .create({
+    //     headers: {
+    //       "jwt-auth-token": storage.getItem("jwt-auth-token"),
+    //     },
+    //   })
+    //   .get("group")
+    //   .then((res) => {
+    //     console.log("created될때", res);
+    //     this.groups = res.data.groupList;
+    //     for (var i = 0; i < this.groups.length; i++) {
+    //       this.groups[i]["src"] = res.data.groupProfileList[i].groupProfileImg;
+    //     }
+    //     // console.log(this.groups);
+    //     this.AllGroup = this.groups.slice(0, 12);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+  },
+  methods: {
+    toGroupDetail(g) {
+      this.$router.push({ name: "GroupDetail", query: { groupId: g } });
+    },
   },
   data: function() {
     return {
-      groupList: [
-        {
-          groupImg: 'timer_background.jpg',
-          groupName: '피자레인저',
-          groupDesc: '일주일 목표를 다 이루면 피자를 먹는 모임입니다.',
-          groupMaster: '이지금',
-          groupMemberCnt: 29,
-        },
-        {
-          groupImg: 'naver_long.png',
-          groupName: '네이버롱',
-          groupDesc: '일주일 목표를 다 이루면 피자를 먹는 모임입니다.',
-          groupMaster: '이하연',
-          groupMemberCnt: 27,
-        },
-        {
-          groupImg: 'pattern.jpg',
-          groupName: '패턴',
-          groupDesc: '일주일 목표를 다 이루면 피자를 먹는 모임입니다.',
-          groupMaster: '임찬찬',
-          groupMemberCnt: 26,
-        },
-        {
-          groupImg: 'timer_background.jpg',
-          groupName: '피자레인저',
-          groupDesc: '일주일 목표를 다 이루면 피자를 먹는 모임입니다.',
-          groupMaster: '이지금',
-          groupMemberCnt: 29,
-        },
-        {
-          groupImg: 'timer_background.jpg',
-          groupName: '피자레인저',
-          groupDesc: '일주일 목표를 다 이루면 피자를 먹는 모임입니다.',
-          groupMaster: '이지금',
-          groupMemberCnt: 29,
-        },
-      ],
+      groups: [],
+      recommendGroup: [],
     };
   },
 };
