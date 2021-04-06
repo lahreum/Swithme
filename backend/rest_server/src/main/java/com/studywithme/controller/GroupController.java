@@ -449,7 +449,7 @@ public class GroupController {
 	
 	@PostMapping("/{groupId}")
 	@ApiOperation(value="그룹가입",notes="url로 그룹번호, 파라미터로 비밀번호를 받고, 그룹가입에 성공하면 true 반환")
-	public Object joinGroup(@PathVariable("groupId") int groupId,@RequestParam("password") String password,HttpServletRequest req) {
+	public Object joinGroup(@PathVariable("groupId") int groupId,@RequestParam(value="password",required=false) String password,HttpServletRequest req) {
 		Map<String,Object> result=new HashMap<>();
 		
 		result.put("success",false);
