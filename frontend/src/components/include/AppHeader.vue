@@ -256,39 +256,39 @@ export default {
   },
   data: function() {
     return {
-      isLogin: false,
       username: "default",
       dialog: false,
       userInfo: [],
       email: "",
       pw: "",
-      userNickname: "",
       recommendGroup: [],
       Rgroups: [],
-      profileImg: "",
+      isLogin: this.$store.getters.getUserIsLogin,
+      userNickname: this.$store.getters.getUserNickname,
+      profileImg: this.$store.getters.getUserImage,
     };
   },
 
   created() {
     // console.log('마운티드됨?');
     if (storage.getItem("jwt-auth-token")) {
-      this.isLogin = true;
-      axios
-        .create({
-          headers: {
-            "jwt-auth-token": storage.getItem("jwt-auth-token"),
-          },
-        })
-        .get("user")
-        .then((res) => {
-          console.log(res);
-          this.userInfo = res.data.data;
-          this.userInfo["profileImg"] = res.data.profileImg;
-        });
+      // axios
+      //   .create({
+      //     headers: {
+      //       "jwt-auth-token": storage.getItem("jwt-auth-token"),
+      //     },
+      //   })
+      //   .get("user")
+      //   .then((res) => {
+      //     console.log(res);
+      //     this.userInfo = res.data.data;
+      //     this.userInfo["profileImg"] = res.data.profileImg;
+      //   });
+      console.log("크리에티드");
 
       this.profileImg = this.$store.getters.getUserImage;
-
-      // console.log(storage.getItem("jwt-auth-token"));
+      this.userNickname = this.$store.getters.getUserNickname;
+      this.isLogin = this.$store.getters.getUserIsLogin;
     }
   },
 
@@ -311,6 +311,7 @@ export default {
       if (this.$router.currentRoute.path != "/") {
         this.$router.push("/");
       }
+      console.log(this.$store.state.user);
     },
     goMyPage: function() {
       if (this.userInfo.userType != null) {
@@ -339,12 +340,14 @@ export default {
 
           this.userInfo = res.data.data;
           this.userInfo["profileImg"] = res.data.profileImg;
+          this.userInfo["isLogin"] = true;
           console.log("히히", this.userInfo);
           this.$store.commit("LOGIN", this.userInfo);
-          this.userNickname = this.$store.getters.getUserNickname;
-          // console.log(this.userNickname);
 
           this.profileImg = this.$store.getters.getUserImage;
+          this.userNickname = this.$store.getters.getUserNickname;
+          // console.log(this.userNickname);
+          window.location.reload();
           axios
             .create({
               headers: {
@@ -395,7 +398,6 @@ export default {
             // console.log(this.$store.state.user);
 
             // console.log("스토어", this.userNickname);
-            // window.location.reload();
           } else {
             alert("아이디 또는 비밀번호를 잘못 입력하였습니다.");
           }
