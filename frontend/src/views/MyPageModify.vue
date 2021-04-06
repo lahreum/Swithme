@@ -17,9 +17,14 @@
         justify="center"
         style="margin-top: 40px; margin-left: 40px;"
       >
-        <profile-large
-          :src="'data:image/png;base64,' + user.profileImg"
-        ></profile-large>
+        <div v-if="isDefault" @click="onClickImageUpload">
+          <profile-large
+            :src="'data:image/png;base64,' + user.profileImg"
+          ></profile-large>
+        </div>
+        <div v-else @click="onClickImageUpload">
+          <profile-large :src="tmpProfileImg"></profile-large>
+        </div>
         <v-btn
           class="btn-profile-edit"
           depressed
@@ -27,10 +32,11 @@
           dark
           small
           color="#673fb4"
-          @click="modifyPic"
+          @click="saveProfileImg"
         >
-          <v-icon dark>mdi-pencil</v-icon>
+          <v-icon dark>mdi-content-save</v-icon>
         </v-btn>
+        <input ref="imageInput" type="file" hidden @change="onChangeImages" />
       </v-row>
       <!-- 기타 정보 -->
       <div style="padding-left: 15%; padding-right: 15%; margin-top: 50px;">
@@ -230,6 +236,7 @@ export default {
         this.user.userId = response.data.data.userId;
         this.user.message = response.data.data.userMessage;
         this.user.profileImg = response.data.profileImg;
+        this.tmpProfileImg = response.data.profileImg;
       })
       .catch((error) => {
         console.log(error);
@@ -255,9 +262,12 @@ export default {
         message: '',
         profileImg: '',
       },
+      fileList: [],
+      tmpProfileImg: '',
       warningClose: false,
       warningPassword: false,
       warningNickname: false,
+      isDefault: true,
       nicknameRules: [
         // (v) => v == null,
         (v) => !!v || '닉네임을 입력해주세요.',
@@ -279,9 +289,7 @@ export default {
     goRouting: function() {
       this.$router.push('/my-page');
     },
-    modifyPic: function() {
-      alert('사진 수정!!!!!!');
-    },
+
     getNewNickname(value) {
       this.new.nickname = value;
     },
@@ -307,6 +315,7 @@ export default {
           if (response.data.success) {
             alert('새로운 상태메시지로 저장되었습니다.');
             this.user.message = this.new.message;
+            window.location.reload();
             // this.new.message = '';
           } else {
             alert('상태메시지 저장 중 문제가 발생했습니다.');
@@ -333,6 +342,7 @@ export default {
           .then((response) => {
             if (response.data.success) {
               alert('새로운 비밀번호로 변경되었습니다.');
+              window.location.reload();
             } else {
               alert('비밀번호 변경 도중 오류가 발생했습니다.');
             }
@@ -382,6 +392,7 @@ export default {
               'jwt-auth-token',
               response.headers['jwt-auth-token']
             );
+            window.location.reload();
             // this.new.nickname = '';
           } else {
             alert('닉네임 변경 도중 오류가 발생했습니다. (2)');
@@ -391,6 +402,56 @@ export default {
           console.log(error);
           alert('닉네임 변경 도중 오류가 발생했습니다. (3)');
         });
+    },
+    onClickImageUpload() {
+      this.$refs.imageInput.click();
+    },
+    onChangeImages(e) {
+      let file = e.target.files[0]; // Get first index in files
+      this.fileList = e.target.files;
+      if (e.target.files.length != 0) {
+        this.isDefault = false;
+        this.new.profileImg = URL.createObjectURL(file); // Create File URL
+        this.tmpProfileImg = URL.createObjectURL(file);
+      } else {
+        this.isDefault = true;
+        this.new.profileImg = this.user.profileImg;
+        this.tmpProfileImg = this.user.profileImg;
+      }
+    },
+    saveProfileImg: function() {
+      if (!this.isDefault) {
+        if (this.new.profileImg == '') {
+          alert('프로필 이미지를 클릭해 파일을 업로드해주세요.');
+        } else {
+          let params = new FormData();
+          params.append('file', this.fileList[0]);
+
+          this.$Axios
+            .create({
+              headers: {
+                'Content-Type': 'multipart/form-data',
+                'jwt-auth-token': storage.getItem('jwt-auth-token'),
+              },
+            })
+            .put('user/profile-img', params)
+            .then((response) => {
+              if (response.data.result) {
+                alert('프로필 사진이 성공적으로 변경되었습니다.');
+                window.location.reload();
+              } else {
+                alert('프로필 변경 도중 오류가 발생했습니다.');
+                window.location.reload();
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+              alert('에러 발생');
+            });
+        }
+      } else {
+        alert('기존 프로필 사진입니다. 변경된 사항이 없습니다.');
+      }
     },
   },
 };
