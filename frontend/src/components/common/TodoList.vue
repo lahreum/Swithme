@@ -5,11 +5,11 @@
       <Todo
         @delete="deleteTodo"
         @done="doneTodo"
-        v-for="(todo, index) in list"
-        :title="todo.message"
-        :id="todo.id"
-        :done="todo.done"
-        :key="index"
+        v-for="todo in todoList"
+        :title="todo.todoContent"
+        :id="todo.todoId"
+        :done="todo.todoFinish"
+        :key="todo.todoId"
       />
     </v-list>
     <ProgressBar :progressValue="progress" />
@@ -20,7 +20,10 @@
 import TodoInput from '@/components/common/TodoInput.vue';
 import Todo from '@/components/common/Todo.vue';
 import ProgressBar from '@/components/common/ProgressBar.vue';
+const storage = window.sessionStorage;
+
 export default {
+  props:["todoList", "date"],
   components: {
     TodoInput,
     Todo,
@@ -28,49 +31,109 @@ export default {
   },
   data() {
     return {
-      list: [],
+      // list: [],
       progress: 0,
+      // todoList: [],
     };
   },
   mounted() {
-    const list = JSON.parse(localStorage.getItem('list'));
-    this.list = list || [];
+    // const list = JSON.parse(localStorage.getItem('list'));
+    // this.list = list || [];
+    // this.UpdateProgress();
+    this.todoList = this.todoList || [];
     this.UpdateProgress();
   },
   methods: {
     addTodo(message) {
-      const todoObj = {
-        id: Math.random(),
-        message,
-        done: false,
-      };
-      this.list.push(todoObj);
-      this.setLs();
+      // const todoObj = {
+      //   id: Math.random(),
+      //   message,
+      //   done: false,
+      // };
+      // this.list.push(todoObj);
+      // this.setLs();
+      console.log('addTodo 드러옴');
+      let params = new URLSearchParams();
+      params.append('content', message);
+
+      this.$Axios
+      .post('todo', params, {
+        headers: {
+            "jwt-auth-token": storage.getItem("jwt-auth-token"),
+        }
+      })
+      .then((res)=>{
+        if(res.data.success) {
+          console.log('todolist가 잘 추가되었음');
+        } else {
+          console.log('todolist 추가 못함');
+        }
+      })
+      .catch((error)=>{
+        console.log(error);
+      })
       this.UpdateProgress();
     },
+    // doneTodo(id) {
+    //   const todoIndex = this.list.findIndex((todo) => todo.id === id);
+    //   const doneProp = this.list[todoIndex].done;
+    //   this.$set(this.list[todoIndex], 'done', !doneProp);
+    //   this.setLs();
+    //   this.UpdateProgress();
+    // },
     doneTodo(id) {
-      const todoIndex = this.list.findIndex((todo) => todo.id === id);
-      const doneProp = this.list[todoIndex].done;
-      this.$set(this.list[todoIndex], 'done', !doneProp);
-      this.setLs();
-      this.UpdateProgress();
+      let params = new URLSearchParams();
+      params.append('todoId', id);
+
+      this.$Axios
+      .put('todo', params, {
+        headers: {
+          "jwt-auth-token": storage.getItem("jwt-auth-token"),
+        }
+      })
+      .then((res)=>{
+        if(res.data.success) {
+          console.log('todolist done');
+        } else {
+          console.log('todolist done fail');
+        }
+      })
+      .catch((error)=>{
+        console.log(error);
+      })
     },
     deleteTodo(id) {
-      const todoIndex = this.list.findIndex((todo) => todo.id === id);
-      this.list.splice(todoIndex, 1);
-      this.setLs();
-      this.UpdateProgress();
+      // const todoIndex = this.list.findIndex((todo) => todo.id === id);
+      // this.list.splice(todoIndex, 1);
+      // this.setLs();
+      // this.UpdateProgress();
+      this.$Axios
+      .delete('todo?todoId=' + id,{
+        headers: {
+          "jwt-auth-token": storage.getItem("jwt-auth-token"),
+        }
+      })
+      .then((res)=>{
+        if(res.data.success) {
+          console.log('todolist 삭제 성공');
+        } else {
+          console.log('todolist 삭제 실패');
+        }
+      })
+      .catch((error)=>{
+        console.log(error);
+      })
     },
     setLs() {
       const jsonList = JSON.stringify(this.list);
       localStorage.setItem('list', jsonList);
     },
     UpdateProgress() {
-      const lengthList = this.list.length;
+      const lengthList = this.todoList.length;
       var doneTodos = 0;
       var i = 0;
       for (i = 0; i < lengthList; i++) {
-        if (this.list[i].done) {
+        if (this.todoList[i].done) {
           doneTodos += 1;
         }
       }
@@ -84,7 +147,7 @@ export default {
 <style>
 .todoList {
   padding: 0;
-  height: 360px;
+  height: 18.2vw;
   overflow: scroll;
 }
 </style>

@@ -70,7 +70,6 @@ const storage = window.sessionStorage;
     }),
     created() {
       this.categoryName = `${this.$store.state.categoryName}`;
-      console.log(this.categoryName);
     },
     methods: {
       createBoard() {
