@@ -106,7 +106,7 @@
                 ></profile-small>
               </v-col>
               <v-col
-                style="cursor: pointer;"
+                style="cursor: pointer"
                 align="start"
                 align-self="center"
                 v-on="on"
@@ -204,7 +204,7 @@
                 ></v-img
               ></a>
               <!-- <a href="https://j4b103.p.ssafy.io/service/oauth/naver"> -->
-              <a href="http://localhost:9999/oauth/naver"
+              <a href="http://localhost:9999/oauth/naver">
                 <v-img
                   @click="dialog = false"
                   src="@/assets/img/naver_long.png"
@@ -240,29 +240,29 @@
 </template>
 
 <script>
-import "@/views/user/user.css";
-import AppBtnLarge from "@/components/common/AppBtnLarge.vue";
-import InputBar from "@/components/common/InputBar.vue";
-import ProfileSmall from "@/components/common/ProfileSmall.vue";
-import axios from "axios";
+import '@/views/user/user.css';
+import AppBtnLarge from '@/components/common/AppBtnLarge.vue';
+import InputBar from '@/components/common/InputBar.vue';
+import ProfileSmall from '@/components/common/ProfileSmall.vue';
+import axios from 'axios';
 
 const storage = window.sessionStorage;
 export default {
-  props: ["darkmode"],
+  props: ['darkmode'],
   components: {
-    "app-btn-large": AppBtnLarge,
-    "input-bar": InputBar,
-    "profile-small": ProfileSmall,
+    'app-btn-large': AppBtnLarge,
+    'input-bar': InputBar,
+    'profile-small': ProfileSmall,
   },
-  data: function() {
+  data: function () {
     return {
       isLogin: false,
-      username: "default",
+      username: 'default',
       dialog: false,
       userInfo: {},
-      email: "",
-      pw: "",
-      userNickname: "",
+      email: '',
+      pw: '',
+      userNickname: '',
       recommendGroup: [],
       Rgroups: [],
     };
@@ -270,9 +270,9 @@ export default {
 
   mounted() {
     // console.log('마운티드됨?');
-    if (storage.getItem("jwt-auth-token")) {
+    if (storage.getItem('jwt-auth-token')) {
       this.isLogin = true;
-      this.getUserInfo(storage.getItem("jwt-auth-token"));
+      this.getUserInfo(storage.getItem('jwt-auth-token'));
       // console.log(storage.getItem("jwt-auth-token"));
     }
   },
@@ -285,11 +285,11 @@ export default {
         this.isLogin = true;
       }
     },
-    signIn: function() {
+    signIn: function () {
       this.isLogin = true;
     },
-    signOut: function() {
-      alert("성공적으로 로그아웃 했습니다. 안녕히!");
+    signOut: function () {
+      alert('성공적으로 로그아웃 했습니다. 안녕히!');
       this.isLogin = false;
       storage.removeItem('jwt-auth-token');
       this.$store.commit('userInit');
@@ -297,15 +297,15 @@ export default {
         this.$router.push('/');
       }
     },
-    goMyPage: function() {
+    goMyPage: function () {
       if (this.userInfo.userType != null) {
         this.$router.push('/my-page');
       } else {
         this.$router.push('/my-page-access');
       }
     },
-    goMain: function() {
-      this.$router.push("/");
+    goMain: function () {
+      this.$router.push('/');
     },
     openLogin() {
       this.dialog = true;
@@ -314,34 +314,34 @@ export default {
       axios
         .create({
           headers: {
-            "jwt-auth-token": token,
+            'jwt-auth-token': token,
           },
         })
-        .get("user")
+        .get('user')
         .then((res) => {
           // console.log(res);
           // this.userInfo = res.data;
 
           this.userInfo = res.data.data;
           this.userInfo.profileImg = res.data.profileImg;
-          this.$store.commit("LOGIN", this.userInfo);
+          this.$store.commit('LOGIN', this.userInfo);
           this.userNickname = this.$store.getters.getUserNickname;
           // console.log(this.userNickname);
-          console.log("무야호", this.userInfo);
+          console.log('무야호', this.userInfo);
           this.profileImg = this.$store.getters.getUserImage;
           console.log(this.$store.getters.getUserImage);
           axios
             .create({
               headers: {
-                "jwt-auth-token": storage.getItem("jwt-auth-token"),
+                'jwt-auth-token': storage.getItem('jwt-auth-token'),
               },
             })
-            .get("group")
+            .get('group')
             .then((res) => {
               this.Rgroups = res.data.groupList;
               console.log(this.Rgroups);
               for (var i = 0; i < this.Rgroups.length; i++) {
-                this.Rgroups[i]["src"] =
+                this.Rgroups[i]['src'] =
                   res.data.groupProfileList[i].groupProfileImg;
               }
 
@@ -349,8 +349,8 @@ export default {
                 (group) => group.groupName.length > 4
               );
               this.recommendGroup = this.recommendGroup.slice(0, 6);
-              console.log("zzzzz", this.recommendGroup);
-              this.$store.commit("RECOMMENDGROUP", this.recommendGroup);
+              console.log('zzzzz', this.recommendGroup);
+              this.$store.commit('RECOMMENDGROUP', this.recommendGroup);
             })
             .catch((err) => {
               console.log(err);
@@ -362,10 +362,10 @@ export default {
     },
     login() {
       var params = new URLSearchParams();
-      params.append("userId", this.email);
-      params.append("userPassword", this.pw);
+      params.append('userId', this.email);
+      params.append('userPassword', this.pw);
       axios
-        .post("user/login", params)
+        .post('user/login', params)
         .then((res) => {
           // console.log(res);
           if (res.data.success === true) {
@@ -373,15 +373,15 @@ export default {
             this.dialog = false;
             this.isLogin = true;
             // console.log(res);
-            this.getUserInfo(res.headers["jwt-auth-token"]);
-            storage.setItem("jwt-auth-token", res.headers["jwt-auth-token"]);
+            this.getUserInfo(res.headers['jwt-auth-token']);
+            storage.setItem('jwt-auth-token', res.headers['jwt-auth-token']);
 
             // console.log("유저닉네임", this.userNickname);
             // console.log(this.$store.state.user);
 
             // console.log("스토어", this.userNickname);
           } else {
-            alert("아이디 또는 비밀번호를 잘못 입력하였습니다.");
+            alert('아이디 또는 비밀번호를 잘못 입력하였습니다.');
           }
         })
         .catch((err) => console.log(err));
