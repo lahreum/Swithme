@@ -11,14 +11,9 @@
             <v-col style="margin-bottom:50px;" align="center">
               <v-img
                 class="groupImgUpload"
-                v-if="imageUrl"
                 :src="'data:image/png;base64,' + imageUrl"
               ></v-img>
-              <v-img
-                class="groupImgUpload"
-                v-else
-                :src="group.groupImg"
-              ></v-img>
+
               <v-btn type="button" @click="onClickImageUpload"
                 >이미지 업로드</v-btn
               >
