@@ -46,7 +46,7 @@ public class GoogleOauth implements SocialOauth {
 	}
 
 	@Override
-	public Token requestToken(String code) {
+	public Token requestToken(String code, String state) {
 		Map<String, String> params = new HashMap<>();
 		params.put("client_id", clientId);
 		params.put("client_secret", clientSecret);
@@ -72,25 +72,29 @@ public class GoogleOauth implements SocialOauth {
 	}
 
 	@Override
-	public String checkUserAccount(TokenInfo tokenInfo) {
-		Optional<UserInfo> optUserAccount = userRepository.findById(tokenInfo.getEmail());
+	public String checkUserAccount(String type, TokenInfo tokenInfo) {
+		Optional<UserInfo> optUserAccount = userRepository.findById(tokenInfo.getGoogleEmail());
 		String jwtToken, redirectUri;
 		
 		if(optUserAccount.isPresent()) {	// 계정이 이미 존재할 경우
-			if(optUserAccount.get().getUserType().equals("google")) {	// Google로 가입한 계정일 경우
+			String userType = optUserAccount.get().getUserType();
+			
+//			if(userType==null) return "https://j4b103.p.ssafy.io/no-access/invalid_account";	// 사이트 계정이 있을 경우
+			if(userType==null) return "https://j4b103.p.ssafy.io/no-access/invalid_account";	// 사이트 계정이 있을 경우
+			else if(optUserAccount.get().getUserType().equals(type)) {	// Google로 가입한 계정일 경우
 				jwtToken = jwtService.create(optUserAccount.get());
 //				redirectUri = "https://j4b103.p.ssafy.io/token?is-user=true&jwt-auth-token=" + jwtToken;
 				redirectUri = "http://localhost:8080/token?is-user=true&jwt-auth-token=" + jwtToken;
 				return redirectUri;
 			}
-//			else return "https://j4b103.p.ssafy.io/no-access/invalid_account";	// Google로 가입한 계정이 아닐 경우
-			else return "http://localhost:8080/no-access/invalid_account";	// Google로 가입한 계정이 아닐 경우
+//			else return "https://j4b103.p.ssafy.io/no-access/invalid_account";	// 다른 소셜 로그인 계정이 있을 경우
+			else return "http://localhost:8080/no-access/invalid_account";	// 다른 소셜 로그인 계정이 있을 경우
 		}
 		
 		// 계정이 존재하지 않을 경우
 		UserInfo user = new UserInfo();
-		user.setUserId(tokenInfo.getEmail());
-		user.setUserType("google");
+		user.setUserId(tokenInfo.getGoogleEmail());
+		user.setUserType(type);
 		
 		jwtToken = jwtService.create(user);
 		redirectUri = "http://localhost:8080/token?is-user=false&jwt-auth-token=" + jwtToken;
