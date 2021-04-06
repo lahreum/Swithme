@@ -185,7 +185,7 @@
                 :btnNameColor="'#424242'"
               ></app-btn-middle>
             </div>
-            <div style="display:inline-block;margin:5%" @click="ToGroupMain">
+            <div style="display:inline-block;margin:5%" @click="createGroup">
               <app-btn-middle
                 :isDisabled="active"
                 :btnColor="'#424242'"
@@ -217,7 +217,7 @@ export default {
     return {
       groupName: "",
       groupCategory: "",
-      groupMaxMemberCount: 0,
+      groupMaxMemberCount: 1,
       groupPassword: "",
       groupNotice: "",
       groupGoalDate: "",
@@ -254,7 +254,7 @@ export default {
     active() {
       if (
         this.groupCategory !== "" &&
-        this.groupMaxMemberCount > 1 &&
+        this.groupMaxMemberCount >= 1 &&
         this.groupNotice !== ""
       ) {
         return false;
@@ -273,56 +273,61 @@ export default {
       this.imageUrl = URL.createObjectURL(file); // Create File URL
       this.fileList = e.target.files;
     },
-    ToGroupMain() {
+    createGroup() {
       if (this.groupGoalDate === "") {
         this.groupGoalDate = null;
       }
       if (this.groupGoalTitle === "") {
         this.groupGoalTitle = null;
       }
+      if (this.groupPassword === "") {
+        this.groupPassword = null;
+      }
       console.log(this.fileList);
-      axios
-        .create({
-          headers: {
-            "jwt-auth-token": storage.getItem("jwt-auth-token"),
-          },
-        })
-        .post("group", {
-          groupCategory: this.items.indexOf(this.groupCategory) + 1,
-          groupMaxMemberCount: this.groupMaxMemberCount,
-          groupGoalDate: this.groupGoalDate,
-          groupGoalTitle: this.groupGoalTitle,
-          groupNotice: this.groupNotice,
-          groupName: this.groupName,
-          groupPassword: this.groupPassword,
-        })
-        .then((res) => {
-          console.log(res);
+      if (!this.active) {
+        axios
+          .create({
+            headers: {
+              "jwt-auth-token": storage.getItem("jwt-auth-token"),
+            },
+          })
+          .post("group", {
+            groupCategory: this.items.indexOf(this.groupCategory) + 1,
+            groupMaxMemberCount: this.groupMaxMemberCount,
+            groupGoalDate: this.groupGoalDate,
+            groupGoalTitle: this.groupGoalTitle,
+            groupNotice: this.groupNotice,
+            groupName: this.groupName,
+            groupPassword: this.groupPassword,
+          })
+          .then((res) => {
+            console.log(res);
 
-          // console.log("파일리스트", this.fileList);
-          // console.log("받아온그룹아이디", res.data.createdGroupId);
-          // console.log(this.fileList);
-          if (this.fileList.length !== 0) {
-            var params = new FormData();
-            params.append("groupId", res.data.createdGroupId);
-            params.append("file", this.fileList[0]);
+            // console.log("파일리스트", this.fileList);
+            // console.log("받아온그룹아이디", res.data.createdGroupId);
+            // console.log(this.fileList);
+            if (this.fileList.length !== 0) {
+              var params = new FormData();
+              params.append("groupId", res.data.createdGroupId);
+              params.append("file", this.fileList[0]);
 
-            // console.log(this.fileList[0]);
-            axios
-              .create({
-                headers: {
-                  "Content-Type": "multipart/form-data",
-                  "jwt-auth-token": storage.getItem("jwt-auth-token"),
-                },
-              })
-              .put("group/profile-img", params)
-              .then((res) => {
-                console.log("해치웠나??", res);
-                this.$router.push("/group");
-              });
-          }
-          this.$router.push("/group");
-        });
+              // console.log(this.fileList[0]);
+              axios
+                .create({
+                  headers: {
+                    "Content-Type": "multipart/form-data",
+                    "jwt-auth-token": storage.getItem("jwt-auth-token"),
+                  },
+                })
+                .put("group/profile-img", params)
+                .then((res) => {
+                  console.log("해치웠나??", res);
+                  this.$router.push("/group");
+                });
+            }
+            this.$router.push("/group");
+          });
+      }
     },
   },
 };

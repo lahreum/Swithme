@@ -15,8 +15,24 @@
               x-large
               >mdi-cog-outline</v-icon
             >
-            <v-btn @click="joinGroup" style="margin-left:35%">가입하기</v-btn>
-            <v-btn @click="leaveGroup">탈퇴하기</v-btn>
+            <v-col align="end">
+              <v-btn
+                v-if="
+                  !nowUser &&
+                    groupInfo.groupCurMemberCount <
+                      groupInfo.groupMaxMemberCount
+                "
+                @click="joinGroup"
+                icon
+                color="green"
+                style="margin:0 5% 0 600px"
+                ><v-icon>mdi-login</v-icon>가입하기</v-btn
+              >
+
+              <v-btn v-if="nowUser" @click="leaveGroup" icon color="red"
+                ><v-icon>mdi-logout</v-icon>탈퇴하기</v-btn
+              >
+            </v-col>
           </v-row>
 
           <v-row
@@ -57,7 +73,7 @@
           <v-row style="margin-bottom:50px;">
             <v-col
               cols="12"
-              sm="2"
+              sm="3"
               v-for="(grouper, idx) in studying"
               :key="'studying' + idx"
               ><div class="GroupStudyUser">
@@ -72,7 +88,7 @@
             >
             <v-col
               cols="12"
-              sm="2"
+              sm="3"
               v-for="(grouper, idx) in notStudying"
               :key="'notStudying' + idx"
               ><div class="GroupStudyUser">
@@ -107,7 +123,7 @@ export default {
       notStudying: [],
       IsGM: false,
       Dday: 0,
-
+      loginNickname: "",
       navInfo: [
         "sample2.png",
         "그룹",
@@ -136,7 +152,7 @@ export default {
         console.log("디테일만들어질때", res);
         this.groupInfo = res.data.groupInfo;
         this.groupers = res.data.groupMemberList;
-
+        this.loginNickname = this.$store.getters.getUserNickname;
         for (var i = 0; i < this.groupers.length; i++) {
           if (this.groupers[i].Studying) {
             this.studying.push(this.groupers[i]);
@@ -146,15 +162,13 @@ export default {
         }
         console.log(this.groupInfo);
         console.log(this.groupers);
+        console.log(this.groupers.includes(this.loginNickname));
         console.log("공부중아닌그룹원들", this.notStudying);
         let Goal = new Date(this.groupInfo.groupGoalDate);
         this.Dday = Math.abs(Goal.getTime() - today.getTime());
         this.Dday = Math.ceil(this.Dday / (1000 * 3600 * 24));
 
-        if (
-          this.$store.getters.getUserNickname ===
-          this.groupInfo.groupMasterNickname
-        ) {
+        if (this.loginNickname === this.groupInfo.groupMasterNickname) {
           this.IsGM = true;
         }
       })
@@ -164,6 +178,16 @@ export default {
     // console.log("받아왓니", this.$route.params.groupId);
     // console.log("dfasdf", this.studying);
     // console.log(this.notStudying);
+  },
+  computed: {
+    nowUser() {
+      for (var i = 0; i < this.groupers.length; i++) {
+        if (this.groupers[i].nickname === this.loginNickname) {
+          return true;
+        }
+      }
+      return false;
+    },
   },
   components: {
     MiddleNav,
@@ -193,7 +217,31 @@ export default {
           },
         })
         .post(`group/${this.groupInfo.groupId}`)
-        .then((res) => console.log(res));
+        .then((res) => {
+          console.log("그룹가입하기눌럿을때", res);
+          let today = new Date();
+          let day = date.dateFunc(today);
+          axios
+            .create({
+              headers: {
+                "jwt-auth-token": storage.getItem("jwt-auth-token"),
+              },
+            })
+            .get(`group/${this.$route.query.groupId}?datetime=${day}`)
+            .then((res) => {
+              console.log("그룹가입하기성공햇을때", res);
+              this.groupers = res.data.groupMemberList;
+              this.studying = [];
+              this.notStudying = [];
+              for (var i = 0; i < this.groupers.length; i++) {
+                if (this.groupers[i].Studying) {
+                  this.studying.push(this.groupers[i]);
+                } else {
+                  this.notStudying.push(this.groupers[i]);
+                }
+              }
+            });
+        });
     },
     leaveGroup() {
       axios
@@ -203,7 +251,31 @@ export default {
           },
         })
         .delete(`group/${this.groupInfo.groupId}`)
-        .then((res) => console.log(res));
+        .then((res) => {
+          console.log(res);
+          let today = new Date();
+          let day = date.dateFunc(today);
+          axios
+            .create({
+              headers: {
+                "jwt-auth-token": storage.getItem("jwt-auth-token"),
+              },
+            })
+            .get(`group/${this.$route.query.groupId}?datetime=${day}`)
+            .then((res) => {
+              console.log(res);
+              this.groupers = res.data.groupMemberList;
+              this.studying = [];
+              this.notStudying = [];
+              for (var i = 0; i < this.groupers.length; i++) {
+                if (this.groupers[i].Studying) {
+                  this.studying.push(this.groupers[i]);
+                } else {
+                  this.notStudying.push(this.groupers[i]);
+                }
+              }
+            });
+        });
     },
   },
 };

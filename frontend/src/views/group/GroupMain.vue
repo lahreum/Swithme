@@ -79,7 +79,9 @@
               v-for="(group, index) in MyGroup"
               :key="index"
               ><GroupInfo
-                @clickGroupInfo="toGroupDetail(group.groupId)"
+                @clickGroupInfo="
+                  toGroupDetail(group.groupId, group.groupPassword)
+                "
                 :src="'data:image/png;base64,' + group.src"
                 :groupName="group.groupName"
                 :groupDesc="group.groupNotice"
@@ -94,7 +96,9 @@
               v-for="(group, index) in HotGroup"
               :key="index"
               ><GroupInfo
-                @clickGroupInfo="toGroupDetail(group.groupId)"
+                @clickGroupInfo="
+                  toGroupDetail(group.groupId, group.groupPassword)
+                "
                 :src="'data:image/png;base64,' + group.src"
                 :groupName="group.groupName"
                 :groupDesc="group.groupNotice"
@@ -109,7 +113,9 @@
               v-for="(group, index) in NewGroup"
               :key="index"
               ><GroupInfo
-                @clickGroupInfo="toGroupDetail(group.groupId)"
+                @clickGroupInfo="
+                  toGroupDetail(group.groupId, group.groupPassword)
+                "
                 :src="'data:image/png;base64,' + group.src"
                 :groupName="group.groupName"
                 :groupDesc="group.groupNotice"
@@ -124,7 +130,9 @@
               v-for="(group, index) in SearchedGroup"
               :key="index"
               ><GroupInfo
-                @clickGroupInfo="toGroupDetail(group.groupId)"
+                @clickGroupInfo="
+                  toGroupDetail(group.groupId, group.groupPassword)
+                "
                 :src="'data:image/png;base64,' + group.src"
                 :groupName="group.groupName"
                 :groupDesc="group.groupNotice"
@@ -137,6 +145,16 @@
               ><span style="font-size:2rem">...이런</span
               ><span>검색어와 일치하는 결과가 없네요</span>
               <h2>다른검색어로 검색해보시겠어요?</h2></v-col
+            >
+            <v-col cols="5"
+              ><v-img src="https://ifh.cc/g/yLHO83.png"></v-img
+            ></v-col>
+          </v-row>
+          <v-row justify="center" v-else-if="caseNum === 7">
+            <v-col align-self="center" align="end" cols="5"
+              ><span style="font-size:2rem">...이런</span
+              ><span>아직 가입한 그룹이 없네요</span>
+              <h2>그룹에 가입해보세요!</h2></v-col
             >
             <v-col cols="5"
               ><v-img src="https://ifh.cc/g/yLHO83.png"></v-img
@@ -173,18 +191,25 @@
 
         <v-col cols="2"></v-col>
       </v-row>
-      <v-dialog v-model="dialog" max-width="600px">
+      <v-dialog v-model="dialog" max-width="400px">
         <v-card>
-          <v-card-title>비번치세요</v-card-title>
+          <v-card-title
+            ><h4>
+              비밀번호를 입력해주세요
+            </h4></v-card-title
+          >
           <v-card-text>
             <v-text-field
-              label="비번치셈ㅋ"
+              label="비밀번호를 입력하세요"
               v-model="enterPassword"
+              :rules="pwRules"
             ></v-text-field>
           </v-card-text>
           <v-card-actions>
-            <v-btn @click="dialog = false">닫기</v-btn>
-            <v-btn @click="enterPw">확인</v-btn>
+            <v-btn style="width:50%;" @click="dialog = false">닫기</v-btn>
+            <v-btn style="width:50%; color:white" color="blue" @click="enterPw"
+              >확인</v-btn
+            >
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -226,6 +251,7 @@ export default {
       enterPassword: "",
       checkGId: "",
       checkGPw: "",
+      pwRules: "",
 
       navInfo: [
         "sample2.png",
@@ -258,9 +284,13 @@ export default {
         .then((res) => {
           console.log("내가잇는그룹", res);
           this.MyGroup = res.data.groupListThatIAm;
-          for (var i = 0; i < this.MyGroup.length; i++) {
-            this.MyGroup[i]["src"] =
-              res.data.groupProfileList[i].groupProfileImg;
+          if (this.MyGroup.length === 0) {
+            this.caseNum = 7;
+          } else {
+            for (var i = 0; i < this.MyGroup.length; i++) {
+              this.MyGroup[i]["src"] =
+                res.data.groupProfileList[i].groupProfileImg;
+            }
           }
         });
       // console.log(this.MyGroup);
@@ -283,7 +313,8 @@ export default {
       // var year = date.getFullYear();
       // var month = ("0" + (1 + date.getMonth())).slice(-2);
       // var day = ("0" + date.getDate()).slice(-2);
-      for (var i = 0; i < this.groups.length; i++) {
+      for (var i = this.groups.length - 1; i >= 0; i--) {
+        console.log(i);
         var groupMadeDate = this.groups[i].groupCreatedDate;
         var groupDate = new Date(groupMadeDate.substring(0, 10));
         // console.log("그룹만들어진날짜==", groupDate);
@@ -363,14 +394,18 @@ export default {
       }
     },
     enterPw() {
-      this.dialog = false;
+      this.pwRules = "";
       if (this.enterPassword === this.checkGPw) {
+        this.dialog = false;
         this.$router.push({
           name: "GroupDetail",
           query: { groupId: this.checkGId },
         });
+      } else if (this.enterPassword === "") {
+        this.pwRules = ["비밀번호를 입력하세요"];
       } else {
-        alert("비번틀림ㅋ");
+        this.pwRules = ["비밀번호가 틀렸습니다"];
+        this.enterPassword = "";
       }
     },
   },

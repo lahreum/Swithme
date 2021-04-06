@@ -1,7 +1,7 @@
 <template>
-  <v-container style="">
+  <v-row align="center">
     <v-text-field
-      style="margin-top:7px; height:40px"
+      style="height:40px"
       outlined
       rounded
       placeholder="검색"
@@ -12,7 +12,7 @@
       color="#673fb4"
       clearable
     ></v-text-field>
-  </v-container>
+  </v-row>
 </template>
 
 <script>

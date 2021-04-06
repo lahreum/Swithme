@@ -30,20 +30,18 @@ export default {
 <style>
 .groupCnt {
   color: black;
-
-  font-size: 20px;
   font-weight: 1000;
-
   position: absolute;
   bottom: 5%;
   left: 5%;
 }
 .groupName {
   font-weight: 600px;
-  font-size: 20px;
+  font-size: 1.1rem;
 }
 .groupDesc {
   color: #bdbdbd;
+  font-size: 0.8rem;
 }
 .groupInfoImg {
   width: 250px;
