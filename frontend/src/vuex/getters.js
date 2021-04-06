@@ -21,4 +21,7 @@ export default {
   getPhoneTime(state) {
     return state.phoneTime;
   },
+  getRecommendGroup(state){
+    return state.Rgroup
+  }
 };

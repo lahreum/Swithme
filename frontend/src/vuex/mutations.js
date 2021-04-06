@@ -24,4 +24,7 @@ export default {
   setPhoneTime(state) {
     state.phoneTime++;
   },
+  RECOMMENDGROUP(state, payload){
+    state.Rgroup = payload;
+  }
 };

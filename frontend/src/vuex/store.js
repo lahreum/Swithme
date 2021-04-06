@@ -16,6 +16,7 @@ const state = {
   isLogin: false,
   awayTime: 0,
   phoneTime: 0,
+  Rgroup:{},
 };
 
 export default new Vuex.Store({
