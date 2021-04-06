@@ -15,6 +15,9 @@ export default {
   getUserIsStudying(state) {
     return state.user.userIsStudying;
   },
+  getUserIsLogin(state) {
+    return state.user.isLogin;
+  },
   getAwayTime(state) {
     return state.awayTime;
   },
