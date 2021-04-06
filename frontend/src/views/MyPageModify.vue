@@ -97,13 +97,20 @@
             <v-row no-gutters>비밀번호</v-row>
             <v-row
               no-gutters
-              v-show="warningPassword"
+              v-if="warningPassword && isSocial"
+              style="letter-spacing: -1px; color: red; font-size: 0.8rem; margin-top: 5px;"
+            >
+              소셜로그인 사용자는 비밀번호를 바꿀 수 없습니다.
+            </v-row>
+            <v-row
+              no-gutters
+              v-if="warningPassword && !isSocial"
               style="letter-spacing: -1px; color: red; font-size: 0.8rem; margin-top: 5px;"
               >8자리 이상의 문자와 숫자</v-row
             >
             <v-row
               no-gutters
-              v-show="warningPassword"
+              v-if="warningPassword && !isSocial"
               style="letter-spacing: -1px; font-weight: lighter; color: red; font-size: 0.8rem; margin-top: 5px;"
               >(변경을 원하지 않을 시 비워두세요)</v-row
             >
@@ -119,6 +126,7 @@
                 <input-bar
                   :type="'password'"
                   :placeholder="'새로운 비밀번호'"
+                  :isDisabled="isSocial"
                   :rules="passwordRules"
                   @pass-input="getNewPassword"
                 ></input-bar>
@@ -136,6 +144,7 @@
                   @mouseleave="warningPassword = false"
                 >
                   <input-bar
+                    :isDisabled="isSocial"
                     :type="'password'"
                     :rules="passwordConfirmRules"
                     :placeholder="'비밀번호 확인'"
@@ -144,6 +153,7 @@
                 <v-col class="pa-0" cols="2" align="center">
                   <div style="width: 100px;" @click="passwordRequest">
                     <app-btn-large
+                      :isDisabled="isSocial"
                       :btnColor="'#673fb4'"
                       :btnName="'저 장'"
                       :btnNameColor="'white'"
@@ -232,11 +242,22 @@ export default {
       })
       .get('user')
       .then((response) => {
+        console.log('USER-INFO: ', response);
         this.user.nickname = response.data.data.userNickname;
         this.user.userId = response.data.data.userId;
         this.user.message = response.data.data.userMessage;
         this.user.profileImg = response.data.profileImg;
         this.tmpProfileImg = response.data.profileImg;
+        if (response.data.data.userType != undefined) {
+          this.user.userType = response.data.data.userType;
+          // console.log('USER-TYPE: ', this.user.userType);
+          // console.log('USER-TYPE: ', typeof response.data.data.userType);
+          this.isSocial = true;
+        } else {
+          // console.log('USER-TYPE: ', this.user.userType);
+          // console.log('USER-TYPE: ', typeof response.data.data.userType);
+          this.isSocial = false;
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -255,6 +276,7 @@ export default {
         userId: '',
         message: '',
         profileImg: '',
+        userType: '',
       },
       new: {
         nickname: '',
@@ -268,6 +290,7 @@ export default {
       warningPassword: false,
       warningNickname: false,
       isDefault: true,
+      isSocial: false,
       nicknameRules: [
         // (v) => v == null,
         (v) => !!v || '닉네임을 입력해주세요.',
@@ -327,30 +350,32 @@ export default {
         });
     },
     passwordRequest() {
-      if (this.$refs.password.validate()) {
-        let params = new URLSearchParams();
-        params.append('newPassword', this.new.password);
-        params.append('userId', this.user.userId);
+      if (!this.isSocial) {
+        if (this.$refs.password.validate()) {
+          let params = new URLSearchParams();
+          params.append('newPassword', this.new.password);
+          params.append('userId', this.user.userId);
 
-        this.$Axios
-          .create({
-            headers: {
-              'jwt-auth-token': storage.getItem('jwt-auth-token'),
-            },
-          })
-          .put('user/password', params)
-          .then((response) => {
-            if (response.data.success) {
-              alert('새로운 비밀번호로 변경되었습니다.');
-              window.location.reload();
-            } else {
+          this.$Axios
+            .create({
+              headers: {
+                'jwt-auth-token': storage.getItem('jwt-auth-token'),
+              },
+            })
+            .put('user/password', params)
+            .then((response) => {
+              if (response.data.success) {
+                alert('새로운 비밀번호로 변경되었습니다.');
+                window.location.reload();
+              } else {
+                alert('비밀번호 변경 도중 오류가 발생했습니다.');
+              }
+            })
+            .catch((error) => {
+              console.log(error);
               alert('비밀번호 변경 도중 오류가 발생했습니다.');
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-            alert('비밀번호 변경 도중 오류가 발생했습니다.');
-          });
+            });
+        }
       }
     },
     nicknameRequest() {

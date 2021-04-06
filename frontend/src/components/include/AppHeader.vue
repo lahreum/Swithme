@@ -291,10 +291,16 @@ export default {
       this.isLogin = false;
       storage.removeItem('jwt-auth-token');
       this.$store.commit('userInit');
-      this.$router.push('/');
+      if (this.$router.currentRoute.path != '/') {
+        this.$router.push('/');
+      }
     },
     goMyPage: function() {
-      this.$router.push('/my-page-access');
+      if (this.userInfo.userType != null) {
+        this.$router.push('/my-page');
+      } else {
+        this.$router.push('/my-page-access');
+      }
     },
     goMain: function() {
       this.$router.push('/');
