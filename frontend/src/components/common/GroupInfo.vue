@@ -6,19 +6,39 @@
           <v-icon color="black" dark>mdi-account</v-icon
           ><span>{{ groupCnt }} / {{ groupTotalCnt }}</span>
         </div>
+        <v-icon
+          color="red"
+          style="position:relative; top:5%; left:5%"
+          v-if="groupPassword !== undefined"
+          >mdi-lock</v-icon
+        >
       </v-img>
     </div>
     <div style="padding:5% 1%">
-      <span class="groupName">{{ groupName }}</span
+      <span
+        class="groupName d-inline-block text-truncate"
+        style="max-width:100%"
+        >{{ groupName }}</span
       ><br />
-      <span class="groupDesc">{{ groupDesc }}</span>
+      <span
+        class="groupDesc d-inline-block text-truncate"
+        style="max-width:100%"
+        >{{ groupDesc }}</span
+      >
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  props: ["src", "groupName", "groupDesc", "groupCnt", "groupTotalCnt"],
+  props: [
+    "src",
+    "groupPassword",
+    "groupName",
+    "groupDesc",
+    "groupCnt",
+    "groupTotalCnt",
+  ],
   methods: {
     clickGroupInfo() {
       this.$emit("clickGroupInfo");

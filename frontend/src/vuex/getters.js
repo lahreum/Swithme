@@ -7,7 +7,7 @@ export default {
     return state.user.userNickname;
   },
   getUserImage(state) {
-    return state.user.userImage;
+    return state.user.profileImg;
   },
   getUserMessage(state) {
     return state.user.userMessage;

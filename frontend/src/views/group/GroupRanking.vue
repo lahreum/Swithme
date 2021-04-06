@@ -10,21 +10,22 @@
             justify="space-between"
             style="font-size:1.5rem; margin-bottom:50px;"
           >
-            {{ groupInfo.groupIntroduce }}
+            {{ groupInfo.groupNotice }}
             <span
               ><v-icon>mdi-account</v-icon>{{ groupers.length }}
-              <v-icon>mdi-crown</v-icon>{{ groupInfo.groupMaster }}</span
+              <v-icon>mdi-crown</v-icon
+              >{{ groupInfo.groupMasterNickname }}</span
             >
           </v-row>
 
           <v-row justify="space-around" style="margin-bottom:50px;">
-            <v-btn icon color="black" x-large @click="ToGroupHome"
+            <v-btn icon color="black" x-large @click="toGroupHome"
               ><v-icon>mdi-home</v-icon> 홈</v-btn
             >
-            <v-btn icon color="black" x-large @click="ToGroupRanking"
+            <v-btn icon color="black" x-large @click="toGroupRanking"
               ><v-icon>mdi-poll</v-icon> 랭킹</v-btn
             >
-            <v-btn icon color="black" x-large @click="ToGroupAttendance"
+            <v-btn icon color="black" x-large @click="toGroupAttendance"
               ><v-icon>mdi-calendar-month</v-icon> 출석부</v-btn
             >
           </v-row>
@@ -38,8 +39,8 @@
                   centered
                   slider-color="#673fb4"
                 >
-                  <v-tab v-for="item in items" :key="item">
-                    {{ item.title }}
+                  <v-tab @click="getRanking" v-for="item in items" :key="item">
+                    {{ item }}
                   </v-tab>
                 </v-tabs>
               </template>
@@ -220,6 +221,9 @@
 
 <script>
 import MiddleNav from "@/components/include/MiddleNav.vue";
+import date from "@/date.js";
+import axios from "axios";
+const storage = window.sessionStorage;
 export default {
   components: {
     MiddleNav,
@@ -232,6 +236,10 @@ export default {
       weekly2: new Date(),
       monthly: new Date(),
       tmp: "",
+      gId: 0,
+      groupInfo: [],
+      groupers: [],
+      range: ["day", "week", "month"],
       navInfo: [
         "sample2.png",
         "그룹",
@@ -239,14 +247,8 @@ export default {
         "목표로 가는 길이 덜 힘들고, 더욱 든든해질 거예요",
       ],
       tabs: null,
-      text:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-      items: [{ title: "일간" }, { title: "주간" }, { title: "월간" }],
-      groupInfo: {
-        groupName: "정처기 합격가즈아",
-        groupIntroduce: "정처기 원콤을 목표로 하는 스터디입니다.",
-        groupMaster: "dldkfma",
-      },
+      items: ["일간", "주간", "월간"],
+
       Day1stTo3rd: [
         { name: "dldkfma", time: "02:14:25" },
         { name: "빛봉현", time: "02:14:25" },
@@ -262,82 +264,26 @@ export default {
         { name: "빛봉현", time: "02:14:25" },
         { name: "정처기out", time: "02:14:25" },
       ],
-      groupers: [
-        {
-          name: "dldkfma",
-          time: "03:13:24",
-          profile: "https://ifh.cc/g/wyakuA.jpg",
-          IsStudying: true,
-        },
-        {
-          name: "빛봉현",
-          time: "03:53:26",
-          profile: "https://ifh.cc/g/wyakuA.jpg",
-          IsStudying: false,
-        },
-        {
-          name: "녹용파는사슴",
-          time: "03:12:21",
-          profile: "https://ifh.cc/g/wyakuA.jpg",
-          IsStudying: false,
-        },
-        {
-          name: "별빛지현",
-          time: "01:13:24",
-          profile: "https://ifh.cc/g/wyakuA.jpg",
-          IsStudying: true,
-        },
-        {
-          name: "dddddut",
-          time: "05:13:54",
-          profile: "https://ifh.cc/g/wyakuA.jpg",
-          IsStudying: true,
-        },
-        {
-          name: "정qqweeut",
-          time: "05:13:54",
-          profile: "https://ifh.cc/g/wyakuA.jpg",
-          IsStudying: false,
-        },
-        {
-          name: "정처기out",
-          time: "05:13:54",
-          profile: "https://ifh.cc/g/wyakuA.jpg",
-          IsStudying: false,
-        },
-        {
-          name: "정hohout",
-          time: "05:13:54",
-          profile: "https://ifh.cc/g/wyakuA.jpg",
-          IsStudying: true,
-        },
-        {
-          name: "정처기기기",
-          time: "05:13:54",
-          profile: "https://ifh.cc/g/wyakuA.jpg",
-          IsStudying: false,
-        },
-        {
-          name: "aaa정처at",
-          time: "05:13:54",
-          profile: "https://ifh.cc/g/wyakuA.jpg",
-          IsStudying: true,
-        },
-      ],
     };
   },
   methods: {
     toGroupHome() {
       this.$router.push({
         name: "GroupDetail",
-        query: { groupId: this.groupInfo.groupId },
+        query: { groupId: this.gId },
       });
     },
-    ToGroupRanking() {
-      this.$router.push("/group-ranking");
+    toGroupRanking() {
+      this.$router.push({
+        name: "GroupRanking",
+        query: { groupId: this.gId },
+      });
     },
-    ToGroupAttendance() {
-      this.$router.push("/group-attendance");
+    toGroupAttendance() {
+      this.$router.push({
+        name: "GroupAttendance",
+        query: { groupId: this.gId },
+      });
     },
     dayMinus() {
       this.tmp = new Date(this.daily);
@@ -392,12 +338,54 @@ export default {
       this.monthly = new Date(this.monthly.setDate(this.monthly.getDate() + 1));
       console.log(this.monthly);
     },
+    getRanking() {
+      let param = this.daily;
+      let day = date.dateFunc(param);
+      axios
+        .create({
+          headers: {
+            "jwt-auth-token": storage.getItem("jwt-auth-token"),
+          },
+        })
+        .get(
+          `group/ranking?datetime=${day}&groupId=${
+            this.groupInfo.groupId
+          }&range=${this.range[this.tabs]}`
+        )
+        .then((res) => console.log(res));
+    },
   },
   created() {
     // let month = this.daily.getMonth() + 1;
     // let date = this.daily.getDate();
     // this.daily = `${month}월 ${date}일`;
     this.getWeekly1();
+    this.gId = this.groupInfo.groupId;
+    let today = new Date();
+    let day = date.dateFunc(today);
+    axios
+      .create({
+        headers: {
+          "jwt-auth-token": storage.getItem("jwt-auth-token"),
+        },
+      })
+      .get(`group/${this.$route.query.groupId}?datetime=${day}`)
+      .then((res) => {
+        this.groupInfo = res.data.groupInfo;
+        this.groupers = res.data.groupMemberList;
+        axios
+          .create({
+            headers: {
+              "jwt-auth-token": storage.getItem("jwt-auth-token"),
+            },
+          })
+          .get(
+            `group/ranking?datetime=${day}&groupId=${
+              this.groupInfo.groupId
+            }&range=${this.range[this.tabs]}`
+          )
+          .then((res) => console.log(res));
+      });
   },
 };
 </script>
