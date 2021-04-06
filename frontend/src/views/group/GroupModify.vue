@@ -154,6 +154,11 @@
                 ></v-text-field>
               </v-col>
             </v-row>
+            <v-row style="margin-top:230px" justify="end"
+              ><v-btn @click="deleteGroup" icon
+                ><v-icon color="red">mdi-delete-forever</v-icon>그룹삭제</v-btn
+              ></v-row
+            >
           </v-row>
           <div style="text-align:center;">
             <div
@@ -173,7 +178,6 @@
                 :btnNameColor="'white'"
               ></app-btn-middle>
             </div>
-            <v-btn @click="deleteGroup">그룹삭제</v-btn>
           </div>
         </v-col>
 
