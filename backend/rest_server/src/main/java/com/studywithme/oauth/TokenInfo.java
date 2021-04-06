@@ -6,12 +6,17 @@ import lombok.Data;
 
 @Data
 public class TokenInfo {
+	// Google
 	@JsonProperty("email")
-	private String email;
+	private String googleEmail;
 	
 	@JsonProperty("name")
-	private String name;
+	private String googleName;
 	
 	@JsonProperty("picture")
-	private String picture;
+	private String googlePicture;
+	
+	// Naver
+	@JsonProperty("response")
+	private NaverInfo naver;
 }
