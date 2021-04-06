@@ -36,38 +36,44 @@
 <script>
 import GroupRecommendCard from "@/components/common/GroupRecommendCard.vue";
 import { Carousel3d, Slide } from "vue-carousel-3d";
-const storage = window.sessionStorage;
+// const storage = window.sessionStorage;
 export default {
   components: {
     "group-recommend-card": GroupRecommendCard,
     "carousel-3d": Carousel3d,
     slide: Slide,
   },
-  // props: ["groups"],
+  data: function() {
+    return {
+      Rgroups: [],
+      recommendGroup: this.$store.getters.getRecommendGroup,
+    };
+  },
+  // props: ["Rgroups"],
   created() {
-    this.$Axios
-      .create({
-        headers: {
-          "jwt-auth-token": storage.getItem("jwt-auth-token"),
-        },
-      })
-      .get("group")
-      .then((res) => {
-        this.groups = res.data.groupList;
-        for (var i = 0; i < this.groups.length; i++) {
-          this.groups[i]["src"] = res.data.groupProfileList[i].groupProfileImg;
-        }
-
-        this.recommendGroup = this.groups.filter(
-          (group) => group.groupName.length > 4
-        );
-        this.recommendGroup = this.recommendGroup.slice(0, 6);
-        console.log(this.recommendGroup);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
+    console.log(this.$store.getters.getRecommendGroup);
+    // this.$Axios
+    //   .create({
+    //     headers: {
+    //       "jwt-auth-token": storage.getItem("jwt-auth-token"),
+    //     },
+    //   })
+    //   .get("group")
+    //   .then((res) => {
+    //     this.Rgroups = res.data.groupList;
+    //     console.log(this.Rgroups);
+    //     for (var i = 0; i < this.Rgroups.length; i++) {
+    //       this.Rgroups[i]["src"] = res.data.groupProfileList[i].groupProfileImg;
+    //     }
+    //     this.recommendGroup = this.Rgroups.filter(
+    //       (group) => group.groupName.length > 4
+    //     );
+    //     this.recommendGroup = this.recommendGroup.slice(0, 6);
+    //     console.log(this.recommendGroup);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
     // this.$Axios
     //   .create({
     //     headers: {
@@ -77,12 +83,12 @@ export default {
     //   .get("group")
     //   .then((res) => {
     //     console.log("created될때", res);
-    //     this.groups = res.data.groupList;
-    //     for (var i = 0; i < this.groups.length; i++) {
-    //       this.groups[i]["src"] = res.data.groupProfileList[i].groupProfileImg;
+    //     this.Rgroups = res.data.groupList;
+    //     for (var i = 0; i < this.Rgroups.length; i++) {
+    //       this.Rgroups[i]["src"] = res.data.groupProfileList[i].groupProfileImg;
     //     }
-    //     // console.log(this.groups);
-    //     this.AllGroup = this.groups.slice(0, 12);
+    //     // console.log(this.Rgroups);
+    //     this.AllGroup = this.Rgroups.slice(0, 12);
     //   })
     //   .catch((err) => {
     //     console.log(err);
@@ -92,12 +98,6 @@ export default {
     toGroupDetail(g) {
       this.$router.push({ name: "GroupDetail", query: { groupId: g } });
     },
-  },
-  data: function() {
-    return {
-      groups: [],
-      recommendGroup: [],
-    };
   },
 };
 </script>

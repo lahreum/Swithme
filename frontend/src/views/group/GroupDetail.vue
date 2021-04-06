@@ -29,7 +29,13 @@
                 ><v-icon>mdi-login</v-icon>가입하기</v-btn
               >
 
-              <v-btn v-if="nowUser" @click="leaveGroup" icon color="red"
+              <v-btn
+                v-if="
+                  nowUser && loginNickname !== groupInfo.groupMasterNickname
+                "
+                @click="leaveGroup"
+                icon
+                color="red"
                 ><v-icon>mdi-logout</v-icon>탈퇴하기</v-btn
               >
             </v-col>
