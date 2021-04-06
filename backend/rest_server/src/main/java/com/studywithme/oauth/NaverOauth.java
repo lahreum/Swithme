@@ -31,8 +31,7 @@ public class NaverOauth implements SocialOauth {
 	private final String clientId = "Lo8etmLBsy1kZMSWYz0x";
 	private final String clientSecret = "lszt2PW8oK";
 	private final String authUri = "https://nid.naver.com/oauth2.0/authorize";
-//	private final String redirectUri = "https://j4b103.p.ssafy.io/service/oauth/naver/callback";
-	private final String redirectUri = "http://localhost:9999/oauth/naver/callback";
+	private final String redirectUri = "https://j4b103.p.ssafy.io/service/oauth/naver/callback";
 	private final String tokenUri = "https://nid.naver.com/oauth2.0/token";
 	private final String tokenInfoUri = "https://openapi.naver.com/v1/nid/me";
 	
@@ -85,16 +84,13 @@ public class NaverOauth implements SocialOauth {
 		if(optUserAccount.isPresent()) {	// 계정이 이미 존재할 경우
 			String userType = optUserAccount.get().getUserType();
 			
-//			if(userType==null) return "https://j4b103.p.ssafy.io/no-access/invalid_account";	// 사이트 계정이 있을 경우
-			if(userType==null) return "http://localhost:8080/no-access/invalid_account";	// 사이트 계정이 있을 경우
+			if(userType==null) return "https://j4b103.p.ssafy.io/no-access/invalid_account";	// 사이트 계정이 있을 경우
 			else if(userType.equals(type)) {	// Naver로 가입한 계정일 경우
 				jwtToken = jwtService.create(optUserAccount.get());
-//				redirectUri = "https://j4b103.p.ssafy.io/token?is-user=true&jwt-auth-token=" + jwtToken;
-				redirectUri = "http://localhost:8080/token?is-user=true&jwt-auth-token=" + jwtToken;
+				redirectUri = "https://j4b103.p.ssafy.io/token?is-user=true&jwt-auth-token=" + jwtToken;
 				return redirectUri;
 			}
-//			else return "https://j4b103.p.ssafy.io/no-access/invalid_account";	// 다른 소셜 로그인 계정이 있을 경우
-			else return "http://localhost:8080/no-access/invalid_account";	// 다른 소셜 로그인 계정이 있을 경우
+			else return "https://j4b103.p.ssafy.io/no-access/invalid_account";	// 다른 소셜 로그인 계정이 있을 경우
 		}
 		
 		// 계정이 존재하지 않을 경우
@@ -103,8 +99,7 @@ public class NaverOauth implements SocialOauth {
 		user.setUserType(type);
 		
 		jwtToken = jwtService.create(user);
-//		redirectUri = "https://j4b103.p.ssafy.io/token?is-user=false&jwt-auth-token=" + jwtToken;
-		redirectUri = "http://localhost:8080/token?is-user=false&jwt-auth-token=" + jwtToken;
+		redirectUri = "https://j4b103.p.ssafy.io/token?is-user=false&jwt-auth-token=" + jwtToken;
 		
 		return redirectUri;
 	}
