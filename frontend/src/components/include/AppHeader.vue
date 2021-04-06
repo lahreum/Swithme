@@ -194,7 +194,8 @@
                   :btnNameColor="'white'"
                 ></app-btn-large>
               </div>
-              <a href="https://j4b103.p.ssafy.io/service/oauth/google"
+              <!-- <a href="https://j4b103.p.ssafy.io/service/oauth/google" -->
+              <a href="http://localhost:9999/oauth/google"
                 ><v-img
                   @click="dialog = false"
                   src="@/assets/img/google_long.png"
@@ -202,7 +203,8 @@
                   width="380"
                 ></v-img
               ></a>
-              <a href="https://j4b103.p.ssafy.io/service/oauth/naver">
+              <!-- <a href="https://j4b103.p.ssafy.io/service/oauth/naver"> -->
+              <a href="http://localhost:9999/oauth/naver"
                 <v-img
                   @click="dialog = false"
                   src="@/assets/img/naver_long.png"
