@@ -80,7 +80,7 @@ public class GoogleOauth implements SocialOauth {
 			String userType = optUserAccount.get().getUserType();
 			
 //			if(userType==null) return "https://j4b103.p.ssafy.io/no-access/invalid_account";	// 사이트 계정이 있을 경우
-			if(userType==null) return "https://j4b103.p.ssafy.io/no-access/invalid_account";	// 사이트 계정이 있을 경우
+			if(userType==null) return "http://localhost:8080/no-access/invalid_account";	// 사이트 계정이 있을 경우
 			else if(optUserAccount.get().getUserType().equals(type)) {	// Google로 가입한 계정일 경우
 				jwtToken = jwtService.create(optUserAccount.get());
 //				redirectUri = "https://j4b103.p.ssafy.io/token?is-user=true&jwt-auth-token=" + jwtToken;
@@ -97,8 +97,8 @@ public class GoogleOauth implements SocialOauth {
 		user.setUserType(type);
 		
 		jwtToken = jwtService.create(user);
-		redirectUri = "http://localhost:8080/token?is-user=false&jwt-auth-token=" + jwtToken;
 //		redirectUri = "https://j4b103.p.ssafy.io/token?is-user=false&jwt-auth-token=" + jwtToken;
+		redirectUri = "http://localhost:8080/token?is-user=false&jwt-auth-token=" + jwtToken;
 		
 		return redirectUri;
 	}

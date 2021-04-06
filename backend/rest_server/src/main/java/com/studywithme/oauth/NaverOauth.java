@@ -103,8 +103,8 @@ public class NaverOauth implements SocialOauth {
 		user.setUserType(type);
 		
 		jwtToken = jwtService.create(user);
-		redirectUri = "http://localhost:8080/token?is-user=false&jwt-auth-token=" + jwtToken;
 //		redirectUri = "https://j4b103.p.ssafy.io/token?is-user=false&jwt-auth-token=" + jwtToken;
+		redirectUri = "http://localhost:8080/token?is-user=false&jwt-auth-token=" + jwtToken;
 		
 		return redirectUri;
 	}
