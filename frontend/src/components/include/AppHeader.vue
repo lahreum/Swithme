@@ -194,17 +194,15 @@
                   :btnNameColor="'white'"
                 ></app-btn-large>
               </div>
-              <!-- <a href="https://j4b103.p.ssafy.io/service/oauth/google"> -->
-              <a href="http://localhost:9999/oauth/google">
-                <v-img
+              <a href="https://j4b103.p.ssafy.io/service/oauth/google"
+                ><v-img
                   @click="dialog = false"
                   src="@/assets/img/google_long.png"
                   style="margin-top: 5px"
                   width="380"
                 ></v-img
               ></a>
-              <!-- <a href="https://j4b103.p.ssafy.io/service/oauth/naver"> -->
-              <a href="http://localhost:9999/oauth/naver">
+              <a href="https://j4b103.p.ssafy.io/service/oauth/naver">
                 <v-img
                   @click="dialog = false"
                   src="@/assets/img/naver_long.png"
@@ -291,12 +289,18 @@ export default {
     signOut: function() {
       alert("성공적으로 로그아웃 했습니다. 안녕히!");
       this.isLogin = false;
-      storage.removeItem("jwt-auth-token");
-      this.$store.commit("userInit");
-      this.$router.push("/");
+      storage.removeItem('jwt-auth-token');
+      this.$store.commit('userInit');
+      if (this.$router.currentRoute.path != '/') {
+        this.$router.push('/');
+      }
     },
     goMyPage: function() {
-      this.$router.push("/my-page-access");
+      if (this.userInfo.userType != null) {
+        this.$router.push('/my-page');
+      } else {
+        this.$router.push('/my-page-access');
+      }
     },
     goMain: function() {
       this.$router.push("/");

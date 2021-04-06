@@ -1,8 +1,9 @@
 <template>
   <div>
     <v-progress-linear
-      color="#673fb4" background-color="#EEEEEE"
-      height="35" 
+      color="#673fb4"
+      background-color="#DAD9FF"
+      height="35"
       :value="progressValue"
       rounded
     >
@@ -16,12 +17,12 @@
 
 <script>
 export default {
-  props: ["progressValue"],
+  props: ['progressValue'],
 };
 </script>
 
 <style scoped>
 .v-progress-linear {
-  border-radius:30px !important;
+  border-radius: 30px !important;
 }
 </style>
