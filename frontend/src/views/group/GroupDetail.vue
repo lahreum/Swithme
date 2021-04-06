@@ -144,9 +144,6 @@ export default {
   created() {
     let today = new Date();
     let day = date.dateFunc(today);
-
-    console.log("내가만든함수", day);
-
     axios
       .create({
         headers: {
@@ -207,10 +204,16 @@ export default {
       });
     },
     toGroupRanking() {
-      this.$router.push("/group-ranking");
+      this.$router.push({
+        name: "GroupRanking",
+        query: { groupId: this.groupInfo.groupId },
+      });
     },
     toGroupAttendance() {
-      this.$router.push("/group-attendance");
+      this.$router.push({
+        name: "GroupAttendance",
+        query: { groupId: this.groupInfo.groupId },
+      });
     },
     toGroupModify(g) {
       this.$router.push({ name: "GroupModify", query: { groupId: g } });

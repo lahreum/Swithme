@@ -49,51 +49,7 @@ export default {
       recommendGroup: this.$store.getters.getRecommendGroup,
     };
   },
-  // props: ["Rgroups"],
-  created() {
-    console.log(this.$store.getters.getRecommendGroup);
-    // this.$Axios
-    //   .create({
-    //     headers: {
-    //       "jwt-auth-token": storage.getItem("jwt-auth-token"),
-    //     },
-    //   })
-    //   .get("group")
-    //   .then((res) => {
-    //     this.Rgroups = res.data.groupList;
-    //     console.log(this.Rgroups);
-    //     for (var i = 0; i < this.Rgroups.length; i++) {
-    //       this.Rgroups[i]["src"] = res.data.groupProfileList[i].groupProfileImg;
-    //     }
-    //     this.recommendGroup = this.Rgroups.filter(
-    //       (group) => group.groupName.length > 4
-    //     );
-    //     this.recommendGroup = this.recommendGroup.slice(0, 6);
-    //     console.log(this.recommendGroup);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-    // this.$Axios
-    //   .create({
-    //     headers: {
-    //       "jwt-auth-token": storage.getItem("jwt-auth-token"),
-    //     },
-    //   })
-    //   .get("group")
-    //   .then((res) => {
-    //     console.log("created될때", res);
-    //     this.Rgroups = res.data.groupList;
-    //     for (var i = 0; i < this.Rgroups.length; i++) {
-    //       this.Rgroups[i]["src"] = res.data.groupProfileList[i].groupProfileImg;
-    //     }
-    //     // console.log(this.Rgroups);
-    //     this.AllGroup = this.Rgroups.slice(0, 12);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-  },
+
   methods: {
     toGroupDetail(g) {
       this.$router.push({ name: "GroupDetail", query: { groupId: g } });

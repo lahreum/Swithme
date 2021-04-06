@@ -18,13 +18,13 @@
           </v-row>
 
           <v-row justify="space-around" style="margin-bottom:50px;">
-            <v-btn icon color="black" x-large @click="ToGroupHome"
+            <v-btn icon color="black" x-large @click="toGroupHome"
               ><v-icon>mdi-home</v-icon> 홈</v-btn
             >
-            <v-btn icon color="black" x-large @click="ToGroupRanking"
+            <v-btn icon color="black" x-large @click="toGroupRanking"
               ><v-icon>mdi-poll</v-icon> 랭킹</v-btn
             >
-            <v-btn icon color="black" x-large @click="ToGroupAttendance"
+            <v-btn icon color="black" x-large @click="toGroupAttendance"
               ><v-icon>mdi-calendar-month</v-icon> 출석부</v-btn
             >
           </v-row>
@@ -203,14 +203,20 @@ export default {
     toGroupHome() {
       this.$router.push({
         name: "GroupDetail",
-        query: { groupId: this.groupInfo.groupId },
+        query: { groupId: this.$route.query.groupId },
       });
     },
-    ToGroupRanking() {
-      this.$router.push("/group-ranking");
+    toGroupRanking() {
+      this.$router.push({
+        name: "GroupRanking",
+        query: { groupId: this.$route.query.groupId },
+      });
     },
-    ToGroupAttendance() {
-      this.$router.push("/group-attendance");
+    toGroupAttendance() {
+      this.$router.push({
+        name: "GroupAttendance",
+        query: { groupId: this.$route.query.groupId },
+      });
     },
     getWeekly1() {
       this.weekly1 = new Date(

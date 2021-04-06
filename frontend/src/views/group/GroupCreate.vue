@@ -320,12 +320,13 @@ export default {
                   },
                 })
                 .put("group/profile-img", params)
-                .then((res) => {
-                  console.log("해치웠나??", res);
+                .then(() => {
+                  console.log("댄");
                   this.$router.push("/group");
                 });
+            } else {
+              this.$router.push("/group");
             }
-            this.$router.push("/group");
           });
       }
     },

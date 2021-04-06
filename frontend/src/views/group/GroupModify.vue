@@ -11,9 +11,10 @@
             <v-col style="margin-bottom:50px;" align="center">
               <v-img
                 class="groupImgUpload"
+                v-if="clickUpload === 0"
                 :src="'data:image/png;base64,' + imageUrl"
               ></v-img>
-
+              <v-img class="groupImgUpload" v-else :src="imageUrl"></v-img>
               <v-btn type="button" @click="onClickImageUpload"
                 >이미지 업로드</v-btn
               >
@@ -208,6 +209,7 @@ export default {
       minNum: 0,
       fileList: [],
       imageUrl: null,
+      clickUpload: 0,
       items: ["정보처리기사", "토익", "임용고시", "공무원"],
       radios: null,
       groupInfo: { groupGoalDate: "", groupGoalTitle: "" },
@@ -277,6 +279,7 @@ export default {
       const file = e.target.files[0]; // Get first index in files
       this.imageUrl = URL.createObjectURL(file); // Create File URL
       this.fileList = e.target.files;
+      this.clickUpload++;
     },
     groupModify() {
       if (this.groupGoalDate === "") {
@@ -314,10 +317,10 @@ export default {
 
           // console.log("파일리스트", this.fileList);
           // console.log("받아온그룹아이디", res.data.createdGroupId);
-          // console.log(this.fileList);
+          console.log("파일리스트", this.fileList);
           if (this.fileList.length !== 0) {
             var params = new FormData();
-            params.append("groupId", res.data.createdGroupId);
+            params.append("groupId", this.groupInfo.groupId);
             params.append("file", this.fileList[0]);
 
             // console.log(this.fileList[0]);
@@ -333,9 +336,11 @@ export default {
                 console.log("해치웠나??", res);
                 this.$router.push("/group");
               });
+          } else {
+            this.$router.push("/group");
           }
-          this.$router.push("/group");
-          console.log("수정한다", this.groupInfo);
+
+          // console.log("수정한다", this.groupInfo);
         });
     },
     deleteGroup() {
