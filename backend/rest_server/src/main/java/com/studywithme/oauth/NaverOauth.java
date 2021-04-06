@@ -1,10 +1,14 @@
 package com.studywithme.oauth;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -17,63 +21,65 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class GoogleOauth implements SocialOauth {
+public class NaverOauth implements SocialOauth {
 	@Autowired
 	private UserRepository userRepository;
 	
 	@Autowired
 	private JwtService jwtService;
 	
-	private final String clientId = "454862811715-f1k2ft42rkh2r02idn4q3mqdd8jmi6j9.apps.googleusercontent.com";
-	private final String clientSecret = "EQxkCbPjG_8TM4guXxgIsX6G";
-	private final String authUri = "https://accounts.google.com/o/oauth2/v2/auth";
-//	private final String redirectUri = "https://j4b103.p.ssafy.io/service/oauth/google/callback";
-	private final String redirectUri = "http://localhost:9999/oauth/google/callback";
-	private final String tokenUri = "https://oauth2.googleapis.com/token";
-	private final String tokenInfoUri = "https://oauth2.googleapis.com/tokeninfo";
+	private final String clientId = "Lo8etmLBsy1kZMSWYz0x";
+	private final String clientSecret = "lszt2PW8oK";
+	private final String authUri = "https://nid.naver.com/oauth2.0/authorize";
+//	private final String redirectUri = "https://j4b103.p.ssafy.io/service/oauth/naver/callback";
+	private final String redirectUri = "http://localhost:9999/oauth/naver/callback";
+	private final String tokenUri = "https://nid.naver.com/oauth2.0/token";
+	private final String tokenInfoUri = "https://openapi.naver.com/v1/nid/me";
 	
 	@Override
 	public String requestAuth() {
-		UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(authUri)
+		SecureRandom random = new SecureRandom();
+	    String state = new BigInteger(130, random).toString();
+	    
+	    UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(authUri)
 				.queryParam("client_id", clientId)
 				.queryParam("redirect_uri", redirectUri)
 				.queryParam("response_type", "code")
-				.queryParam("scope", "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile")
-				.queryParam("access_type", "offline")
-				.queryParam("prompt", "select_account");
+				.queryParam("state", state)
+			    .queryParam("auth_type", "reauthenticate");
 		
 		return uriBuilder.toUriString();
 	}
 
 	@Override
 	public Token requestToken(String code, String state) {
-		Map<String, String> params = new HashMap<>();
-		params.put("client_id", clientId);
-		params.put("client_secret", clientSecret);
-		params.put("code", code);
-		params.put("grant_type", "authorization_code");
-		params.put("redirect_uri", redirectUri);
+		UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(tokenUri)
+				.queryParam("client_id", clientId)
+				.queryParam("client_secret", clientSecret)
+				.queryParam("code", code)
+				.queryParam("grant_type", "authorization_code")
+				.queryParam("state", state);
 		
 		RestTemplate restTemplate = new RestTemplate();
-		Token token = restTemplate.postForObject(tokenUri, params, Token.class);
+		Token token = restTemplate.getForObject(uriBuilder.toUriString(), Token.class);
 		
 		return token;
 	}
 
 	@Override
 	public TokenInfo getTokenInfo(Token token) {
-		Map<String, String> params = new HashMap<>();
-		params.put("id_token", token.getIdToken());
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Authorization", "Bearer "+token.getAccessToken());
 		
 		RestTemplate restTemplate = new RestTemplate();
-		TokenInfo tokenInfo = restTemplate.postForObject(tokenInfoUri, params, TokenInfo.class);
-				
-		return tokenInfo;
+		ResponseEntity<TokenInfo> tokenInfo = restTemplate.exchange(tokenInfoUri, HttpMethod.GET, new HttpEntity<>(headers), TokenInfo.class);
+		
+		return tokenInfo.getBody();
 	}
 
 	@Override
 	public String checkUserAccount(String type, TokenInfo tokenInfo) {
-		Optional<UserInfo> optUserAccount = userRepository.findById(tokenInfo.getGoogleEmail());
+		Optional<UserInfo> optUserAccount = userRepository.findById(tokenInfo.getNaver().getNaverEmail());
 		String jwtToken, redirectUri;
 		
 		if(optUserAccount.isPresent()) {	// 계정이 이미 존재할 경우
@@ -81,7 +87,7 @@ public class GoogleOauth implements SocialOauth {
 			
 //			if(userType==null) return "https://j4b103.p.ssafy.io/no-access/invalid_account";	// 사이트 계정이 있을 경우
 			if(userType==null) return "http://localhost:8080/no-access/invalid_account";	// 사이트 계정이 있을 경우
-			else if(optUserAccount.get().getUserType().equals(type)) {	// Google로 가입한 계정일 경우
+			else if(userType.equals(type)) {	// Naver로 가입한 계정일 경우
 				jwtToken = jwtService.create(optUserAccount.get());
 //				redirectUri = "https://j4b103.p.ssafy.io/token?is-user=true&jwt-auth-token=" + jwtToken;
 				redirectUri = "http://localhost:8080/token?is-user=true&jwt-auth-token=" + jwtToken;
@@ -93,7 +99,7 @@ public class GoogleOauth implements SocialOauth {
 		
 		// 계정이 존재하지 않을 경우
 		UserInfo user = new UserInfo();
-		user.setUserId(tokenInfo.getGoogleEmail());
+		user.setUserId(tokenInfo.getNaver().getNaverEmail());
 		user.setUserType(type);
 		
 		jwtToken = jwtService.create(user);

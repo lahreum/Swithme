@@ -203,12 +203,15 @@
                   width="380"
                 ></v-img
               ></a>
-              <v-img
-                @click="dialog = false"
-                src="@/assets/img/naver_long.png"
-                width="380"
-                style="margin-bottom: 100px"
-              ></v-img>
+              <!-- <a href="https://j4b103.p.ssafy.io/service/oauth/naver"> -->
+              <a href="http://localhost:9999/oauth/naver">
+                <v-img
+                  @click="dialog = false"
+                  src="@/assets/img/naver_long.png"
+                  width="380"
+                  style="margin-bottom: 100px"
+                ></v-img>
+              </a>
               <div class="bottomOption">
                 <v-img
                   src="@/assets/img/pattern.jpg"
