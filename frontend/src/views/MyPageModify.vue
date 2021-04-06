@@ -18,7 +18,7 @@
         style="margin-top: 40px; margin-left: 40px;"
       >
         <profile-large
-          :src="require(`@/assets/img/avatars/iu.jpg`)"
+          :src="'data:image/png;base64,' + user.profileImg"
         ></profile-large>
         <v-btn
           class="btn-profile-edit"
@@ -36,22 +36,44 @@
       <div style="padding-left: 15%; padding-right: 15%; margin-top: 50px;">
         <!-- 닉네임 -->
         <v-row class="mypage-item" style="margin-top: 30px;">
-          <v-col class="mypage-key" cols="3">닉네임</v-col>
-          <v-col class="pa-0">
+          <v-col class="mypage-key" cols="3">
             <v-row no-gutters>
-              <v-col class="mypage-value pa-0" style="margin-right: 10px;">
-                <input-bar></input-bar>
-              </v-col>
-              <v-col class="pa-0" cols="2" align="center">
-                <div @click="isDuplicated" style="width: 100px; ">
-                  <app-btn-large
-                    :btnColor="'#673fb4'"
-                    :btnName="btnStatus"
-                    :btnNameColor="'white'"
-                  ></app-btn-large>
-                </div>
-              </v-col>
+              닉네임
             </v-row>
+            <v-row
+              no-gutters
+              v-show="warningNickname"
+              style="letter-spacing: -1px; color: red; font-size: 0.8rem; margin-top: 5px;"
+              >8자리 이하의 문자</v-row
+            >
+          </v-col>
+
+          <v-col class="pa-0">
+            <v-form ref="nickname">
+              <v-row no-gutters>
+                <v-col
+                  class="mypage-value pa-0"
+                  style="margin-right: 10px; margin-bottom: 10px;"
+                  @mouseover="warningNickname = true"
+                  @mouseleave="warningNickname = false"
+                >
+                  <input-bar
+                    :rules="nicknameRules"
+                    :placeholder="user.nickname"
+                    @pass-input="getNewNickname"
+                  ></input-bar>
+                </v-col>
+                <v-col class="pa-0" cols="2" align="center">
+                  <div @click="nicknameRequest" style="width: 100px; ">
+                    <app-btn-large
+                      :btnColor="'#673fb4'"
+                      :btnName="'저 장'"
+                      :btnNameColor="'white'"
+                    ></app-btn-large>
+                  </div>
+                </v-col>
+              </v-row>
+            </v-form>
           </v-col>
         </v-row>
         <hr style="border: 0; height: 1px; background-color: #d9d9d9; " />
@@ -59,36 +81,71 @@
         <v-row class="mypage-item" style="margin-top: 30px;">
           <v-col class="mypage-key" cols="3">아이디(이메일)</v-col>
           <v-col class="mypage-value">
-            {{ user.email }}
+            {{ user.userId }}
           </v-col>
         </v-row>
         <hr style="border: 0; height: 1px; background-color: #d9d9d9; " />
         <!-- 비밀번호 -->
         <v-row class="mypage-item" style="margin-top: 30px;">
-          <v-col class="mypage-key" cols="3">비밀번호</v-col>
+          <v-col class="mypage-key" cols="3">
+            <v-row no-gutters>비밀번호</v-row>
+            <v-row
+              no-gutters
+              v-show="warningPassword"
+              style="letter-spacing: -1px; color: red; font-size: 0.8rem; margin-top: 5px;"
+              >8자리 이상의 문자와 숫자</v-row
+            >
+            <v-row
+              no-gutters
+              v-show="warningPassword"
+              style="letter-spacing: -1px; font-weight: lighter; color: red; font-size: 0.8rem; margin-top: 5px;"
+              >(변경을 원하지 않을 시 비워두세요)</v-row
+            >
+          </v-col>
           <v-col class="pa-0">
             <v-row no-gutters>
-              <v-col class="mypage-value pa-0" style="margin-right: 10px;">
-                <input-bar></input-bar>
+              <v-col
+                class="mypage-value pa-0"
+                style="margin-right: 10px; margin-bottom: 10px;"
+                @mouseover="warningPassword = true"
+                @mouseleave="warningPassword = false"
+              >
+                <input-bar
+                  :type="'password'"
+                  :placeholder="'새로운 비밀번호'"
+                  :rules="passwordRules"
+                  @pass-input="getNewPassword"
+                ></input-bar>
               </v-col>
               <v-col class="pa-0" cols="2" align="center">
                 <div style="width: 100px; "></div>
               </v-col>
             </v-row>
-            <v-row no-gutters>
-              <v-col class="mypage-value pa-0" style="margin-right: 10px;">
-                <input-bar></input-bar>
-              </v-col>
-              <v-col class="pa-0" cols="2" align="center">
-                <div style="width: 100px; ">
-                  <app-btn-large
-                    :btnColor="'#673fb4'"
-                    :btnName="'저 장'"
-                    :btnNameColor="'white'"
-                  ></app-btn-large>
-                </div>
-              </v-col>
-            </v-row>
+            <v-form ref="password">
+              <v-row no-gutters>
+                <v-col
+                  class="mypage-value pa-0"
+                  style="margin-right: 10px;"
+                  @mouseover="warningPassword = true"
+                  @mouseleave="warningPassword = false"
+                >
+                  <input-bar
+                    :type="'password'"
+                    :rules="passwordConfirmRules"
+                    :placeholder="'비밀번호 확인'"
+                  ></input-bar>
+                </v-col>
+                <v-col class="pa-0" cols="2" align="center">
+                  <div style="width: 100px;" @click="passwordRequest">
+                    <app-btn-large
+                      :btnColor="'#673fb4'"
+                      :btnName="'저 장'"
+                      :btnNameColor="'white'"
+                    ></app-btn-large>
+                  </div>
+                </v-col>
+              </v-row>
+            </v-form>
           </v-col>
         </v-row>
         <hr style="border: 0; height: 1px; background-color: #d9d9d9; " />
@@ -98,10 +155,13 @@
           <v-col class="pa-0">
             <v-row no-gutters>
               <v-col class="mypage-value pa-0" style="margin-right: 10px;">
-                <input-bar></input-bar>
+                <input-bar
+                  :placeholder="this.user.message"
+                  @pass-input="getNewMessage"
+                ></input-bar>
               </v-col>
               <v-col class="pa-0" cols="2" align="center">
-                <div @click="isDuplicated" style="width: 100px; ">
+                <div @click="messageRequest" style="width: 100px; ">
                   <app-btn-large
                     :btnColor="'#673fb4'"
                     :btnName="'저 장'"
@@ -151,12 +211,29 @@ import ProfileLarge from '@/components/common/ProfileLarge.vue';
 import AppBtnLarge from '@/components/common/AppBtnLarge.vue';
 import InputBar from '@/components/common/InputBar.vue';
 
+const storage = window.sessionStorage;
 export default {
   components: {
     'middle-nav': MiddleNav,
     'profile-large': ProfileLarge,
     'app-btn-large': AppBtnLarge,
     'input-bar': InputBar,
+  },
+  created: function() {
+    this.$Axios
+      .create({
+        headers: { 'jwt-auth-token': storage.getItem('jwt-auth-token') },
+      })
+      .get('user')
+      .then((response) => {
+        this.user.nickname = response.data.data.userNickname;
+        this.user.userId = response.data.data.userId;
+        this.user.message = response.data.data.userMessage;
+        this.user.profileImg = response.data.profileImg;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   },
   data: function() {
     return {
@@ -167,12 +244,35 @@ export default {
         '두번째 문장입니다~! 두번째 문장입니다~! 두번째 문장입니다~! 두번째',
       ],
       user: {
-        nickname: 'default',
-        email: 'default@default.com',
-        message: 'default, default, default.',
+        nickname: '',
+        userId: '',
+        message: '',
+        profileImg: '',
       },
-      btnStatus: '중복확인',
+      new: {
+        nickname: '',
+        password: '',
+        message: '',
+        profileImg: '',
+      },
       warningClose: false,
+      warningPassword: false,
+      warningNickname: false,
+      nicknameRules: [
+        // (v) => v == null,
+        (v) => !!v || '닉네임을 입력해주세요.',
+        (v) => (v && v.length <= 8) || '닉네임은 8자 이하로 입력해주세요.',
+      ],
+      passwordRules: [
+        (v) => !!v || '비밀번호를 입력해주세요.',
+        (v) => (v && v.length >= 8) || '비밀번호는 8자 이상으로 입력해주세요.',
+        (v) => /(?=.*[A-Za-z])/.test(v) || '문자와 숫자를 꼭 포함해주세요.',
+        (v) => /(?=.*\d)/.test(v) || '문자와 숫자를 꼭 포함해주세요.',
+      ],
+      passwordConfirmRules: [
+        (v) => !!v || '비밀번호를 입력해주세요.',
+        (v) => v == this.new.password || '비밀번호와 일치해야해요.',
+      ],
     };
   },
   methods: {
@@ -182,8 +282,115 @@ export default {
     modifyPic: function() {
       alert('사진 수정!!!!!!');
     },
-    isDuplicated: function() {
-      this.btnStatus = '저 장';
+    getNewNickname(value) {
+      this.new.nickname = value;
+    },
+    getNewPassword(value) {
+      this.new.password = value;
+    },
+    getNewMessage(value) {
+      this.new.message = value;
+    },
+    getNewProfileImg(value) {
+      this.new.profileImg = value;
+    },
+    messageRequest() {
+      let params = new URLSearchParams();
+      params.append('message', this.new.message);
+
+      this.$Axios
+        .create({
+          headers: { 'jwt-auth-token': storage.getItem('jwt-auth-token') },
+        })
+        .put('user/message', params)
+        .then((response) => {
+          if (response.data.success) {
+            alert('새로운 상태메시지로 저장되었습니다.');
+            this.user.message = this.new.message;
+            // this.new.message = '';
+          } else {
+            alert('상태메시지 저장 중 문제가 발생했습니다.');
+          }
+        })
+        .catch((error) => {
+          alert('상태메시지 저장 중 문제가 발생했습니다.');
+          console.log(error);
+        });
+    },
+    passwordRequest() {
+      if (this.$refs.password.validate()) {
+        let params = new URLSearchParams();
+        params.append('newPassword', this.new.password);
+        params.append('userId', this.user.userId);
+
+        this.$Axios
+          .create({
+            headers: {
+              'jwt-auth-token': storage.getItem('jwt-auth-token'),
+            },
+          })
+          .put('user/password', params)
+          .then((response) => {
+            if (response.data.success) {
+              alert('새로운 비밀번호로 변경되었습니다.');
+            } else {
+              alert('비밀번호 변경 도중 오류가 발생했습니다.');
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+            alert('비밀번호 변경 도중 오류가 발생했습니다.');
+          });
+      }
+    },
+    nicknameRequest() {
+      if (this.$refs.nickname.validate()) {
+        this.$Axios
+          .get('user/nickname?userNickname=' + this.new.nickname)
+          .then((response) => {
+            if (!response.data.isPresent) {
+              console.log('여기까진 들어옵니다.');
+              this.nicknameRequest2();
+            } else {
+              alert('중복인 닉네임 입니다. 다른 닉네임을 입력해주세요.');
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+            alert('닉네임 변경 도중 오류가 발생했습니다. (1)');
+          });
+      }
+    },
+    nicknameRequest2() {
+      console.log(this.new.nickname);
+      let params = new URLSearchParams();
+      params.append('newNickname', this.new.nickname);
+
+      this.$Axios
+        .create({
+          headers: {
+            'jwt-auth-token': storage.getItem('jwt-auth-token'),
+          },
+        })
+        .put('user/nickname', params)
+        .then((response) => {
+          console.log('여기까지도 들어옵니다!');
+          if (response.data.success) {
+            alert('새로운 닉네임으로 변경되었습니다.');
+            this.user.nickname = this.new.nickname;
+            storage.setItem(
+              'jwt-auth-token',
+              response.headers['jwt-auth-token']
+            );
+            // this.new.nickname = '';
+          } else {
+            alert('닉네임 변경 도중 오류가 발생했습니다. (2)');
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          alert('닉네임 변경 도중 오류가 발생했습니다. (3)');
+        });
     },
   },
 };
