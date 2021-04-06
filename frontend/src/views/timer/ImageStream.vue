@@ -22,12 +22,12 @@ export default {
     // 제약 조건 정의
     let constaints = {
       width: { min: 640, max: 640 },
-      height: { min: 480, max: 480 },
+      height: { min: 402, max: 402 },
     };
 
     // canvas 크기 설정
     canvas.width = 640;
-    canvas.height = 480;
+    canvas.height = 402;
 
     // 클라이언트의 카메라를 녹화할 수 있도록 요청
     // 허용할 경우 MediaStream 객체를 얻어 Stream 가능
@@ -66,7 +66,7 @@ export default {
 
                   // 카운트가 1초가 되었을 경우 서버 요청
                   if (cnt != 1000) {
-                    // 이미지 출력
+                      // 이미지 출력
                     img.src = canvas.toDataURL();
 
                     // 0.005초씩 카운트
@@ -89,13 +89,13 @@ export default {
                           let isPerson = false;
                           let isPhone = false;
 
-                          for (let i = 0; i < detectResult.length; i++) {
-                            if (detectResult[i] == 'person') isPerson = true;
-                            else if (detectResult[i] == 'phone') {
-                              isPhone = true;
-                              this.phoneCnt++;
+                            for (let i = 0; i < detectResult.length; i++) {
+                              if (detectResult[i] == 'person') isPerson = true;
+                              else if (detectResult[i] == 'phone') {
+                                isPhone = true;
+                                this.phoneCnt++;
+                              }
                             }
-                          }
 
                           if (!isPerson) this.awayCnt++;
                           else {
