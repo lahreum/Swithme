@@ -1,25 +1,23 @@
 <template>
   <v-row class="info-container" no-gutters align="center">
     <div style="width: 250px;" align="center">
-      <profile-large
-        :src="require(`@/assets/img/avatars/iu.jpg`)"
-      ></profile-large>
+      <profile-large :src="`data:image/png;base64,${profile}`"></profile-large>
     </div>
     <div class="info-right">
       <v-row no-gutters style=" font-size: 1.2rem;">
-        <strong> {{ user.username }} </strong> 님, 오늘도 화이팅입니다!
+        <strong> {{ username }} </strong> 님, 오늘도 화이팅입니다!
       </v-row>
       <v-row
         no-gutters
         style="font-size: 4rem; font-weight: bold; margin-top: -10px; "
       >
-        {{ user.studyTime }}
+        {{ studyTime }}
       </v-row>
       <div>
         <progress-bar :progressValue="30"></progress-bar>
       </div>
       <v-row no-gutters style="font-size: 1.2rem; margin-top: 10px;">
-        "{{ user.myGoal }}"
+        "{{ message }}"
       </v-row>
     </div>
   </v-row>
@@ -30,6 +28,7 @@ import ProfileLarge from '@/components/common/ProfileLarge.vue';
 import ProgressBar from '@/components/common/ProgressBar.vue';
 
 export default {
+  props: ['profile', 'username', 'studyTime', 'message'],
   components: {
     'profile-large': ProfileLarge,
     'progress-bar': ProgressBar,
@@ -38,9 +37,7 @@ export default {
     return {
       user: {
         profile: '프로필 사진',
-        username: 'default',
         studyTime: '9:36:33',
-        myGoal: '오늘 걷지 않으면, 내일 뛰어야 한다.',
       },
     };
   },
