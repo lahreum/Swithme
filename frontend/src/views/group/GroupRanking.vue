@@ -65,7 +65,12 @@
                     >
                   </div>
 
-                  <v-row style="height:600px" justify="center" align="end">
+                  <v-row
+                    v-if="dayStudied"
+                    style="height:600px"
+                    justify="center"
+                    align="end"
+                  >
                     <v-col
                       cols="3"
                       style="text-align:center;background-color:#673fb4; height:45%"
@@ -103,6 +108,15 @@
                       </h2></v-col
                     >
                   </v-row>
+                  <v-row style="height:600px" justify="center" v-else>
+                    <v-col align-self="center" align="end" cols="5"
+                      ><span style="font-size:2rem">...이런</span
+                      ><span>이 날은 공부한사람이 없군요</span>
+                    </v-col>
+                    <v-col cols="5"
+                      ><v-img src="https://ifh.cc/g/yLHO83.png"></v-img
+                    ></v-col>
+                  </v-row>
                 </v-card>
               </v-tab-item>
               <v-tab-item>
@@ -122,7 +136,12 @@
                       ><v-icon>mdi-chevron-right</v-icon></v-btn
                     >
                   </div>
-                  <v-row style="height:600px" justify="center" align="end">
+                  <v-row
+                    v-if="weekStudied"
+                    style="height:600px"
+                    justify="center"
+                    align="end"
+                  >
                     <v-col
                       cols="3"
                       style="text-align:center;background-color:#673fb4; height:45%"
@@ -160,6 +179,15 @@
                       </h2></v-col
                     >
                   </v-row>
+                  <v-row style="height:600px" justify="center" v-else>
+                    <v-col align-self="center" align="end" cols="5"
+                      ><span style="font-size:2rem">...이런</span
+                      ><span>이 주는 공부한사람이 없군요</span>
+                    </v-col>
+                    <v-col cols="5"
+                      ><v-img src="https://ifh.cc/g/yLHO83.png"></v-img
+                    ></v-col>
+                  </v-row>
                 </v-card> </v-tab-item
               ><v-tab-item>
                 <v-card>
@@ -174,7 +202,12 @@
                       ><v-icon>mdi-chevron-right</v-icon></v-btn
                     >
                   </div>
-                  <v-row style="height:600px" justify="center" align="end">
+                  <v-row
+                    v-if="monthStudied"
+                    style="height:600px"
+                    justify="center"
+                    align="end"
+                  >
                     <v-col
                       cols="3"
                       style="text-align:center;background-color:#673fb4; height:45%"
@@ -211,6 +244,15 @@
                         {{ Month1stTo3rd[2].todayStudyTime }}
                       </h2></v-col
                     >
+                  </v-row>
+                  <v-row style="height:600px" justify="center" v-else>
+                    <v-col align-self="center" align="end" cols="5"
+                      ><span style="font-size:2rem">...이런</span
+                      ><span>이 달은 공부한사람이 없군요</span>
+                    </v-col>
+                    <v-col cols="5"
+                      ><v-img src="https://ifh.cc/g/yLHO83.png"></v-img
+                    ></v-col>
                   </v-row>
                 </v-card>
               </v-tab-item>
@@ -450,6 +492,41 @@ export default {
             }
           }
         });
+    },
+  },
+  computed: {
+    dayStudied() {
+      if (
+        this.Day1stTo3rd[0].todayStudyTime === "00:00:00" &&
+        this.Day1stTo3rd[1].todayStudyTime === "00:00:00" &&
+        this.Day1stTo3rd[2].todayStudyTime === "00:00:00"
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    weekStudied() {
+      if (
+        this.Week1stTo3rd[0].todayStudyTime === "00:00:00" &&
+        this.Week1stTo3rd[1].todayStudyTime === "00:00:00" &&
+        this.Week1stTo3rd[2].todayStudyTime === "00:00:00"
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    monthStudied() {
+      if (
+        this.Month1stTo3rd[0].todayStudyTime === "00:00:00" &&
+        this.Month1stTo3rd[1].todayStudyTime === "00:00:00" &&
+        this.Month1stTo3rd[2].todayStudyTime === "00:00:00"
+      ) {
+        return false;
+      } else {
+        return true;
+      }
     },
   },
   created() {
