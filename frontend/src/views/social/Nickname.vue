@@ -46,25 +46,26 @@
 </template>
 
 <script>
-import axios from 'axios';
-import InputBar from '@/components/common/InputBar.vue';
-import AppBtnMiddle from '@/components/common/AppBtnMiddle.vue';
+import axios from "axios";
+import InputBar from "@/components/common/InputBar.vue";
+import AppBtnMiddle from "@/components/common/AppBtnMiddle.vue";
 
 const storage = window.sessionStorage;
 
 export default {
   components: {
-    'input-bar': InputBar,
-    'app-btn-middle': AppBtnMiddle,
+    "input-bar": InputBar,
+    "app-btn-middle": AppBtnMiddle,
   },
   data() {
     return {
       tmpToken: this.$route.params.tmpToken,
-      nickname: '',
+      userInfo: this.$route.params.userInfo,
+      nickname: "",
       nicknameRules: [
         // (v) => v == null,
-        (v) => !!v || '닉네임을 입력해주세요.',
-        (v) => (v && v.length <= 8) || '닉네임은 8자 이하로 입력해주세요.',
+        (v) => !!v || "닉네임을 입력해주세요.",
+        (v) => (v && v.length <= 8) || "닉네임은 8자 이하로 입력해주세요.",
       ],
     };
   },
@@ -72,10 +73,10 @@ export default {
     setNickname() {
       if (this.$refs.nickname.validate()) {
         axios
-          .get('user/nickname?userNickname=' + this.nickname)
+          .get("user/nickname?userNickname=" + this.nickname)
           .then((response) => {
             if (response.data.isPresent) {
-              alert('이미 존재하는 닉네임입니다. 다시 입력해주세요.');
+              alert("이미 존재하는 닉네임입니다. 다시 입력해주세요.");
             } else {
               this.setNickname2();
             }
@@ -84,20 +85,33 @@ export default {
             console.log(error);
           });
       } else {
-        alert('닉네임은 8글자 이내로 작성해주세요.');
+        alert("닉네임은 8글자 이내로 작성해주세요.");
       }
     },
     setNickname2() {
       axios
-        .post('user/signup-social', {
+        .post("user/signup-social", {
           nickname: this.nickname,
           token: this.tmpToken,
         })
         .then((response) => {
           if (response.data.success) {
-            alert('닉네임 설정이 완료되었습니다. 환영해요!');
-            storage.setItem('jwt-auth-token', response.data.token);
-            this.$router.push('/');
+            alert("닉네임 설정이 완료되었습니다. 환영해요!");
+            storage.setItem("jwt-auth-token", response.data.token);
+            this.$Axios
+              .create({
+                headers: {
+                  "jwt-auth-token": storage.getItem("jwt-auth-token"),
+                },
+              })
+              .get("user")
+              .then((res) => {
+                this.userInfo = res.data.data;
+                this.userInfo["profileImg"] = res.data.profileImg;
+                this.userInfo["isLogin"] = true;
+                this.$store.commit("LOGIN", this.userInfo);
+              });
+            this.$router.push("/");
           }
         })
         .catch((error) => {

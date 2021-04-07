@@ -57,10 +57,20 @@
             <v-btn icon color="black" x-large @click="toGroupHome"
               ><v-icon>mdi-home</v-icon> 홈</v-btn
             >
-            <v-btn icon color="black" x-large @click="toGroupRanking"
+            <v-btn
+              :disabled="!nowUser"
+              icon
+              color="black"
+              x-large
+              @click="toGroupRanking"
               ><v-icon>mdi-poll</v-icon> 랭킹</v-btn
             >
-            <v-btn icon color="black" x-large @click="toGroupAttendance"
+            <v-btn
+              :disabled="!nowUser"
+              icon
+              color="black"
+              x-large
+              @click="toGroupAttendance"
               ><v-icon>mdi-calendar-month</v-icon> 출석부</v-btn
             >
           </v-row>
