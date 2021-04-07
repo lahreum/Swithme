@@ -109,7 +109,7 @@
               :key="'notStudying' + idx"
               ><div class="GroupStudyUser">
                 <ProfileStudying
-                  :src="'data:image/png;base64,' + grouper.profileImg"
+                  :src="grouper.profileImg"
                   :IsStudying="grouper.studying"
                 />
                 <h2 style="margin:30px 0 0 0">{{ grouper.nickname }}</h2>
@@ -129,6 +129,7 @@
 import ProfileStudying from "@/components/common/ProfileStudying.vue";
 import MiddleNav from "@/components/include/MiddleNav.vue";
 import date from "@/date.js";
+import studyTime from "@/changeSec.js";
 import axios from "axios";
 const storage = window.sessionStorage;
 
@@ -167,7 +168,10 @@ export default {
         this.groupers = res.data.groupMemberList;
         this.loginNickname = this.$store.getters.getUserNickname;
         for (var i = 0; i < this.groupers.length; i++) {
-          if (this.groupers[i].Studying) {
+          this.groupers[i].todayStudyTime = studyTime(
+            this.groupers[i].todayStudyTime
+          );
+          if (this.groupers[i].studying) {
             this.studying.push(this.groupers[i]);
           } else {
             this.notStudying.push(this.groupers[i]);
@@ -253,7 +257,7 @@ export default {
               this.studying = [];
               this.notStudying = [];
               for (var i = 0; i < this.groupers.length; i++) {
-                if (this.groupers[i].Studying) {
+                if (this.groupers[i].studying) {
                   this.studying.push(this.groupers[i]);
                 } else {
                   this.notStudying.push(this.groupers[i]);
@@ -287,7 +291,7 @@ export default {
               this.studying = [];
               this.notStudying = [];
               for (var i = 0; i < this.groupers.length; i++) {
-                if (this.groupers[i].Studying) {
+                if (this.groupers[i].studying) {
                   this.studying.push(this.groupers[i]);
                 } else {
                   this.notStudying.push(this.groupers[i]);
