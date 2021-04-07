@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@fortawesome/free-regular-svg-icons": "^5.15.3",
+    "aos": "^2.3.4",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "global": "^4.4.0",

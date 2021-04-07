@@ -1,4 +1,17 @@
 <template>
+  <div>
+    <v-dialog
+      v-model="dialog"
+      width="800px">
+      <v-carousel>
+        <v-carousel-item
+          v-for="tutorial in tutorials"
+          :key="tutorial.idx"
+          :src="tutorial.src"
+        >
+        </v-carousel-item>
+      </v-carousel>
+    </v-dialog>
   <div style="width:100%;">
     <v-container class="outbox">
       <v-row no-gutters>
@@ -53,6 +66,7 @@
       </v-row>
     </v-container>
   </div>
+  </div>
 </template>
 
 <script>
@@ -72,6 +86,24 @@ export default {
   },
   data: function() {
     return{
+      dialog: false,
+      tutorials:[
+        {
+          idx: 1,
+          src: '@/assets/img/study_tutorial1.png',
+          content: "불필요한 것에 신경쓰지 않고 공부만 할 수 있습니다. SWITHME는 얼굴과 행동,사물을 분석하여 집중/비집중 여부를 파악해주니까요! 하단에는 집중한 시간이 표시됩니다."
+        },
+        {
+          idx: 2,
+          src: '@/assets/img/study_tutorial2.png',
+          content: "필요하다면 TO DO LIST를 활용해보세요. 상단에서 TO DO LIST를 추가하고, 완료하거나 삭제할 수 있습니다. 지난 투두리스트는 '나의학습'에서 확인할 수 있습니다."
+        },
+        {
+          idx: 3,
+          src: '@/assets/img/study_tutorial3.png',
+          content: "하단에는 투두리스트를 기준으로 현재 진행률이 표시됩니다. 학습을 종료하고 싶다면 그만하기 버튼을 눌러주세요. 그만하기 버튼을 누르면 메인 홈으로 돌아갑니다."
+        }
+      ],
       isStudying: false,
       user: {},
       todoList:[],
@@ -95,10 +127,8 @@ export default {
   created(){
     this.getUserInfo();
     this.getUserTimer();
-    this.getTodoList();
     this.startTimer();
-    
-    
+    this.getTodoList();
   },
   methods: {
     getUserInfo() {
@@ -189,7 +219,7 @@ export default {
       })
     },
     openTutorial(){
-      alert('open Tutorial!'); 
+      this.dialog = true;
     },
     startTimer() {   // 타이머 시작 -> 카메라 on일때만 start 하는 걸로 변경필요. 새로고침하면 정보 사라지는데 어떡하지? vuex에 담아두기???? 
       console.log('start timer!');
@@ -337,17 +367,13 @@ export default {
       ];
 
       for(var i=0; i< interruption.length; i++) {
-        if(interruption[i] === 0) continue; // 딴짓한게 없으면 보내지 않음
+        if(interruption[i] == 0) continue; // 딴짓한게 없으면 보내지 않음
 
         let params = new URLSearchParams();
         params.append('action', i);       // 딴짓의 종류(1:휴대폰, 2:자리비움, 3:잡담, 4:졸음)
         params.append('datetime', day);   
         params.append('notStudyTime', interruption[i]); // 딴짓한 누적 시간
 
-        // console.log('action is = ', i);
-        // console.log('actdatetimeion is = ', day);
-        console.log('notStudyTime is = ' + interruption[i]);
-        
         this.$Axios
         .create({
           headers: {
@@ -365,15 +391,9 @@ export default {
         .catch((error)=>{
           console.log(error);
         })
-
       }
-      ``
       //방해 요인 시간을 0으로 만듬
-      this.$store.mutations.InitializeInterruption;
-      console.log(`${this.$store.state.phoneTime}`);
-      console.log(`${this.$store.state.awayTime}`);
-      console.log(`${this.$store.state.talkTime}`);
-      console.log(`${this.$store.state.sleepTime}`);
+      // this.$store.commit("InitializeInterruption");
     },
     updateTodoList(value){
       if(value) {   // todoList 추가되었으면 다시 getTodoList()

@@ -8,9 +8,12 @@ import vuetify from './plugins/vuetify';
 import VueFullPage from 'vue-fullpage.js';
 import Carousel3d from 'vue-carousel-3d';
 import axios from 'axios';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 Vue.prototype.$Axios = axios; // this.$Axios 로 전역으로 사용 가능
 Vue.config.productionTip = false;
+AOS.init();
 
 Vue.use(VueRouter);
 Vue.use(VueFullPage);

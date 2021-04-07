@@ -43,15 +43,14 @@ export default {
       this.changed = false;
     }
   },
+  created(){
+    this.todoList = this.todoList || [];
+  },
   mounted() {
     // const list = JSON.parse(localStorage.getItem('list'));
     // this.list = list || [];
+    this.UpdateProgress();
     // this.UpdateProgress();
-    this.todoList = this.todoList || [];
-    this.UpdateProgress();
-  },
-  created() {
-    this.UpdateProgress();
   },
   methods: {
     addTodo(message) {
@@ -153,6 +152,8 @@ export default {
         }
       }
       this.progress = parseInt((100 * doneTodos) / lengthList);
+      this.changed = true;
+      console.log('updateProgress 하면서 부모로 emit 보냄');
     },
   },
 };
