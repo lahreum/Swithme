@@ -15,6 +15,12 @@ export default {
     state.categoryId = payload.value;
     state.categoryName = payload.name;
   },
+  FETCHSTUDYING(state) {
+    state.user.isStudying = true;
+  },
+  STOPSTUDYING(state) {
+    state.user.isStudying = false;
+  },
   userInit(state) {
     state.user = {};
   },
