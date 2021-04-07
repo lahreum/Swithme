@@ -13,6 +13,7 @@ export default {
       awayCnt: 0,
       phoneCnt: 0,
       sleepCnt: 0,
+      busyCnt: 0,
     };
   },
   mounted() {
@@ -89,30 +90,42 @@ export default {
                           let isPerson = false;
                           let isPhone = false;
                           let isFace = false;
+                          let personNum = 0;
+                          let faceNum = 0;
 
                           for (let i = 0; i < detectResult.length; i++) {
-                            if (detectResult[i] == 'person') isPerson = true;
-                            else if (detectResult[i] == 'phone') {
+                            if (detectResult[i] == 'person') {
+                              isPerson = true;
+                              personNum++;
+                            } else if (detectResult[i] == 'phone')
                               isPhone = true;
-                              this.phoneCnt++;
-                            } else if (detectResult[i] == 'face') isFace = true;
+                            else if (detectResult[i] == 'face') {
+                              isFace = true;
+                              faceNum++;
+                            }
                           }
 
                           if (!isPerson) this.awayCnt++;
                           else {
-                            if (this.awayCnt >= 20) this.$emit('resumeTimer');
+                            if (this.awayCnt >= 5) this.$emit('resumeTimer');
                             this.awayCnt = 0;
                           }
 
                           if (!isPhone) {
                             if (this.phoneCnt >= 5) this.$emit('resumeTimer');
                             this.phoneCnt = 0;
-                          }
+                          } else this.phoneCnt++;
 
                           if (!isFace) this.sleepCnt++;
                           else {
                             if (this.sleepCnt >= 5) this.$emit('resumeTimer');
                             this.sleepCnt = 0;
+                          }
+
+                          if (personNum > 1 || faceNum > 1) this.busyCnt++;
+                          else if (personNum == 1 && faceNum == 1) {
+                            if (this.busyCnt >= 5) this.$emit('resumeTimer');
+                            this.busyCnt = 0;
                           }
 
                           console.log(
@@ -121,14 +134,16 @@ export default {
                               ', 핸드폰 카운트: ' +
                               this.phoneCnt +
                               ', 졸음 카운트: ' +
-                              this.sleepCnt
+                              this.sleepCnt +
+                              ', 바쁨 카운트: ' +
+                              this.busyCnt
                           );
 
-                          if (this.awayCnt == 20) {
-                            // 20초동안 자리를 비워 타이머 중지
+                          if (this.awayCnt == 5) {
+                            // 5초동안 자리를 비워 타이머 중지
                             this.$store.commit('setAwayTime');
                             this.$emit('pauseTimer');
-                          } else if (this.awayCnt > 20) {
+                          } else if (this.awayCnt > 5) {
                             // 이후부터는 자리비움 시간 누적
                             this.$store.commit('setAwayTime');
                           }
@@ -152,6 +167,15 @@ export default {
                             this.$store.commit('setSleepTime');
                           }
 
+                          if (this.busyCnt == 5) {
+                            // 5초동안 바빠 타이머 중지
+                            this.$store.commit('setBusyTime');
+                            this.$emit('pauseTimer');
+                          } else if (this.busyCnt > 5) {
+                            // 이후부터는 바쁨 시간 누적
+                            this.$store.commit('setBusyTime');
+                          }
+
                           console.log(
                             '자리비움 누적 시간: ' +
                               this.$store.getters.getAwayTime
@@ -165,6 +189,10 @@ export default {
                           console.log(
                             '졸음 누적 시간: ' +
                               this.$store.getters.getSleepTime
+                          );
+
+                          console.log(
+                            '바쁨 누적 시간: ' + this.$store.getters.getBusyTime
                           );
 
                           // 이미지 출력

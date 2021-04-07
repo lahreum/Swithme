@@ -16,6 +16,7 @@ const state = {
   awayTime: 0,
   phoneTime: 0,
   sleepTime: 0,
+  busyTime: 0,
 };
 
 export default new Vuex.Store({
