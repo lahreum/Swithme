@@ -12,6 +12,7 @@ export default {
       interval: null,
       awayCnt: 0,
       phoneCnt: 0,
+      sleepCnt: 0,
     };
   },
   mounted() {
@@ -87,13 +88,14 @@ export default {
                           let detectResult = response.data;
                           let isPerson = false;
                           let isPhone = false;
+                          let isFace = false;
 
                           for (let i = 0; i < detectResult.length; i++) {
                             if (detectResult[i] == 'person') isPerson = true;
                             else if (detectResult[i] == 'phone') {
                               isPhone = true;
                               this.phoneCnt++;
-                            }
+                            } else if (detectResult[i] == 'face') isFace = true;
                           }
 
                           if (!isPerson) this.awayCnt++;
@@ -107,11 +109,19 @@ export default {
                             this.phoneCnt = 0;
                           }
 
+                          if (!isFace) this.sleepCnt++;
+                          else {
+                            if (this.sleepCnt >= 5) this.$emit('resumeTimer');
+                            this.sleepCnt = 0;
+                          }
+
                           console.log(
                             '자리비움 카운트: ' +
                               this.awayCnt +
-                              ' 핸드폰 카운트: ' +
-                              this.phoneCnt
+                              ', 핸드폰 카운트: ' +
+                              this.phoneCnt +
+                              ', 졸음 카운트: ' +
+                              this.sleepCnt
                           );
 
                           if (this.awayCnt == 20) {
@@ -133,6 +143,15 @@ export default {
                             this.$store.commit('setPhoneTime');
                           }
 
+                          if (this.sleepCnt == 5) {
+                            // 5초동안 졸아 타이머 중지
+                            this.$store.commit('setSleepTime');
+                            this.$emit('pauseTimer');
+                          } else if (this.sleepCnt > 5) {
+                            // 이후부터는 졸음 시간 누적
+                            this.$store.commit('setSleepTime');
+                          }
+
                           console.log(
                             '자리비움 누적 시간: ' +
                               this.$store.getters.getAwayTime
@@ -141,6 +160,11 @@ export default {
                           console.log(
                             '핸드폰 누적 시간: ' +
                               this.$store.getters.getPhoneTime
+                          );
+
+                          console.log(
+                            '졸음 누적 시간: ' +
+                              this.$store.getters.getSleepTime
                           );
 
                           // 이미지 출력

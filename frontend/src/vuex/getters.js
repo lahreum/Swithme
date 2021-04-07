@@ -21,4 +21,7 @@ export default {
   getPhoneTime(state) {
     return state.phoneTime;
   },
+  getSleepTime(state) {
+    return state.sleepTime;
+  },
 };

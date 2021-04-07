@@ -24,4 +24,7 @@ export default {
   setPhoneTime(state) {
     state.phoneTime++;
   },
+  setSleepTime(state) {
+    state.sleepTime++;
+  },
 };
