@@ -23,7 +23,7 @@ import ProgressBar from '@/components/common/ProgressBar.vue';
 const storage = window.sessionStorage;
 
 export default {
-  props:["todoList", "date"],
+  props:["todoList"],
   components: {
     TodoInput,
     Todo,

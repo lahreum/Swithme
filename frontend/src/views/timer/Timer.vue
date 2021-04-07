@@ -37,7 +37,7 @@
             </div>
             <v-card style="border-radius:60%;">
               <p class="date">{{ curruentDate }}</p>
-              <TodoList :todoList="todoList" :date="curruentDate"/>
+              <TodoList :todoList="todoList" />
               <br />
               <div @click="stopStudy" style="text-align:center;">
                 <AppBtnLarge
@@ -202,6 +202,7 @@ export default {
     stopTimer() {
       this.running = false; // 타이머가 멈춤
       this.changeStatusToNotStudy();
+      
       clearInterval(this.started);    // 반복 명령 종료
     },
     runningTimer(){   // 타이머 시작
@@ -250,6 +251,7 @@ export default {
       this.$router.push('/');
       this.saveHourlyTime();      // 방해요소는 날짜 바뀔때랑 공부 종료할때 보내면 되고, 각 방해요소별로 보내야함.
       this.changeStatusToNotStudy();
+      this.saveInterruption();
       // 비디오 끄기
       // 지금까지 공부한 시간 DB에 저장
     },
@@ -285,7 +287,6 @@ export default {
         if(res.data.success) {
           console.log('비공부상태로 변경 성공');
           this.$store.commit("STOPSTUDYING");
-          console.log(this.$store.commit("getUserIsStudying"));
         } else {
           console.log('비공부상태로 변경 실패');
         }
@@ -324,6 +325,53 @@ export default {
         console.log(error);
       })
     },
+    saveInterruption() {
+      let today = new Date();
+      let day = date.dateFunc(today);
+      
+      var interruption = [
+        `${this.$store.state.phoneTime}`,
+        `${this.$store.state.awayTime}`,
+        `${this.$store.state.talkTime}`,
+        `${this.$store.state.sleepTime}`
+      ];
+
+      for(var i=0; i< interruption.length; i++) {
+        let params = new URLSearchParams();
+        params.append('action', i);       // 딴짓의 종류(1:휴대폰, 2:자리비움, 3:잡담, 4:졸음)
+        params.append('datetime', day);   
+        params.append('notStudyTime', interruption[i]); // 딴짓한 누적 시간
+
+        // console.log('action is = ', i);
+        // console.log('actdatetimeion is = ', day);
+        console.log('notStudyTime is = ' + interruption[i]);
+        
+        this.$Axios
+        .create({
+          headers: {
+            "jwt-auth-token": storage.getItem("jwt-auth-token"),
+          },
+        })
+        .post('timer/not-study-time', params)
+        .then((res)=>{
+          if(res.data.success) {
+            console.log("딴 짓한 시간 잘 저장됨");
+          } else {
+            console.log('딴 짓한 시간이 저장되지 않음');
+          }
+        })
+        .catch((error)=>{
+          console.log(error);
+        })
+
+      }
+      //방해 요인 시간을 0으로 만듬
+      this.$store.mutations.InitializeInterruption;
+      console.log(`${this.$store.state.phoneTime}`);
+      console.log(`${this.$store.state.awayTime}`);
+      console.log(`${this.$store.state.talkTime}`);
+      console.log(`${this.$store.state.sleepTime}`);
+    }
   },
 };
 </script>
