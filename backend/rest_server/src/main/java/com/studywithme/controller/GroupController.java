@@ -280,8 +280,7 @@ public class GroupController {
 		
 		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		Optional<GroupInfo> group=groupRepository.findById(groupId);
-		Optional<GroupMember> groupMember=groupMemberRepository.findByGroupMemberUserNicknameAndGroupMemberGroupId(nickname, groupId);
-		if(user.isPresent()&&group.isPresent()&&groupMember.isPresent()) {
+		if(user.isPresent()&&group.isPresent()) {
 			List<UserDto> userList=new ArrayList<>();
 			
 			switch(range) {
@@ -302,6 +301,7 @@ public class GroupController {
 					else
 						userDto.setTodayStudyTime(0);
 					userList.add(userDto);
+					System.out.println(userDto.toString());
 				}
 				break;
 			case "week":
@@ -353,7 +353,7 @@ public class GroupController {
 			int max=userList.size();
 			if(max>3)
 				max=3;
-			for(int i=0;i<3;i++)
+			for(int i=0;i<max;i++)
 				userListTop3.add(userList.get(i));
 			result.clear();
 			result.put("rankingList",userListTop3);
