@@ -222,27 +222,27 @@
 </template>
 
 <script>
-import MiddleNav from '../components/include/MiddleNav.vue';
-import ProfileLarge from '@/components/common/ProfileLarge.vue';
-import AppBtnLarge from '@/components/common/AppBtnLarge.vue';
-import InputBar from '@/components/common/InputBar.vue';
+import MiddleNav from "../components/include/MiddleNav.vue";
+import ProfileLarge from "@/components/common/ProfileLarge.vue";
+import AppBtnLarge from "@/components/common/AppBtnLarge.vue";
+import InputBar from "@/components/common/InputBar.vue";
 
 const storage = window.sessionStorage;
 export default {
   components: {
-    'middle-nav': MiddleNav,
-    'profile-large': ProfileLarge,
-    'app-btn-large': AppBtnLarge,
-    'input-bar': InputBar,
+    "middle-nav": MiddleNav,
+    "profile-large": ProfileLarge,
+    "app-btn-large": AppBtnLarge,
+    "input-bar": InputBar,
   },
   created: function() {
     this.$Axios
       .create({
-        headers: { 'jwt-auth-token': storage.getItem('jwt-auth-token') },
+        headers: { "jwt-auth-token": storage.getItem("jwt-auth-token") },
       })
-      .get('user')
+      .get("user")
       .then((response) => {
-        console.log('USER-INFO: ', response);
+        console.log("USER-INFO: ", response);
         this.user.nickname = response.data.data.userNickname;
         this.user.userId = response.data.data.userId;
         this.user.message = response.data.data.userMessage;
@@ -266,26 +266,26 @@ export default {
   data: function() {
     return {
       navInfo: [
-        'sample1.jpg',
-        '마이페이지',
-        '첫번째 문장입니다. 첫번째 문장입니다. 첫번째 문장입',
-        '두번째 문장입니다~! 두번째 문장입니다~! 두번째 문장입니다~! 두번째',
+        "sample1.jpg",
+        "마이페이지",
+        "첫번째 문장입니다. 첫번째 문장입니다. 첫번째 문장입",
+        "두번째 문장입니다~! 두번째 문장입니다~! 두번째 문장입니다~! 두번째",
       ],
       user: {
-        nickname: '',
-        userId: '',
-        message: '',
-        profileImg: '',
-        userType: '',
+        nickname: "",
+        userId: "",
+        message: "",
+        profileImg: "",
+        userType: "",
       },
       new: {
-        nickname: '',
-        password: '',
-        message: '',
-        profileImg: '',
+        nickname: "",
+        password: "",
+        message: "",
+        profileImg: "",
       },
       fileList: [],
-      tmpProfileImg: '',
+      tmpProfileImg: "",
       warningClose: false,
       warningPassword: false,
       warningNickname: false,
@@ -293,24 +293,24 @@ export default {
       isSocial: false,
       nicknameRules: [
         // (v) => v == null,
-        (v) => !!v || '닉네임을 입력해주세요.',
-        (v) => (v && v.length <= 8) || '닉네임은 8자 이하로 입력해주세요.',
+        (v) => !!v || "닉네임을 입력해주세요.",
+        (v) => (v && v.length <= 8) || "닉네임은 8자 이하로 입력해주세요.",
       ],
       passwordRules: [
-        (v) => !!v || '비밀번호를 입력해주세요.',
-        (v) => (v && v.length >= 8) || '비밀번호는 8자 이상으로 입력해주세요.',
-        (v) => /(?=.*[A-Za-z])/.test(v) || '문자와 숫자를 꼭 포함해주세요.',
-        (v) => /(?=.*\d)/.test(v) || '문자와 숫자를 꼭 포함해주세요.',
+        (v) => !!v || "비밀번호를 입력해주세요.",
+        (v) => (v && v.length >= 8) || "비밀번호는 8자 이상으로 입력해주세요.",
+        (v) => /(?=.*[A-Za-z])/.test(v) || "문자와 숫자를 꼭 포함해주세요.",
+        (v) => /(?=.*\d)/.test(v) || "문자와 숫자를 꼭 포함해주세요.",
       ],
       passwordConfirmRules: [
-        (v) => !!v || '비밀번호를 입력해주세요.',
-        (v) => v == this.new.password || '비밀번호와 일치해야해요.',
+        (v) => !!v || "비밀번호를 입력해주세요.",
+        (v) => v == this.new.password || "비밀번호와 일치해야해요.",
       ],
     };
   },
   methods: {
     goRouting: function() {
-      this.$router.push('/my-page');
+      this.$router.push("/my-page");
     },
 
     getNewNickname(value) {
@@ -327,25 +327,25 @@ export default {
     },
     messageRequest() {
       let params = new URLSearchParams();
-      params.append('message', this.new.message);
+      params.append("message", this.new.message);
 
       this.$Axios
         .create({
-          headers: { 'jwt-auth-token': storage.getItem('jwt-auth-token') },
+          headers: { "jwt-auth-token": storage.getItem("jwt-auth-token") },
         })
-        .put('user/message', params)
+        .put("user/message", params)
         .then((response) => {
           if (response.data.success) {
-            alert('새로운 상태메시지로 저장되었습니다.');
+            alert("새로운 상태메시지로 저장되었습니다.");
             this.user.message = this.new.message;
             window.location.reload();
             // this.new.message = '';
           } else {
-            alert('상태메시지 저장 중 문제가 발생했습니다.');
+            alert("상태메시지 저장 중 문제가 발생했습니다.");
           }
         })
         .catch((error) => {
-          alert('상태메시지 저장 중 문제가 발생했습니다.');
+          alert("상태메시지 저장 중 문제가 발생했습니다.");
           console.log(error);
         });
     },
@@ -353,27 +353,27 @@ export default {
       if (!this.isSocial) {
         if (this.$refs.password.validate()) {
           let params = new URLSearchParams();
-          params.append('newPassword', this.new.password);
-          params.append('userId', this.user.userId);
+          params.append("newPassword", this.new.password);
+          params.append("userId", this.user.userId);
 
           this.$Axios
             .create({
               headers: {
-                'jwt-auth-token': storage.getItem('jwt-auth-token'),
+                "jwt-auth-token": storage.getItem("jwt-auth-token"),
               },
             })
-            .put('user/password', params)
+            .put("user/password", params)
             .then((response) => {
               if (response.data.success) {
-                alert('새로운 비밀번호로 변경되었습니다.');
+                alert("새로운 비밀번호로 변경되었습니다.");
                 window.location.reload();
               } else {
-                alert('비밀번호 변경 도중 오류가 발생했습니다.');
+                alert("비밀번호 변경 도중 오류가 발생했습니다.");
               }
             })
             .catch((error) => {
               console.log(error);
-              alert('비밀번호 변경 도중 오류가 발생했습니다.');
+              alert("비밀번호 변경 도중 오류가 발생했습니다.");
             });
         }
       }
@@ -381,51 +381,51 @@ export default {
     nicknameRequest() {
       if (this.$refs.nickname.validate()) {
         this.$Axios
-          .get('user/nickname?userNickname=' + this.new.nickname)
+          .get("user/nickname?userNickname=" + this.new.nickname)
           .then((response) => {
             if (!response.data.isPresent) {
-              console.log('여기까진 들어옵니다.');
+              console.log("여기까진 들어옵니다.");
               this.nicknameRequest2();
             } else {
-              alert('중복인 닉네임 입니다. 다른 닉네임을 입력해주세요.');
+              alert("중복인 닉네임 입니다. 다른 닉네임을 입력해주세요.");
             }
           })
           .catch((error) => {
             console.log(error);
-            alert('닉네임 변경 도중 오류가 발생했습니다. (1)');
+            alert("닉네임 변경 도중 오류가 발생했습니다. (1)");
           });
       }
     },
     nicknameRequest2() {
       console.log(this.new.nickname);
       let params = new URLSearchParams();
-      params.append('newNickname', this.new.nickname);
+      params.append("newNickname", this.new.nickname);
 
       this.$Axios
         .create({
           headers: {
-            'jwt-auth-token': storage.getItem('jwt-auth-token'),
+            "jwt-auth-token": storage.getItem("jwt-auth-token"),
           },
         })
-        .put('user/nickname', params)
+        .put("user/nickname", params)
         .then((response) => {
-          console.log('여기까지도 들어옵니다!');
+          console.log("여기까지도 들어옵니다!");
           if (response.data.success) {
-            alert('새로운 닉네임으로 변경되었습니다.');
+            alert("새로운 닉네임으로 변경되었습니다.");
             this.user.nickname = this.new.nickname;
             storage.setItem(
-              'jwt-auth-token',
-              response.headers['jwt-auth-token']
+              "jwt-auth-token",
+              response.headers["jwt-auth-token"]
             );
             window.location.reload();
             // this.new.nickname = '';
           } else {
-            alert('닉네임 변경 도중 오류가 발생했습니다. (2)');
+            alert("닉네임 변경 도중 오류가 발생했습니다. (2)");
           }
         })
         .catch((error) => {
           console.log(error);
-          alert('닉네임 변경 도중 오류가 발생했습니다. (3)');
+          alert("닉네임 변경 도중 오류가 발생했습니다. (3)");
         });
     },
     onClickImageUpload() {
@@ -446,36 +446,36 @@ export default {
     },
     saveProfileImg: function() {
       if (!this.isDefault) {
-        if (this.new.profileImg == '') {
-          alert('프로필 이미지를 클릭해 파일을 업로드해주세요.');
+        if (this.new.profileImg == "") {
+          alert("프로필 이미지를 클릭해 파일을 업로드해주세요.");
         } else {
           let params = new FormData();
-          params.append('file', this.fileList[0]);
+          params.append("file", this.fileList[0]);
 
           this.$Axios
             .create({
               headers: {
-                'Content-Type': 'multipart/form-data',
-                'jwt-auth-token': storage.getItem('jwt-auth-token'),
+                "Content-Type": "multipart/form-data",
+                "jwt-auth-token": storage.getItem("jwt-auth-token"),
               },
             })
-            .put('user/profile-img', params)
+            .put("user/profile-img", params)
             .then((response) => {
               if (response.data.result) {
-                alert('프로필 사진이 성공적으로 변경되었습니다.');
+                alert("프로필 사진이 성공적으로 변경되었습니다.");
                 window.location.reload();
               } else {
-                alert('프로필 변경 도중 오류가 발생했습니다.');
+                alert("프로필 변경 도중 오류가 발생했습니다.");
                 window.location.reload();
               }
             })
             .catch((error) => {
               console.log(error);
-              alert('에러 발생');
+              alert("에러 발생");
             });
         }
       } else {
-        alert('기존 프로필 사진입니다. 변경된 사항이 없습니다.');
+        alert("기존 프로필 사진입니다. 변경된 사항이 없습니다.");
       }
     },
   },

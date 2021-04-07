@@ -176,6 +176,7 @@
                 <v-col class="middleLetter formLetter" cols="3">비밀번호</v-col>
                 <v-col cols="9"
                   ><input-bar
+                    :type="'password'"
                     @pass-input="getPw"
                     placeholder="비밀번호"
                   ></input-bar
