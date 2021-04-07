@@ -292,7 +292,7 @@ public class GroupController {
 				Optional<List<GroupMember>> groupMemberList=groupMemberRepository.findByGroupMemberGroupId(groupId);
 				for(GroupMember gm:groupMemberList.get()) {
 					Optional<UserInfo> curUser=userRepository.findByUserNickname(gm.getGroupMemberUserNickname());
-					Optional<TimeDaily> curTimeDaily=timeDailyRepository.findByTimeDailyUserNicknameAndTimeDailyYearMonthDayAndTimeDailyAction(nickname, datetime,0);
+					Optional<TimeDaily> curTimeDaily=timeDailyRepository.findByTimeDailyUserNicknameAndTimeDailyYearMonthDayAndTimeDailyAction(gm.getGroupMemberUserNickname(), datetime,0);
 					
 					UserDto userDto=new UserDto();
 					userDto.setNickname(curUser.get().getUserNickname());
