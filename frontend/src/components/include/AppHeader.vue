@@ -63,7 +63,7 @@
       <v-col cols="2">
         <v-row
           no-gutters
-          v-if="!isLogin"
+          v-if="!$store.getters.getUserIsLogin"
           justify="center"
           style="margin-left: 60px"
         >
@@ -102,7 +102,7 @@
             <template v-slot:activator="{ on }">
               <v-col cols="2">
                 <profile-small
-                  :src="'data:image/png;base64,' + profileImg"
+                  :src="'data:image/png;base64,' + $store.getters.getUserImage"
                 ></profile-small>
               </v-col>
               <v-col
@@ -112,7 +112,7 @@
                 v-on="on"
                 :class="{ 'white-text': darkmode, 'black-text': !darkmode }"
               >
-                {{ userNickname }}님, 안녕하세요!
+                {{ $store.getters.getUserNickname }}님, 안녕하세요!
               </v-col>
             </template>
             <v-list>
@@ -122,7 +122,7 @@
                 </v-list-item-title>
               </v-list-item>
               <v-list-item>
-                <v-list-item-title style="cursor: pointer" @click="signOut">
+                <v-list-item-title style="cursor: pointer" @click="logout">
                   로그아웃
                 </v-list-item-title>
               </v-list-item>
@@ -286,32 +286,21 @@ export default {
       //   });
       console.log("크리에티드");
 
-      this.profileImg = this.$store.getters.getUserImage;
-      this.userNickname = this.$store.getters.getUserNickname;
-      this.isLogin = this.$store.getters.getUserIsLogin;
+      // this.profileImg = this.$store.getters.getUserImage;
+      // this.userNickname = this.$store.getters.getUserNickname;
+      // this.isLogin = this.$store.getters.getUserIsLogin;
     }
   },
 
   methods: {
-    checkLogin() {
-      if (this.userInfo === null) {
-        this.isLogin = false;
-      } else {
-        this.isLogin = true;
-      }
-    },
-    signIn: function() {
-      this.isLogin = true;
-    },
-    signOut: function() {
+    logout: function() {
       alert("성공적으로 로그아웃 했습니다. 안녕히!");
-      this.isLogin = false;
+      // this.isLogin = false;
       storage.removeItem("jwt-auth-token");
       this.$store.commit("userInit");
       if (this.$router.currentRoute.path != "/") {
         this.$router.push("/");
       }
-      console.log(this.$store.state.user);
     },
     goMyPage: function() {
       if (this.userInfo.userType != null) {
@@ -336,8 +325,6 @@ export default {
         .get("user")
         .then((res) => {
           console.log(res);
-          // this.userInfo = res.data;
-
           this.userInfo = res.data.data;
           this.userInfo["profileImg"] = res.data.profileImg;
           this.userInfo["isLogin"] = true;
@@ -346,8 +333,7 @@ export default {
 
           this.profileImg = this.$store.getters.getUserImage;
           this.userNickname = this.$store.getters.getUserNickname;
-          // console.log(this.userNickname);
-          window.location.reload();
+
           axios
             .create({
               headers: {
@@ -362,12 +348,11 @@ export default {
                 this.Rgroups[i]["src"] =
                   res.data.groupProfileList[i].groupProfileImg;
               }
-
               this.recommendGroup = this.Rgroups.filter(
                 (group) => group.groupName.length > 4
               );
               this.recommendGroup = this.recommendGroup.slice(0, 6);
-              console.log("zzzzz", this.recommendGroup);
+
               this.$store.commit("RECOMMENDGROUP", this.recommendGroup);
             })
             .catch((err) => {
@@ -382,7 +367,6 @@ export default {
       var params = new URLSearchParams();
       params.append("userId", this.email);
       params.append("userPassword", this.pw);
-
       axios
         .post("user/login", params)
         .then((res) => {
