@@ -33,9 +33,5 @@ def detect(image):
     face_outputs = (face_boxes, face_scores, face_classes, face_nums)
 
     result = detect_result(origin_outputs, origin_class_names, face_outputs, face_class_names)
-    # image = draw_outputs(image, (face_boxes, face_scores, face_classes, face_nums), face_class_names)
-    # image = draw_outputs(image, (hand_boxes, hand_scores, hand_classes, hand_nums), hand_class_names)
-    # image = draw_outputs(image, (book_boxes, book_scores, book_classes, book_nums), book_class_names)
 
-    # return image
     return result
