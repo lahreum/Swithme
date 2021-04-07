@@ -12,8 +12,6 @@
           <v-row no-gutters class="time-bar timer" justify="center" align="center">
             {{ time }}
           </v-row>
-          <!-- <v-btn @click="startTimer">start</v-btn> -->
-          <!-- <v-btn @click="stopTimer">stop</v-btn> -->
         </v-col>
 
         <!-- 오른쪽 투두리스트 화면 -->
@@ -81,7 +79,9 @@ export default {
       profileImg: '',
       tutorialFlag: false,
       time: '00:00:00',
-      // timeBegan: null,
+      UTCminute: 0,
+      UTCsecond: 0,
+      accumulatedSec: 0,
       timeBegan: null,
       timeStopped: null,
       stoppedDuration: 0,
@@ -97,13 +97,15 @@ export default {
     this.getUserTimer();
     this.getTodoList();
     this.startTimer();
+    
+    
   },
   methods: {
     getUserInfo() {
       this.$Axios
       .get('user',{
         headers: {
-            "jwt-auth-token": storage.getItem("jwt-auth-token"),
+          "jwt-auth-token": storage.getItem("jwt-auth-token"),
         }
       })
       .then((res)=>{
@@ -191,6 +193,7 @@ export default {
     },
     startTimer() {   // 타이머 시작 -> 카메라 on일때만 start 하는 걸로 변경필요. 새로고침하면 정보 사라지는데 어떡하지? vuex에 담아두기???? 
       console.log('start timer!');
+      this.$store.commit("FETCHSTUDYING");
       if (this.running) return;      // 이미 타이머 돌아가고 잇는데 또 시작하라고할때
       
       this.started = setInterval(()=> this.runningTimer(), 1000);	// 1s마다 타이머 함수가 실행되도록 함.
@@ -198,9 +201,18 @@ export default {
     },
     stopTimer() {
       this.running = false; // 타이머가 멈춤
+      this.$store.commit("STOPSTUDYING");
       clearInterval(this.started);    // 반복 명령 종료
     },
     runningTimer(){   // 타이머 시작
+      var currentTime = new Date();                   // 정각마다 공부한 시간을 저장하기 위해서
+      this.UTCminute = currentTime.getUTCMinutes();
+      this.UTCsecond = currentTime.getUTCSeconds();
+      
+      if(this.UTCminute === 0 && this.UTCsecond === 0) {  // 정각일때마다 초기화 && DB에 누적 분 저장
+
+      }
+
       this.sec++;
       if( this.sec >=60) {
         this.min++;

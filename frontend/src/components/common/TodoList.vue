@@ -43,6 +43,9 @@ export default {
     this.todoList = this.todoList || [];
     this.UpdateProgress();
   },
+  created() {
+    this.UpdateProgress();
+  },
   methods: {
     addTodo(message) {
       // const todoObj = {
@@ -65,6 +68,7 @@ export default {
       .then((res)=>{
         if(res.data.success) {
           console.log('todolist가 잘 추가되었음');
+          this.UpdateProgress();
         } else {
           console.log('todolist 추가 못함');
         }
@@ -72,7 +76,6 @@ export default {
       .catch((error)=>{
         console.log(error);
       })
-      this.UpdateProgress();
     },
     // doneTodo(id) {
     //   const todoIndex = this.list.findIndex((todo) => todo.id === id);
@@ -94,6 +97,7 @@ export default {
       .then((res)=>{
         if(res.data.success) {
           console.log('todolist done');
+          this.UpdateProgress();
         } else {
           console.log('todolist done fail');
         }
@@ -116,6 +120,7 @@ export default {
       .then((res)=>{
         if(res.data.success) {
           console.log('todolist 삭제 성공');
+          this.UpdateProgress();
         } else {
           console.log('todolist 삭제 실패');
         }
@@ -129,16 +134,15 @@ export default {
       localStorage.setItem('list', jsonList);
     },
     UpdateProgress() {
-      const lengthList = this.todoList.length;
+      const lengthList = Object.keys(this.todoList).length;
       var doneTodos = 0;
       var i = 0;
       for (i = 0; i < lengthList; i++) {
-        if (this.todoList[i].done) {
+        if (this.todoList[i].todoFinish) {
           doneTodos += 1;
         }
       }
       this.progress = parseInt((100 * doneTodos) / lengthList);
-      console.log(typeof this.progress);
     },
   },
 };
