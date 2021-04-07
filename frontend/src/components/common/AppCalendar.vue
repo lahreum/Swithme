@@ -7,7 +7,7 @@
             <v-btn fab text small color="grey darken-2" @click="prev">
               <v-icon small>mdi-chevron-left</v-icon>
             </v-btn>
-            <v-toolbar-title v-if="$refs.calendar">
+            <v-toolbar-title v-if="isMounted">
               {{ $refs.calendar.title }}
             </v-toolbar-title>
             <v-btn fab text small color="grey darken-2" @click="next">
@@ -32,7 +32,6 @@
           :events="events"
           event-color="#673fb4"
           @click:date="viewDay"
-          @change="updateRange"
         ></v-calendar>
       </v-sheet>
     </v-col>
@@ -49,22 +48,35 @@ export default {
     myDate: '',
     focus: '',
     events: [],
-    dates: ['210306', '210425', '210401'],
-    times: ['02:00:03', '05:21:33', '13:22:49'],
+    dates: [],
+    times: [],
+    histories: Array,
+    title: '',
+    isMounted: false,
   }),
   mounted() {
-    this.$refs.calendar.checkChange();
+    this.isMounted = true;
   },
   created() {
+    // 자료 받아오기
     this.$Axios
       .create({
         headers: { 'jwt-auth-token': storage.getItem('jwt-auth-token') },
       })
       .get('/timer/total')
       .then((response) => {
-        if (response.data.success) {
-          alert('성공!!');
-          console.log(response);
+        if (response.data.myTotalStudyHistory.length != 0) {
+          this.histories = response.data.myTotalStudyHistory;
+          for (let i = 0; i < this.histories.length; i++) {
+            this.dates.push(this.histories[i].timeDailyYearMonthDay);
+            this.times.push(this.histories[i].timeDailyTime);
+            this.events.push({
+              name: this.times[i] + '',
+              start: this.parseDate(this.dates[i]),
+            });
+          }
+        } else {
+          alert('기기바보');
         }
       })
       .catch((error) => {
@@ -86,29 +98,38 @@ export default {
     next() {
       this.$refs.calendar.next();
     },
-    showEvent() {},
-    updateRange() {
-      var tmpEvents = [];
-      var eventCount = this.dates.length;
+    // updateRange() {
+    //   var tmpEvents = [];
+    //   var eventCount = this.dates.length;
 
-      var parseDate = function(str) {
-        let y = '20' + str.substr(0, 2);
-        let m = '' + str.substr(2, 2);
-        let d = '' + str.substr(4);
+    //   var parseDate = function(str) {
+    //     let y = '20' + str.substr(0, 2);
+    //     let m = '' + str.substr(2, 2);
+    //     let d = '' + str.substr(4);
 
-        let all = y + '-' + m + '-' + d;
+    //     let all = y + '-' + m + '-' + d;
 
-        return new Date(all);
-      };
+    //     return new Date(all);
+    //   };
 
-      for (let i = 0; i < eventCount; i++) {
-        tmpEvents.push({
-          name: this.times[i],
-          start: parseDate(this.dates[i]),
-        });
-      }
+    //   for (let i = 0; i < eventCount; i++) {
+    //     tmpEvents.push({
+    //       name: this.times[i],
+    //       start: parseDate(this.dates[i]),
+    //     });
+    //   }
+    //   // console.log('???????????', tmpEvents);
 
-      this.events = tmpEvents;
+    //   this.events = tmpEvents;
+    // },
+    parseDate: function(str) {
+      let y = '20' + str.substr(0, 2);
+      let m = '' + str.substr(2, 2);
+      let d = '' + str.substr(4);
+
+      let all = y + '-' + m + '-' + d;
+
+      return new Date(all);
     },
   },
 };
