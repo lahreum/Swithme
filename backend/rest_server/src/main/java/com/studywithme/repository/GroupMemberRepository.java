@@ -11,4 +11,5 @@ public interface GroupMemberRepository extends JpaRepository<GroupMember,Integer
 	Optional<GroupMember> findByGroupMemberUserNicknameAndGroupMemberGroupId(String groupMemberUserNickname,int groupMemberGroupId);
 	Optional<List<GroupMember>> findByGroupMemberGroupId(int groupMemberGroupId);
 	Optional<List<GroupMember>> findByGroupMemberUserNickname(String groupMemberUserNickname);
+	Optional<List<GroupMember>> findByGroupMemberGroupIdOrderByGroupMemberId(int groupMemberGroupid);
 }

@@ -311,8 +311,7 @@ public class GroupController {
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
-				for(String s: dates)
-					System.out.println(s);
+				
 				Optional<List<GroupMember>> groupMemberWeekly=groupMemberRepository.findByGroupMemberGroupId(groupId);
 				for(GroupMember gm:groupMemberWeekly.get()) {
 					Optional<UserInfo> curUser=userRepository.findByUserNickname(gm.getGroupMemberUserNickname());
@@ -370,6 +369,8 @@ public class GroupController {
 		
 		result.put("success",false);
 		
+		List<List<TimeDaily>> attList=new ArrayList<>();
+		
 		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
 		
 		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
@@ -378,25 +379,38 @@ public class GroupController {
 			if(group.isPresent()) {
 				Optional<GroupMember> groupMember=groupMemberRepository.findByGroupMemberUserNicknameAndGroupMemberGroupId(nickname, groupId);
 				if(groupMember.isPresent()) {
-					Optional<List<GroupMember>> groupMemberList=groupMemberRepository.findByGroupMemberGroupId(groupId);
+					Optional<List<GroupMember>> groupMemberList=groupMemberRepository.findByGroupMemberGroupIdOrderByGroupMemberId(groupId);
 					String[] dates=null;
 					try {
 						dates = commonMethods.getDays(datetime);
 					} catch (ParseException e) {
 						e.printStackTrace();
 					}
-					for(String s:dates)
-						System.out.println(s);
+					
 					result.clear();
 					for(GroupMember gm:groupMemberList.get()) {
 						List<TimeDaily> eachTimeDaily=new ArrayList<>();
+						int index=0;
 						for(String s:dates) {
 							Optional<TimeDaily> td=timeDailyRepository.findByTimeDailyUserNicknameAndTimeDailyYearMonthDayAndTimeDailyAction(gm.getGroupMemberUserNickname(), s, 0);
-							if(td.isPresent()) 
+							if(td.isPresent()) {
+								td.get().setTimeDailyId(index);
 								eachTimeDaily.add(td.get());
+							}
+							else {
+								TimeDaily newTd=new TimeDaily();
+								newTd.setTimeDailyTime(0);
+								newTd.setTimeDailyAction(0);
+								newTd.setTimeDailyId(index);
+								newTd.setTimeDailyUserNickname(gm.getGroupMemberUserNickname());
+								newTd.setTimeDailyYearMonthDay(s);
+								eachTimeDaily.add(newTd);
+							}
+							index++;
 						}
-						result.put(gm.getGroupMemberUserNickname(),eachTimeDaily);
+						attList.add(eachTimeDaily);
 					}
+					result.put("attendanceList",attList);
 					result.put("success",true);
 				}
 			}
