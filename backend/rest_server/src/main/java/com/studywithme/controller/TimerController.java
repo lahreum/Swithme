@@ -295,7 +295,31 @@ public class TimerController {
 			}			
 		}
 		return result;
-	}	
+	}
+	
+	@GetMapping("/total")
+	@ApiOperation(value="지금까지의 총 공부이력",notes="토큰을 받아 해당 사용자의 현재까지의 총 이력 반환")
+	public Object totalStudyTime(HttpServletRequest req) {
+		Map<String, Object> result=new HashMap<>();
+		
+		result.put("myTotalStudyHistory",null);
+		
+		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
+		
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
+		if(user.isPresent()) {
+			Optional<List<TimeDaily>> studyList=timeDailyRepository.findByTimeDailyUserNicknameAndTimeDailyAction(nickname, 0);
+			if(studyList.isPresent()) {
+				for(int i=0;i<studyList.get().size();i++) 
+					studyList.get().get(i).setTimeDailyUserNickname(null);
+				
+				result.clear();
+				result.put("myTotalStudyHistory",studyList);
+			}
+		}
+		
+		return result;
+	}
 	
 	//--------------------------------------------------------
 	
