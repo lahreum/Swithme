@@ -37,7 +37,7 @@
             </div>
             <v-card style="border-radius:60%;">
               <p class="date">{{ curruentDate }}</p>
-              <TodoList :todoList="todoList" />
+              <TodoList @updateTodoList="updateTodoList" :todoList="todoList" />
               <br />
               <div @click="stopStudy" style="text-align:center;">
                 <AppBtnLarge
@@ -337,6 +337,8 @@ export default {
       ];
 
       for(var i=0; i< interruption.length; i++) {
+        if(interruption[i] === 0) continue; // 딴짓한게 없으면 보내지 않음
+
         let params = new URLSearchParams();
         params.append('action', i);       // 딴짓의 종류(1:휴대폰, 2:자리비움, 3:잡담, 4:졸음)
         params.append('datetime', day);   
@@ -365,12 +367,18 @@ export default {
         })
 
       }
+      ``
       //방해 요인 시간을 0으로 만듬
       this.$store.mutations.InitializeInterruption;
       console.log(`${this.$store.state.phoneTime}`);
       console.log(`${this.$store.state.awayTime}`);
       console.log(`${this.$store.state.talkTime}`);
       console.log(`${this.$store.state.sleepTime}`);
+    },
+    updateTodoList(value){
+      if(value) {   // todoList 추가되었으면 다시 getTodoList()
+        this.getTodoList();
+      }
     }
   },
 };
