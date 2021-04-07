@@ -8,7 +8,9 @@
         style="font-size: 1.8rem; letter-spacing: -1px;"
         justify="center"
       >
-        <v-col cols="4" align="center">{{ username }}님의 학습분석</v-col>
+        <v-col cols="4" align="center">
+          {{ this.user.userNickname }}님의 학습분석
+        </v-col>
       </v-row>
       <v-row no-gutters justify="center" style="margin-top: 5px; ">
         <hr
@@ -18,7 +20,12 @@
       <!-- 내 정보 -->
       <v-row justify="center" no-gutters style="margin-top: 50px;">
         <div style="width: 800px; min-width: 800px;">
-          <my-info></my-info>
+          <my-info
+            :username="user.userNickname"
+            :message="user.userMessage"
+            :profile="user.profileImg"
+            :studyTime="user.todayStudyTime"
+          ></my-info>
         </div>
       </v-row>
       <!-- part: 2 -->
@@ -43,9 +50,9 @@
               <v-col
                 cols="7"
                 align="center"
-                style="background-color: #DAD9FF; margin-right: 10px;"
+                style="background-color: #eaeaea; margin-right: 10px;"
               >
-                (달력 들어갈 자리)
+                <app-calendar></app-calendar>
               </v-col>
               <v-col
                 align="center"
@@ -54,8 +61,9 @@
                 <v-row
                   justify="center"
                   style="letter-spacing: -3px; font-size: 3rem; font-weight: lighter; margin-top: 2px; margin-bottom: 2px;"
-                  >TODO</v-row
                 >
+                  TODO
+                </v-row>
                 <v-row
                   style="margin: 8px; background-color: white; padding-bottom: 10px;"
                 >
@@ -208,12 +216,59 @@
 import MiddleNav from '../components/include/MiddleNav.vue';
 import MyInfo from '@/components/common/MyInfo.vue';
 import TodoList from '@/components/common/TodoList.vue';
+import AppCalendar from '@/components/common/AppCalendar.vue';
+import date from '@/date.js';
 
+const storage = window.sessionStorage;
 export default {
   components: {
     'middle-nav': MiddleNav,
     'my-info': MyInfo,
     'todo-list': TodoList,
+    'app-calendar': AppCalendar,
+  },
+  created: function() {
+    // user 정보 받아오기
+    this.$Axios
+      .create({
+        headers: { 'jwt-auth-token': storage.getItem('jwt-auth-token') },
+      })
+      .get('user')
+      .then((response) => {
+        this.user.userId = response.data.data.userId;
+        this.user.userNickname = response.data.data.userNickname;
+        this.user.userMessage = response.data.data.userMessage;
+        this.user.userIsStudying = response.data.data.userIsStudying;
+        this.user.profileImg = response.data.profileImg;
+      });
+
+    // 공부 시간 받아오기
+    let today = new Date();
+    let day = date.dateFunc(today);
+
+    this.$Axios
+      .create({
+        headers: {
+          'jwt-auth-token': storage.getItem('jwt-auth-token'),
+        },
+      })
+      .get('timer/today?datetime=' + day)
+      .then((response) => {
+        // console.log('RESPONSEEEEEEE!!!!', response);
+        if (
+          response.data.todayStudyTime == null ||
+          response.data.todayStudyTime === 0
+        ) {
+          this.user.todayStudyTime = '0:00:00';
+          // console.log('TYPE♡♡♡♡♡♡', typeof response.data.todayStudyTime);
+        } else {
+          // 이거 확실하게 int로 받아오는 거 맞나요ㅜ
+          this.user.todayStudyTime = response.data.todayStudyTime;
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   },
   data: function() {
     return {
@@ -223,7 +278,15 @@ export default {
         '첫asdf번째 문장입니다. 첫번째 문장입니다. 첫번째 문장입',
         '두번째 문장입니다~! 두번째 문장입니다~! 두번째 문장입니다~! 두번째',
       ],
-      username: 'dlwlrma',
+      user: {
+        userId: '',
+        userNickname: '',
+        userMessage: '',
+        userIsStudying: false,
+        profileImg: '',
+        userType: '',
+        todayStudyTime: '',
+      },
     };
   },
 };
