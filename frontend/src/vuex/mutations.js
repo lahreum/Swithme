@@ -27,7 +27,7 @@ export default {
   setSleepTime(state) {
     state.sleepTime++;
   },
-  setBusyTime(state) {
-    state.busyTime++;
+  setTalkTime(state) {
+    state.talkTime++;
   },
 };

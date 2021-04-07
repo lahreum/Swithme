@@ -1,5 +1,5 @@
 <template>
-  <div style="width:100%;">
+  <div style="width: 100%">
     <v-container class="outbox">
       <v-row no-gutters>
         <!-- 왼쪽 스트리밍 화면 -->
@@ -12,7 +12,7 @@
 
         <!-- 오른쪽 투두리스트 화면 -->
         <v-col cols="3">
-          <div style="background-color: #EEEEEE;">
+          <div style="background-color: #eeeeee">
             <!-- 회원정보 -->
             <div>
               <div class="user">
@@ -31,11 +31,11 @@
             <div>
               <p class="todolist">TO DO LIST</p>
             </div>
-            <v-card style="border-radius:60%;">
+            <v-card style="border-radius: 60%">
               <p class="date">2021/03/25</p>
               <todo-list></todo-list>
               <br />
-              <div @click="$router.push('/')" style="text-align:center;">
+              <div @click="$router.push('/')" style="text-align: center">
                 <app-btn-large
                   :btnColor="`#424242`"
                   :btnName="'그만하기'"
@@ -68,10 +68,14 @@ export default {
   },
   methods: {
     pauseTimer() {
+      this.$store.state.user.userIsStudying = false;
       console.log('pauseTimer');
+      console.log(this.$store.getters.getUserIsStudying);
     },
     resumeTimer() {
+      this.$store.state.user.userIsStudying = true;
       console.log('resumeTimer');
+      console.log(this.$store.getters.getUserIsStudying);
     },
   },
 };

@@ -24,7 +24,7 @@ export default {
   getSleepTime(state) {
     return state.sleepTime;
   },
-  getBusyTime(state) {
-    return state.busyTime;
+  getTalkTime(state) {
+    return state.talkTime;
   },
 };

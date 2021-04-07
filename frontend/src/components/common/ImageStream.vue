@@ -13,7 +13,7 @@ export default {
       awayCnt: 0,
       phoneCnt: 0,
       sleepCnt: 0,
-      busyCnt: 0,
+      talkCnt: 0,
     };
   },
   mounted() {
@@ -107,25 +107,41 @@ export default {
 
                           if (!isPerson) this.awayCnt++;
                           else {
-                            if (this.awayCnt >= 5) this.$emit('resumeTimer');
+                            if (
+                              this.awayCnt >= 5 &&
+                              !this.$store.getters.getUserIsStudying
+                            )
+                              this.$emit('resumeTimer');
                             this.awayCnt = 0;
                           }
 
                           if (!isPhone) {
-                            if (this.phoneCnt >= 5) this.$emit('resumeTimer');
+                            if (
+                              this.phoneCnt >= 5 &&
+                              !this.$store.getters.getUserIsStudying
+                            )
+                              this.$emit('resumeTimer');
                             this.phoneCnt = 0;
                           } else this.phoneCnt++;
 
                           if (!isFace) this.sleepCnt++;
                           else {
-                            if (this.sleepCnt >= 5) this.$emit('resumeTimer');
+                            if (
+                              this.sleepCnt >= 5 &&
+                              !this.$store.getters.getUserIsStudying
+                            )
+                              this.$emit('resumeTimer');
                             this.sleepCnt = 0;
                           }
 
-                          if (personNum > 1 || faceNum > 1) this.busyCnt++;
+                          if (personNum > 1 || faceNum > 1) this.talkCnt++;
                           else if (personNum == 1 && faceNum == 1) {
-                            if (this.busyCnt >= 5) this.$emit('resumeTimer');
-                            this.busyCnt = 0;
+                            if (
+                              this.talkCnt >= 5 &&
+                              !this.$store.getters.getUserIsStudying
+                            )
+                              this.$emit('resumeTimer');
+                            this.talkCnt = 0;
                           }
 
                           console.log(
@@ -135,8 +151,8 @@ export default {
                               this.phoneCnt +
                               ', 졸음 카운트: ' +
                               this.sleepCnt +
-                              ', 바쁨 카운트: ' +
-                              this.busyCnt
+                              ', 잡담 카운트: ' +
+                              this.talkCnt
                           );
 
                           if (this.awayCnt == 5) {
@@ -167,13 +183,13 @@ export default {
                             this.$store.commit('setSleepTime');
                           }
 
-                          if (this.busyCnt == 5) {
-                            // 5초동안 바빠 타이머 중지
-                            this.$store.commit('setBusyTime');
+                          if (this.talkCnt == 5) {
+                            // 5초동안 잡담하여 타이머 중지
+                            this.$store.commit('setTalkTime');
                             this.$emit('pauseTimer');
-                          } else if (this.busyCnt > 5) {
-                            // 이후부터는 바쁨 시간 누적
-                            this.$store.commit('setBusyTime');
+                          } else if (this.talkCnt > 5) {
+                            // 이후부터는 잡담 시간 누적
+                            this.$store.commit('setTalkTime');
                           }
 
                           console.log(
@@ -192,7 +208,7 @@ export default {
                           );
 
                           console.log(
-                            '바쁨 누적 시간: ' + this.$store.getters.getBusyTime
+                            '잡담 누적 시간: ' + this.$store.getters.getTalkTime
                           );
 
                           // 이미지 출력
