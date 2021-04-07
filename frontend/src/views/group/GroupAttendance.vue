@@ -10,10 +10,11 @@
             justify="space-between"
             style="font-size:1.5rem; margin-bottom:50px;"
           >
-            {{ groupInfo.groupIntroduce }}
+            {{ groupInfo.groupNotice }}
             <span
               ><v-icon>mdi-account</v-icon>{{ groupers.length }}
-              <v-icon>mdi-crown</v-icon>{{ groupInfo.groupMaster }}</span
+              <v-icon>mdi-crown</v-icon
+              >{{ groupInfo.groupMasterNickname }}</span
             >
           </v-row>
 
@@ -51,7 +52,6 @@
             >
               <div style="text-align:center">
                 <h4>출석률</h4>
-
                 <h4>{{ AttendanceRate }}%</h4>
               </div>
             </v-progress-circular>
@@ -78,14 +78,22 @@
                   <td
                     style="font-size:1.2rem;text-align:center;border:1px solid black"
                   >
-                    {{ grouper.name }}
+                    <h3>{{ grouper[0].timeDailyUserNickname }}</h3>
                   </td>
                   <td
                     style="font-size:1.2rem; text-align:center; border:1px solid black"
                     v-for="n in 7"
                     :key="n"
                   >
-                    {{ grouper.arr[n - 1] }}
+                    <h4
+                      v-if="grouper[n - 1].timeDailyTime !== '00:00:00'"
+                      style="background-color:#673fb4"
+                    >
+                      {{ grouper[n - 1].timeDailyTime }}
+                    </h4>
+                    <h4 v-else>
+                      {{ grouper[n - 1].timeDailyTime }}
+                    </h4>
                   </td>
                 </tr>
               </tbody>
@@ -100,6 +108,10 @@
 
 <script>
 import MiddleNav from "@/components/include/MiddleNav.vue";
+import date from "@/date.js";
+import studyTime from "@/changeSec.js";
+import axios from "axios";
+const storage = window.sessionStorage;
 export default {
   components: {
     MiddleNav,
@@ -113,17 +125,15 @@ export default {
       weekly2: new Date(),
       tmp: "",
       AttendanceRate: 0,
+      groupInfo: [],
+      groupers: [],
       navInfo: [
         "sample2.png",
         "그룹",
         "목표가 같은 사람들끼리 모여 달려보세요.",
         "목표로 가는 길이 덜 힘들고, 더욱 든든해질 거예요",
       ],
-      groupInfo: {
-        groupName: "정처기 합격가즈아",
-        groupIntroduce: "정처기 원콤을 목표로 하는 스터디입니다.",
-        groupMaster: "dldkfma",
-      },
+
       value: 80,
       week: {
         1: "가입순",
@@ -135,68 +145,6 @@ export default {
         7: "토",
         8: "일",
       },
-      groupers: [
-        {
-          name: "dldkfma",
-          arr: [
-            "01:03:03",
-            "02:03:03",
-            "",
-            "04:03:03",
-            "05:03:03",
-            "06:03:03",
-            "07:03:03",
-          ],
-        },
-        {
-          name: "빛봉현",
-          arr: [
-            "01:03:03",
-            "02:03:03",
-            "03:03:03",
-            "04:03:03",
-            "05:03:03",
-            "06:03:03",
-            "",
-          ],
-        },
-        {
-          name: "별빛지현",
-          arr: [
-            "01:03:03",
-            "02:03:03",
-            "",
-            "04:03:03",
-            "",
-            "06:03:03",
-            "07:03:03",
-          ],
-        },
-        {
-          name: "녹용파는사슴",
-          arr: [
-            "01:03:03",
-            "",
-            "03:03:03",
-            "04:03:03",
-            "05:03:03",
-            "06:03:03",
-            "07:03:03",
-          ],
-        },
-        {
-          name: "정처기out",
-          arr: [
-            "01:03:03",
-            "02:03:03",
-            "03:03:03",
-            "",
-            "05:03:03",
-            "06:03:03",
-            "07:03:03",
-          ],
-        },
-      ],
     };
   },
   methods: {
@@ -237,6 +185,7 @@ export default {
         this.tmp.setDate(this.tmp.getDate() - 6 - this.tmp.getDay())
       );
       this.getWeekly2();
+      this.getAttendance();
     },
     weekPlus() {
       this.tmp = new Date(this.weekly1);
@@ -244,25 +193,89 @@ export default {
         this.tmp.setDate(this.tmp.getDate() + 8 - this.tmp.getDay())
       );
       this.getWeekly2();
+      this.getAttendance();
+    },
+    getAttendance() {
+      let day = date.dateFunc(this.weekly1);
+      axios
+        .create({
+          headers: {
+            "jwt-auth-token": storage.getItem("jwt-auth-token"),
+          },
+        })
+        .get(
+          `group/attendance?datetime=${day}&groupId=${this.$route.query.groupId}`
+        )
+        .then((res) => {
+          console.log("출석부받아오기", res);
+          this.groupers = res.data.attendanceList;
+          var cnt = 0;
+          var i = 0;
+          var j = 0;
+
+          const CountGroupers = this.groupers.length;
+          const a = CountGroupers * 7;
+          for (i = 0; i < CountGroupers; i++) {
+            for (j = 0; j < 7; j++) {
+              if (this.groupers[i][j].timeDailyTime === 0) {
+                cnt++;
+              }
+              this.groupers[i][j].timeDailyTime = studyTime(
+                this.groupers[i][j].timeDailyTime
+              );
+            }
+          }
+          this.AttendanceRate = parseInt((100 * (a - cnt)) / a);
+        });
     },
   },
-  created() {
-    var cnt = 0;
-    var i = 0;
-    var j = 0;
 
-    const CountGroupers = this.groupers.length;
-    const a = CountGroupers * 7;
-    for (i = 0; i < CountGroupers; i++) {
-      for (j = 0; j < 7; j++) {
-        if (this.groupers[i].arr[j] === "") {
-          cnt += 1;
+  created() {
+    let today = new Date();
+    let day = date.dateFunc(today);
+
+    axios
+      .create({
+        headers: {
+          "jwt-auth-token": storage.getItem("jwt-auth-token"),
+        },
+      })
+      .get(`group/${this.$route.query.groupId}?datetime=${day}`)
+      .then((res) => {
+        this.groupInfo = res.data.groupInfo;
+        this.groupers = res.data.groupMemberList;
+      });
+    axios
+      .create({
+        headers: {
+          "jwt-auth-token": storage.getItem("jwt-auth-token"),
+        },
+      })
+      .get(
+        `group/attendance?datetime=${day}&groupId=${this.$route.query.groupId}`
+      )
+      .then((res) => {
+        console.log("출석부받아오기", res);
+        this.groupers = res.data.attendanceList;
+        var cnt = 0;
+        var i = 0;
+        var j = 0;
+
+        const CountGroupers = this.groupers.length;
+        const a = CountGroupers * 7;
+        for (i = 0; i < CountGroupers; i++) {
+          for (j = 0; j < 7; j++) {
+            if (this.groupers[i][j].timeDailyTime === 0) {
+              cnt++;
+            }
+            this.groupers[i][j].timeDailyTime = studyTime(
+              this.groupers[i][j].timeDailyTime
+            );
+          }
         }
-      }
-    }
-    this.AttendanceRate = parseInt((100 * (a - cnt)) / a);
-    console.log(this.AttendanceRate);
-    this.getWeekly1();
+        this.AttendanceRate = parseInt((100 * (a - cnt)) / a);
+        this.getWeekly1();
+      });
   },
 };
 </script>

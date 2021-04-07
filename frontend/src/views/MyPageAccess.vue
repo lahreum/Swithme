@@ -42,47 +42,47 @@
 </template>
 
 <script>
-import MiddleNav from '../components/include/MiddleNav.vue';
-import InputBar from '../components/common/InputBar.vue';
-import AppBtnLarge from '../components/common/AppBtnLarge.vue';
+import MiddleNav from "../components/include/MiddleNav.vue";
+import InputBar from "../components/common/InputBar.vue";
+import AppBtnLarge from "../components/common/AppBtnLarge.vue";
 
 const storage = window.sessionStorage;
 export default {
   components: {
-    'middle-nav': MiddleNav,
-    'input-bar': InputBar,
-    'app-btn-large': AppBtnLarge,
+    "middle-nav": MiddleNav,
+    "input-bar": InputBar,
+    "app-btn-large": AppBtnLarge,
   },
   data: function() {
     return {
       navInfo: [
-        'sample3.gif',
-        '마이페이지',
-        '첫번째 문장입니다. 첫번째 문장입니다. 첫번째 문장입',
-        '두번째 문장입니다~! 두번째 문장입니다~! 두번째 문장입니다~! 두번째',
+        "sample3.gif",
+        "마이페이지",
+        "첫번째 문장입니다. 첫번째 문장입니다. 첫번째 문장입",
+        "두번째 문장입니다~! 두번째 문장입니다~! 두번째 문장입니다~! 두번째",
       ],
-      btnColor: '#673FB4',
-      btnName: '확 인',
-      btnNameColor: 'white',
-      password: '',
+      btnColor: "#673FB4",
+      btnName: "확 인",
+      btnNameColor: "white",
+      password: "",
     };
   },
   methods: {
     routingRequest: function() {
       let params = new URLSearchParams();
-      params.append('userPassword', this.password);
+      params.append("userPassword", this.password);
 
       this.$Axios
-        .post('user/mypage', params, {
+        .post("user/mypage", params, {
           headers: {
-            'jwt-auth-token': storage.getItem('jwt-auth-token'),
+            "jwt-auth-token": storage.getItem("jwt-auth-token"),
           },
         })
         .then((response) => {
           if (response.data.isCorrect) {
-            this.$router.push('/my-page');
+            this.$router.push("/my-page");
           } else {
-            alert('잘못된 비밀번호 입니다.');
+            alert("잘못된 비밀번호 입니다.");
           }
         });
     },

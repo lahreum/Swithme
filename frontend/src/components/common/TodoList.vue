@@ -60,22 +60,22 @@ export default {
       params.append('content', message);
 
       this.$Axios
-      .post('todo', params, {
-        headers: {
-            "jwt-auth-token": storage.getItem("jwt-auth-token"),
-        }
-      })
-      .then((res)=>{
-        if(res.data.success) {
-          console.log('todolist가 잘 추가되었음');
-          this.UpdateProgress();
-        } else {
-          console.log('todolist 추가 못함');
-        }
-      })
-      .catch((error)=>{
-        console.log(error);
-      })
+        .post('todo', params, {
+          headers: {
+            'jwt-auth-token': storage.getItem('jwt-auth-token'),
+          },
+        })
+        .then((res) => {
+          if (res.data.success) {
+            console.log('todolist가 잘 추가되었음');
+            this.UpdateProgress();
+          } else {
+            console.log('todolist 추가 못함');
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     // doneTodo(id) {
     //   const todoIndex = this.list.findIndex((todo) => todo.id === id);
@@ -89,22 +89,22 @@ export default {
       params.append('todoId', id);
 
       this.$Axios
-      .put('todo', params, {
-        headers: {
-          "jwt-auth-token": storage.getItem("jwt-auth-token"),
-        }
-      })
-      .then((res)=>{
-        if(res.data.success) {
-          console.log('todolist done');
-          this.UpdateProgress();
-        } else {
-          console.log('todolist done fail');
-        }
-      })
-      .catch((error)=>{
-        console.log(error);
-      })
+        .put('todo', params, {
+          headers: {
+            'jwt-auth-token': storage.getItem('jwt-auth-token'),
+          },
+        })
+        .then((res) => {
+          if (res.data.success) {
+            console.log('todolist done');
+            this.UpdateProgress();
+          } else {
+            console.log('todolist done fail');
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     deleteTodo(id) {
       // const todoIndex = this.list.findIndex((todo) => todo.id === id);
@@ -112,22 +112,22 @@ export default {
       // this.setLs();
       // this.UpdateProgress();
       this.$Axios
-      .delete('todo?todoId=' + id,{
-        headers: {
-          "jwt-auth-token": storage.getItem("jwt-auth-token"),
-        }
-      })
-      .then((res)=>{
-        if(res.data.success) {
-          console.log('todolist 삭제 성공');
-          this.UpdateProgress();
-        } else {
-          console.log('todolist 삭제 실패');
-        }
-      })
-      .catch((error)=>{
-        console.log(error);
-      })
+        .delete('todo?todoId=' + id, {
+          headers: {
+            'jwt-auth-token': storage.getItem('jwt-auth-token'),
+          },
+        })
+        .then((res) => {
+          if (res.data.success) {
+            console.log('todolist 삭제 성공');
+            this.UpdateProgress();
+          } else {
+            console.log('todolist 삭제 실패');
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     setLs() {
       const jsonList = JSON.stringify(this.list);
