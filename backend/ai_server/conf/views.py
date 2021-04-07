@@ -32,7 +32,7 @@ def predict(request):
     # 1차원에서 3차원 ndarray로 변환
     image = cv2.imdecode(image, cv2.IMREAD_COLOR)
 
-    # # 객체 감지
+    # 객체 감지
     result = detect(image)
 
     return JsonResponse(result, safe=False)

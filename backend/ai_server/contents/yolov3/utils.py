@@ -126,7 +126,9 @@ def detect_result(origin_outputs, origin_class_names, face_outputs, face_class_n
     for i in range(origin_nums):
         if origin_objectness[i] >= 0.7:
             class_name = origin_class_names[int(origin_classes[i])]
-            result.append(class_name)
+
+            if class_name == 'person' or class_name == 'phone':
+                result.append(class_name)
 
     for i in range(face_nums):
         if face_objectness[i] >= 0.7:
