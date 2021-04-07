@@ -52,7 +52,7 @@
                 align="center"
                 style="background-color: #eaeaea; margin-right: 10px;"
               >
-                <app-calendar></app-calendar>
+                <app-calendar @pickedDate="getPickedDate"></app-calendar>
               </v-col>
               <v-col
                 align="center"
@@ -67,7 +67,7 @@
                 <v-row
                   style="margin: 8px; background-color: white; padding-bottom: 10px;"
                 >
-                  <todo-list></todo-list>
+                  <todo-list :todoList="user.todoList"></todo-list>
                 </v-row>
               </v-col>
             </v-row>
@@ -218,6 +218,7 @@ import MyInfo from '@/components/common/MyInfo.vue';
 import TodoList from '@/components/common/TodoList.vue';
 import AppCalendar from '@/components/common/AppCalendar.vue';
 import date from '@/date.js';
+import changeSec from '@/changeSec.js';
 
 const storage = window.sessionStorage;
 export default {
@@ -262,12 +263,29 @@ export default {
           this.user.todayStudyTime = '0:00:00';
           // console.log('TYPE♡♡♡♡♡♡', typeof response.data.todayStudyTime);
         } else {
-          // 이거 확실하게 int로 받아오는 거 맞나요ㅜ
-          this.user.todayStudyTime = response.data.todayStudyTime;
+          this.user.todayStudyTime = changeSec(response.data.todayStudyTime);
+          // this.user.todayStudyTime = response.data.todayStudyTime;
         }
       })
       .catch((error) => {
         console.log(error);
+      });
+
+    // 투두리스트 받아오기
+    this.$Axios
+      .create({
+        headers: { 'jwt-auth-token': storage.getItem('jwt-auth-token') },
+      })
+      .get('todo?datetime=' + this.pickedDate)
+      .then((response) => {
+        if (response.data.todoList.length != 0) {
+          this.user.todoList = response.data.todoList;
+        } else {
+          this.user.todoList = [];
+        }
+      })
+      .catch((error) => {
+        console.log('TODO-LIST ERROR!!!!!', error);
       });
   },
   data: function() {
@@ -286,8 +304,32 @@ export default {
         profileImg: '',
         userType: '',
         todayStudyTime: '',
+        todoList: [],
       },
+      pickedDate: date.dateFunc(new Date()),
     };
+  },
+  methods: {
+    getPickedDate: function(value) {
+      this.pickedDate = value;
+
+      // 투두리스트 받아오기
+      this.$Axios
+        .create({
+          headers: { 'jwt-auth-token': storage.getItem('jwt-auth-token') },
+        })
+        .get('todo?datetime=' + this.pickedDate)
+        .then((response) => {
+          if (response.data.todoList.length != 0) {
+            this.user.todoList = response.data.todoList;
+          } else {
+            this.user.todoList = [];
+          }
+        })
+        .catch((error) => {
+          console.log('TODO-LIST ERROR!!!!!', error);
+        });
+    },
   },
 };
 </script>

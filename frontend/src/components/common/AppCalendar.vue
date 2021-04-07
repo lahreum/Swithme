@@ -35,18 +35,18 @@
         ></v-calendar>
       </v-sheet>
     </v-col>
-    <div>
-      {{ myDate }}
-    </div>
   </v-row>
 </template>
 
 <script>
+import dateJS from '@/date.js';
+import changeSec from '@/changeSec.js';
+
 const storage = window.sessionStorage;
 export default {
   data: () => ({
-    myDate: '',
     focus: '',
+    pickedDate: '',
     events: [],
     dates: [],
     times: [],
@@ -71,7 +71,7 @@ export default {
             this.dates.push(this.histories[i].timeDailyYearMonthDay);
             this.times.push(this.histories[i].timeDailyTime);
             this.events.push({
-              name: this.times[i] + '',
+              name: changeSec(this.times[i]) + '',
               start: this.parseDate(this.dates[i]),
             });
           }
@@ -87,10 +87,13 @@ export default {
   methods: {
     viewDay({ date }) {
       this.focus = date;
-      this.myDate = date;
+      this.pickedDate = date;
+      this.$emit('pickedDate', this.pickedDate);
     },
     setToday() {
       this.focus = '';
+      this.pickedDate = dateJS.dateFunc(new Date());
+      this.$emit('pickedDate', this.pickedDate);
     },
     prev() {
       this.$refs.calendar.prev();

@@ -78,14 +78,22 @@
                   <td
                     style="font-size:1.2rem;text-align:center;border:1px solid black"
                   >
-                    {{ grouper[0].timeDailyUserNickname }}
+                    <h3>{{ grouper[0].timeDailyUserNickname }}</h3>
                   </td>
                   <td
                     style="font-size:1.2rem; text-align:center; border:1px solid black"
                     v-for="n in 7"
                     :key="n"
                   >
-                    {{ grouper[n - 1].timeDailyTime }}
+                    <h4
+                      v-if="grouper[n - 1].timeDailyTime !== '00:00:00'"
+                      style="background-color:#673fb4"
+                    >
+                      {{ grouper[n - 1].timeDailyTime }}
+                    </h4>
+                    <h4 v-else>
+                      {{ grouper[n - 1].timeDailyTime }}
+                    </h4>
                   </td>
                 </tr>
               </tbody>
@@ -101,7 +109,7 @@
 <script>
 import MiddleNav from "@/components/include/MiddleNav.vue";
 import date from "@/date.js";
-// import studyTime from "@/changeSec.js";
+import studyTime from "@/changeSec.js";
 import axios from "axios";
 const storage = window.sessionStorage;
 export default {
@@ -177,6 +185,7 @@ export default {
         this.tmp.setDate(this.tmp.getDate() - 6 - this.tmp.getDay())
       );
       this.getWeekly2();
+      this.getAttendance();
     },
     weekPlus() {
       this.tmp = new Date(this.weekly1);
@@ -184,8 +193,41 @@ export default {
         this.tmp.setDate(this.tmp.getDate() + 8 - this.tmp.getDay())
       );
       this.getWeekly2();
+      this.getAttendance();
     },
-    getAttendance() {},
+    getAttendance() {
+      let day = date.dateFunc(this.weekly1);
+      axios
+        .create({
+          headers: {
+            "jwt-auth-token": storage.getItem("jwt-auth-token"),
+          },
+        })
+        .get(
+          `group/attendance?datetime=${day}&groupId=${this.$route.query.groupId}`
+        )
+        .then((res) => {
+          console.log("출석부받아오기", res);
+          this.groupers = res.data.attendanceList;
+          var cnt = 0;
+          var i = 0;
+          var j = 0;
+
+          const CountGroupers = this.groupers.length;
+          const a = CountGroupers * 7;
+          for (i = 0; i < CountGroupers; i++) {
+            for (j = 0; j < 7; j++) {
+              if (this.groupers[i][j].timeDailyTime === 0) {
+                cnt++;
+              }
+              this.groupers[i][j].timeDailyTime = studyTime(
+                this.groupers[i][j].timeDailyTime
+              );
+            }
+          }
+          this.AttendanceRate = parseInt((100 * (a - cnt)) / a);
+        });
+    },
   },
 
   created() {
@@ -223,15 +265,15 @@ export default {
         const a = CountGroupers * 7;
         for (i = 0; i < CountGroupers; i++) {
           for (j = 0; j < 7; j++) {
-            if (this.groupers[i].timeDailyTime === 0) {
-              cnt += 1;
+            if (this.groupers[i][j].timeDailyTime === 0) {
+              cnt++;
             }
+            this.groupers[i][j].timeDailyTime = studyTime(
+              this.groupers[i][j].timeDailyTime
+            );
           }
         }
         this.AttendanceRate = parseInt((100 * (a - cnt)) / a);
-        console.log(a);
-        console.log(cnt);
-        console.log(this.AttendanceRate);
         this.getWeekly1();
       });
   },

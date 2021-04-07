@@ -176,6 +176,7 @@
                 <v-col class="middleLetter formLetter" cols="3">비밀번호</v-col>
                 <v-col cols="9"
                   ><input-bar
+                    :type="'password'"
                     @pass-input="getPw"
                     placeholder="비밀번호"
                   ></input-bar
@@ -272,23 +273,9 @@ export default {
   created() {
     // console.log('마운티드됨?');
     if (storage.getItem("jwt-auth-token")) {
-      // axios
-      //   .create({
-      //     headers: {
-      //       "jwt-auth-token": storage.getItem("jwt-auth-token"),
-      //     },
-      //   })
-      //   .get("user")
-      //   .then((res) => {
-      //     console.log(res);
-      //     this.userInfo = res.data.data;
-      //     this.userInfo["profileImg"] = res.data.profileImg;
-      //   });
-      console.log("크리에티드");
-
-      // this.profileImg = this.$store.getters.getUserImage;
-      // this.userNickname = this.$store.getters.getUserNickname;
-      // this.isLogin = this.$store.getters.getUserIsLogin;
+      console.log();
+    } else {
+      this.$store.commit("userInit");
     }
   },
 
