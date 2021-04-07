@@ -33,8 +33,15 @@ export default {
     return {
       // list: [],
       progress: 0,
+      changed: false,
       // todoList: [],
     };
+  },
+  watch: {
+    changed: function() {
+      this.$emit('updateTodoList', this.changed);
+      this.changed = false;
+    }
   },
   mounted() {
     // const list = JSON.parse(localStorage.getItem('list'));
@@ -68,6 +75,7 @@ export default {
         .then((res) => {
           if (res.data.success) {
             console.log('todolist가 잘 추가되었음');
+            this.changed = true;
             this.UpdateProgress();
           } else {
             console.log('todolist 추가 못함');
@@ -97,6 +105,7 @@ export default {
         .then((res) => {
           if (res.data.success) {
             console.log('todolist done');
+            this.changed = true;
             this.UpdateProgress();
           } else {
             console.log('todolist done fail');
@@ -120,6 +129,7 @@ export default {
         .then((res) => {
           if (res.data.success) {
             console.log('todolist 삭제 성공');
+            this.changed = true;
             this.UpdateProgress();
           } else {
             console.log('todolist 삭제 실패');
