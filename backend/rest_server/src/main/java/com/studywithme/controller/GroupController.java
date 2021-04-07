@@ -296,12 +296,7 @@ public class GroupController {
 					
 					UserDto userDto=new UserDto();
 					userDto.setNickname(curUser.get().getUserNickname());
-					try {
-						userDto.setProfileImg(curUser.get().getUserProfileImg().getBytes(1l, (int)curUser.get().getUserProfileImg().length()));
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					
 					if(curTimeDaily.isPresent()) 
 						userDto.setTodayStudyTime(curTimeDaily.get().getTimeDailyTime());
 					else
@@ -322,12 +317,7 @@ public class GroupController {
 					if(curUser.isPresent()) {
 						UserDto userDto=new UserDto();
 						userDto.setNickname(curUser.get().getUserNickname());
-						try {
-							userDto.setProfileImg(curUser.get().getUserProfileImg().getBytes(1l, (int)curUser.get().getUserProfileImg().length()));
-						} catch (SQLException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						
 						int sum=0;
 						for(String s: dates) {
 							Optional<TimeDaily> timeDailyEach=timeDailyRepository.findByTimeDailyUserNicknameAndTimeDailyYearMonthDayAndTimeDailyAction(nickname, s,0);
@@ -350,13 +340,7 @@ public class GroupController {
 					
 					UserDto userDto=new UserDto();
 					userDto.setNickname(curUser.get().getUserNickname());
-					try {
-						userDto.setProfileImg(curUser.get().getUserProfileImg().getBytes(1l, (int)curUser.get().getUserProfileImg().length()));
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					
+										
 					if(monthlyList.isPresent()) 
 						userDto.setTodayStudyTime(monthlyList.get().getTimeMonthlyTime());
 					else
@@ -365,8 +349,14 @@ public class GroupController {
 				}
 			}		
 			Collections.sort(userList);
+			List<UserDto> userListTop3=new ArrayList<>();
+			int max=userList.size();
+			if(max>3)
+				max=3;
+			for(int i=0;i<3;i++)
+				userListTop3.add(userList.get(i));
 			result.clear();
-			result.put("rankingList",userList);
+			result.put("rankingList",userListTop3);
 		}
 		return result;
 	}
