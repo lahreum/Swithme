@@ -16,7 +16,7 @@ face_class_names = [c.strip() for c in open(face_class_names_path).readlines()]
 # hand_class_names = [c.strip() for c in open(hand_class_names_path).readlines()]
 
 
-def detect(image, detect_cnt):
+def detect(image):
     # 모델 불러오기
     origin_yolo = settings.ORIGIN_YOLO
     face_yolo = settings.FACE_YOLO
