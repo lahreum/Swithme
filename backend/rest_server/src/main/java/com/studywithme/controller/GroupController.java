@@ -280,7 +280,8 @@ public class GroupController {
 		
 		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		Optional<GroupInfo> group=groupRepository.findById(groupId);
-		if(user.isPresent()&&group.isPresent()) {
+		Optional<GroupMember> groupMember=groupMemberRepository.findByGroupMemberUserNicknameAndGroupMemberGroupId(nickname, groupId);
+		if(user.isPresent()&&group.isPresent()&&groupMember.isPresent()) {
 			List<UserDto> userList=new ArrayList<>();
 			
 			switch(range) {
