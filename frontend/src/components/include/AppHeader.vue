@@ -63,7 +63,7 @@
       <v-col cols="2">
         <v-row
           no-gutters
-          v-if="!isLogin"
+          v-if="!$store.getters.getUserIsLogin"
           justify="center"
           style="margin-left: 60px"
         >
@@ -102,17 +102,17 @@
             <template v-slot:activator="{ on }">
               <v-col cols="2">
                 <profile-small
-                  :src="'data:image/png;base64,' + userInfo.profileImg"
+                  :src="'data:image/png;base64,' + $store.getters.getUserImage"
                 ></profile-small>
               </v-col>
               <v-col
-                style="cursor: pointer;"
+                style="cursor: pointer"
                 align="start"
                 align-self="center"
                 v-on="on"
                 :class="{ 'white-text': darkmode, 'black-text': !darkmode }"
               >
-                {{ userNickname }}님, 안녕하세요!
+                {{ $store.getters.getUserNickname }}님, 안녕하세요!
               </v-col>
             </template>
             <v-list>
@@ -122,7 +122,7 @@
                 </v-list-item-title>
               </v-list-item>
               <v-list-item>
-                <v-list-item-title style="cursor: pointer" @click="signOut">
+                <v-list-item-title style="cursor: pointer" @click="logout">
                   로그아웃
                 </v-list-item-title>
               </v-list-item>
@@ -176,6 +176,7 @@
                 <v-col class="middleLetter formLetter" cols="3">비밀번호</v-col>
                 <v-col cols="9"
                   ><input-bar
+                    :type="'password'"
                     @pass-input="getPw"
                     placeholder="비밀번호"
                   ></input-bar
@@ -254,39 +255,32 @@ export default {
   },
   data: function() {
     return {
-      isLogin: false,
       username: 'default',
       dialog: false,
-      userInfo: {},
+      userInfo: [],
       email: '',
       pw: '',
-      userNickname: '',
+      recommendGroup: [],
+      Rgroups: [],
+      isLogin: this.$store.getters.getUserIsLogin,
+      userNickname: this.$store.getters.getUserNickname,
+      profileImg: this.$store.getters.getUserImage,
     };
   },
 
-  mounted() {
+  created() {
     // console.log('마운티드됨?');
     if (storage.getItem('jwt-auth-token')) {
-      this.isLogin = true;
-      this.getUserInfo(storage.getItem('jwt-auth-token'));
-      // console.log(storage.getItem("jwt-auth-token"));
+      console.log();
+    } else {
+      this.$store.commit('userInit');
     }
   },
 
   methods: {
-    checkLogin() {
-      if (this.userInfo === null) {
-        this.isLogin = false;
-      } else {
-        this.isLogin = true;
-      }
-    },
-    signIn: function() {
-      this.isLogin = true;
-    },
-    signOut: function() {
+    logout: function() {
       alert('성공적으로 로그아웃 했습니다. 안녕히!');
-      this.isLogin = false;
+      // this.isLogin = false;
       storage.removeItem('jwt-auth-token');
       this.$store.commit('userInit');
       if (this.$router.currentRoute.path != '/') {
@@ -315,26 +309,46 @@ export default {
         })
         .get('user')
         .then((res) => {
-          // console.log(res);
-          // this.userInfo = res.data;
-
+          console.log(res);
           this.userInfo = res.data.data;
-          this.userInfo.profileImg = res.data.profileImg;
+          this.userInfo['profileImg'] = res.data.profileImg;
+          this.userInfo['isLogin'] = true;
+          console.log('히히', this.userInfo);
           this.$store.commit('LOGIN', this.userInfo);
-          this.userNickname = this.$store.getters.getUserNickname;
-          // console.log(this.userNickname);
-          console.log('무야호', this.userInfo);
+
           this.profileImg = this.$store.getters.getUserImage;
-          console.log(this.$store.getters.getUserImage);
+          this.userNickname = this.$store.getters.getUserNickname;
+
+          axios
+            .create({
+              headers: {
+                'jwt-auth-token': storage.getItem('jwt-auth-token'),
+              },
+            })
+            .get('group')
+            .then((res) => {
+              this.Rgroups = res.data.groupList;
+              console.log(this.Rgroups);
+              for (var i = 0; i < this.Rgroups.length; i++) {
+                this.Rgroups[i]['src'] =
+                  res.data.groupProfileList[i].groupProfileImg;
+              }
+              this.recommendGroup = this.Rgroups.filter(
+                (group) => group.groupName.length > 4
+              );
+              this.recommendGroup = this.recommendGroup.slice(0, 6);
+
+              this.$store.commit('RECOMMENDGROUP', this.recommendGroup);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
         })
         .catch((err) => {
           console.log(err);
         });
     },
-
     login() {
-      // console.log('로그인버튼눌럿다!');
-
       var params = new URLSearchParams();
       params.append('userId', this.email);
       params.append('userPassword', this.pw);
@@ -343,7 +357,6 @@ export default {
         .then((res) => {
           // console.log(res);
           if (res.data.success === true) {
-            window.location.reload();
             this.dialog = false;
             this.isLogin = true;
             // console.log(res);

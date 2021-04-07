@@ -70,6 +70,7 @@
                 :groupDesc="group.groupNotice"
                 :groupCnt="group.groupCurMemberCount"
                 :groupTotalCnt="group.groupMaxMemberCount"
+                :groupPassword="group.groupPassword"
             /></v-col>
           </v-row>
           <v-row v-else-if="caseNum === 2">
@@ -87,6 +88,7 @@
                 :groupDesc="group.groupNotice"
                 :groupCnt="group.groupCurMemberCount"
                 :groupTotalCnt="group.groupMaxMemberCount"
+                :groupPassword="group.groupPassword"
             /></v-col>
           </v-row>
           <v-row v-else-if="caseNum === 3">
@@ -104,6 +106,7 @@
                 :groupDesc="group.groupNotice"
                 :groupCnt="group.groupCurMemberCount"
                 :groupTotalCnt="group.groupMaxMemberCount"
+                :groupPassword="group.groupPassword"
             /></v-col>
           </v-row>
           <v-row v-else-if="caseNum === 4">
@@ -121,6 +124,7 @@
                 :groupDesc="group.groupNotice"
                 :groupCnt="group.groupCurMemberCount"
                 :groupTotalCnt="group.groupMaxMemberCount"
+                :groupPassword="group.groupPassword"
             /></v-col>
           </v-row>
           <v-row v-else-if="caseNum === 5">
@@ -138,6 +142,7 @@
                 :groupDesc="group.groupNotice"
                 :groupCnt="group.groupCurMemberCount"
                 :groupTotalCnt="group.groupMaxMemberCount"
+                :groupPassword="group.groupPassword"
             /></v-col>
           </v-row>
           <v-row justify="center" v-else-if="caseNum === 6">
@@ -379,6 +384,7 @@ export default {
                 res.data.groupProfileList[i].groupProfileImg;
             }
             this.AllGroup = this.groups.slice(0, 12);
+            this.caseNum = 1;
           })
           .catch((err) => console.log(err));
       }
@@ -419,7 +425,7 @@ export default {
       })
       .get("group")
       .then((res) => {
-        // console.log("그룹메인created될때", res);
+        console.log("그룹받아오는거성공할때", res);
         this.groups = res.data.groupList;
         for (var i = 0; i < this.groups.length; i++) {
           this.groups[i]["src"] = res.data.groupProfileList[i].groupProfileImg;

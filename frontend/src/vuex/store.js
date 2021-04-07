@@ -17,6 +17,7 @@ const state = {
   phoneTime: 0,
   sleepTime: 0,
   talkTime: 0,
+  Rgroup:{},
 };
 
 export default new Vuex.Store({

@@ -10,8 +10,16 @@
           <v-row align-content="center">
             <v-col style="margin-bottom:50px;" align="center">
               <v-img
+                id="input"
                 class="groupImgUpload"
+                v-if="clickUpload === 0"
                 :src="'data:image/png;base64,' + imageUrl"
+              ></v-img>
+              <v-img
+                id="input"
+                class="groupImgUpload"
+                v-else
+                :src="imageUrl"
               ></v-img>
 
               <v-btn type="button" @click="onClickImageUpload"
@@ -19,6 +27,7 @@
               >
               <input
                 ref="imageInput"
+                accept=".jpg, .jpeg, .png"
                 type="file"
                 hidden
                 @change="onChangeImages"
@@ -187,6 +196,7 @@ import AppBtnMiddle from "@/components/common/AppBtnMiddle.vue";
 import MiddleNav from "@/components/include/MiddleNav.vue";
 import axios from "axios";
 const storage = window.sessionStorage;
+
 export default {
   components: {
     MiddleNav,
@@ -208,6 +218,8 @@ export default {
       minNum: 0,
       fileList: [],
       imageUrl: null,
+      resizeImg: {},
+      clickUpload: 0,
       items: ["정보처리기사", "토익", "임용고시", "공무원"],
       radios: null,
       groupInfo: { groupGoalDate: "", groupGoalTitle: "" },
@@ -272,12 +284,80 @@ export default {
     onClickImageUpload() {
       this.$refs.imageInput.click();
     },
+    dataURItoBlob(dataURI) {
+      // convert base64 to raw binary data held in a string
+      // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+      var byteString = atob(dataURI.split(",")[1]);
+
+      // separate out the mime component
+      var mimeString = dataURI
+        .split(",")[0]
+        .split(":")[1]
+        .split(";")[0];
+
+      // write the bytes of the string to an ArrayBuffer
+      var ab = new ArrayBuffer(byteString.length);
+
+      // create a view into the buffer
+      var ia = new Uint8Array(ab);
+
+      // set the bytes of the buffer to the correct values
+      for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+      }
+
+      // write the ArrayBuffer to a blob, and you're done
+      var blob = new Blob([ab], { type: mimeString });
+      return blob;
+    },
+
     onChangeImages(e) {
-      console.log(e.target.files);
+      console.log(e);
+
       const file = e.target.files[0]; // Get first index in files
       this.imageUrl = URL.createObjectURL(file); // Create File URL
+
       this.fileList = e.target.files;
+      console.log(e.target.files);
+      console.log(this.fileList);
+      this.clickUpload++;
+      console.log(this.fileList);
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = function(event) {
+        const imgElement = document.createElement("img");
+
+        imgElement.src = event.target.result;
+
+        document.querySelector("#input").src = event.target.result;
+        imgElement.onload = function(e) {
+          const canvas = document.createElement("canvas");
+          const MAX_WIDTH = 400;
+
+          const scaleSize = MAX_WIDTH / e.target.width;
+          canvas.width = MAX_WIDTH;
+          canvas.height = e.target.height * scaleSize;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(e.target, 0, 0, canvas.width, canvas.height);
+          // console.log(e.target);
+          const srcEncoded = ctx.canvas.toDataURL(e.target, "image/jpeg");
+
+          console.log(file.name);
+          console.log(typeof srcEncoded);
+          var tmpBlob = this.dataURItoBlob(srcEncoded);
+          this.resizeImg = new File(tmpBlob, file.name, {
+            type: "image/jpeg",
+          });
+
+          console.log("리사이즈이미지", this.resizeImg);
+
+          console.log(this.filelist);
+        };
+      };
+      console.log(this.filelist);
+      console.log(file);
     },
+
     groupModify() {
       if (this.groupGoalDate === "") {
         this.groupGoalDate = null;
@@ -314,13 +394,15 @@ export default {
 
           // console.log("파일리스트", this.fileList);
           // console.log("받아온그룹아이디", res.data.createdGroupId);
-          // console.log(this.fileList);
+          console.log("파일리스트", this.fileList);
+
           if (this.fileList.length !== 0) {
             var params = new FormData();
-            params.append("groupId", res.data.createdGroupId);
-            params.append("file", this.fileList[0]);
+            params.append("groupId", this.groupInfo.groupId);
 
-            // console.log(this.fileList[0]);
+            params.append("file", this.fileList[0]);
+            // params.append("file", this.resizeImg);
+
             axios
               .create({
                 headers: {
@@ -333,9 +415,11 @@ export default {
                 console.log("해치웠나??", res);
                 this.$router.push("/group");
               });
+          } else {
+            this.$router.push("/group");
           }
-          this.$router.push("/group");
-          console.log("수정한다", this.groupInfo);
+
+          // console.log("수정한다", this.groupInfo);
         });
     },
     deleteGroup() {

@@ -24,12 +24,12 @@ export default {
     // 제약 조건 정의
     let constaints = {
       width: { min: 640, max: 640 },
-      height: { min: 480, max: 480 },
+      height: { min: 402, max: 402 },
     };
 
     // canvas 크기 설정
     canvas.width = 640;
-    canvas.height = 480;
+    canvas.height = 402;
 
     // 클라이언트의 카메라를 녹화할 수 있도록 요청
     // 허용할 경우 MediaStream 객체를 얻어 Stream 가능

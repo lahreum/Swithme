@@ -29,7 +29,13 @@
                 ><v-icon>mdi-login</v-icon>가입하기</v-btn
               >
 
-              <v-btn v-if="nowUser" @click="leaveGroup" icon color="red"
+              <v-btn
+                v-if="
+                  nowUser && loginNickname !== groupInfo.groupMasterNickname
+                "
+                @click="leaveGroup"
+                icon
+                color="red"
                 ><v-icon>mdi-logout</v-icon>탈퇴하기</v-btn
               >
             </v-col>
@@ -51,10 +57,20 @@
             <v-btn icon color="black" x-large @click="toGroupHome"
               ><v-icon>mdi-home</v-icon> 홈</v-btn
             >
-            <v-btn icon color="black" x-large @click="toGroupRanking"
+            <v-btn
+              :disabled="!nowUser"
+              icon
+              color="black"
+              x-large
+              @click="toGroupRanking"
               ><v-icon>mdi-poll</v-icon> 랭킹</v-btn
             >
-            <v-btn icon color="black" x-large @click="toGroupAttendance"
+            <v-btn
+              :disabled="!nowUser"
+              icon
+              color="black"
+              x-large
+              @click="toGroupAttendance"
               ><v-icon>mdi-calendar-month</v-icon> 출석부</v-btn
             >
           </v-row>
@@ -93,7 +109,7 @@
               :key="'notStudying' + idx"
               ><div class="GroupStudyUser">
                 <ProfileStudying
-                  :src="'data:image/png;base64,' + grouper.profileImg"
+                  :src="grouper.profileImg"
                   :IsStudying="grouper.studying"
                 />
                 <h2 style="margin:30px 0 0 0">{{ grouper.nickname }}</h2>
@@ -113,6 +129,7 @@
 import ProfileStudying from "@/components/common/ProfileStudying.vue";
 import MiddleNav from "@/components/include/MiddleNav.vue";
 import date from "@/date.js";
+import studyTime from "@/changeSec.js";
 import axios from "axios";
 const storage = window.sessionStorage;
 
@@ -138,9 +155,6 @@ export default {
   created() {
     let today = new Date();
     let day = date.dateFunc(today);
-
-    console.log("내가만든함수", day);
-
     axios
       .create({
         headers: {
@@ -154,7 +168,10 @@ export default {
         this.groupers = res.data.groupMemberList;
         this.loginNickname = this.$store.getters.getUserNickname;
         for (var i = 0; i < this.groupers.length; i++) {
-          if (this.groupers[i].Studying) {
+          this.groupers[i].todayStudyTime = studyTime(
+            this.groupers[i].todayStudyTime
+          );
+          if (this.groupers[i].studying) {
             this.studying.push(this.groupers[i]);
           } else {
             this.notStudying.push(this.groupers[i]);
@@ -201,10 +218,16 @@ export default {
       });
     },
     toGroupRanking() {
-      this.$router.push("/group-ranking");
+      this.$router.push({
+        name: "GroupRanking",
+        query: { groupId: this.groupInfo.groupId },
+      });
     },
     toGroupAttendance() {
-      this.$router.push("/group-attendance");
+      this.$router.push({
+        name: "GroupAttendance",
+        query: { groupId: this.groupInfo.groupId },
+      });
     },
     toGroupModify(g) {
       this.$router.push({ name: "GroupModify", query: { groupId: g } });
@@ -234,7 +257,7 @@ export default {
               this.studying = [];
               this.notStudying = [];
               for (var i = 0; i < this.groupers.length; i++) {
-                if (this.groupers[i].Studying) {
+                if (this.groupers[i].studying) {
                   this.studying.push(this.groupers[i]);
                 } else {
                   this.notStudying.push(this.groupers[i]);
@@ -268,7 +291,7 @@ export default {
               this.studying = [];
               this.notStudying = [];
               for (var i = 0; i < this.groupers.length; i++) {
-                if (this.groupers[i].Studying) {
+                if (this.groupers[i].studying) {
                   this.studying.push(this.groupers[i]);
                 } else {
                   this.notStudying.push(this.groupers[i]);

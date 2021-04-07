@@ -7,7 +7,7 @@ export default {
     return state.user.userNickname;
   },
   getUserImage(state) {
-    return state.user.userImage;
+    return state.user.profileImg;
   },
   getUserMessage(state) {
     return state.user.userMessage;
@@ -15,11 +15,17 @@ export default {
   getUserIsStudying(state) {
     return state.user.userIsStudying;
   },
+  getUserIsLogin(state) {
+    return state.user.isLogin;
+  },
   getAwayTime(state) {
     return state.awayTime;
   },
   getPhoneTime(state) {
     return state.phoneTime;
+  },
+  getRecommendGroup(state){
+    return state.Rgroup
   },
   getSleepTime(state) {
     return state.sleepTime;

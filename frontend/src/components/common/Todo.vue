@@ -35,7 +35,7 @@ export default {
   methods: {
     doneTodo(id) {
       this.$emit("done", id);
-      console.log(id);
+      // console.log(id);
     },
     deleteTodo(id) {
       this.$emit("delete", id);

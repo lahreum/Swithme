@@ -234,7 +234,7 @@ public class GroupController {
 				
 				for(GroupMember gm:groupMembers.get()) {
 					Optional<UserInfo> curUserOpt=userRepository.findByUserNickname(gm.getGroupMemberUserNickname());
-					Optional<TimeDaily> curTimeDaily=timeDailyRepository.findByTimeDailyUserNicknameAndTimeDailyYearMonthDayAndTimeDailyAction(nickname, datetime,0);
+					Optional<TimeDaily> curTimeDaily=timeDailyRepository.findByTimeDailyUserNicknameAndTimeDailyYearMonthDayAndTimeDailyAction(gm.getGroupMemberUserNickname(), datetime,0);
 							
 					UserDto curUser=new UserDto();
 					curUser.setNickname(curUserOpt.get().getUserNickname());
@@ -292,16 +292,11 @@ public class GroupController {
 				Optional<List<GroupMember>> groupMemberList=groupMemberRepository.findByGroupMemberGroupId(groupId);
 				for(GroupMember gm:groupMemberList.get()) {
 					Optional<UserInfo> curUser=userRepository.findByUserNickname(gm.getGroupMemberUserNickname());
-					Optional<TimeDaily> curTimeDaily=timeDailyRepository.findByTimeDailyUserNicknameAndTimeDailyYearMonthDayAndTimeDailyAction(nickname, datetime,0);
+					Optional<TimeDaily> curTimeDaily=timeDailyRepository.findByTimeDailyUserNicknameAndTimeDailyYearMonthDayAndTimeDailyAction(gm.getGroupMemberUserNickname(), datetime,0);
 					
 					UserDto userDto=new UserDto();
 					userDto.setNickname(curUser.get().getUserNickname());
-					try {
-						userDto.setProfileImg(curUser.get().getUserProfileImg().getBytes(1l, (int)curUser.get().getUserProfileImg().length()));
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					
 					if(curTimeDaily.isPresent()) 
 						userDto.setTodayStudyTime(curTimeDaily.get().getTimeDailyTime());
 					else
@@ -316,21 +311,17 @@ public class GroupController {
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
+				
 				Optional<List<GroupMember>> groupMemberWeekly=groupMemberRepository.findByGroupMemberGroupId(groupId);
 				for(GroupMember gm:groupMemberWeekly.get()) {
 					Optional<UserInfo> curUser=userRepository.findByUserNickname(gm.getGroupMemberUserNickname());
 					if(curUser.isPresent()) {
 						UserDto userDto=new UserDto();
 						userDto.setNickname(curUser.get().getUserNickname());
-						try {
-							userDto.setProfileImg(curUser.get().getUserProfileImg().getBytes(1l, (int)curUser.get().getUserProfileImg().length()));
-						} catch (SQLException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						
 						int sum=0;
 						for(String s: dates) {
-							Optional<TimeDaily> timeDailyEach=timeDailyRepository.findByTimeDailyUserNicknameAndTimeDailyYearMonthDayAndTimeDailyAction(nickname, s,0);
+							Optional<TimeDaily> timeDailyEach=timeDailyRepository.findByTimeDailyUserNicknameAndTimeDailyYearMonthDayAndTimeDailyAction(gm.getGroupMemberUserNickname(), s,0);
 							if(timeDailyEach.isPresent()) 
 								sum+=timeDailyEach.get().getTimeDailyTime();
 						}						
@@ -350,13 +341,7 @@ public class GroupController {
 					
 					UserDto userDto=new UserDto();
 					userDto.setNickname(curUser.get().getUserNickname());
-					try {
-						userDto.setProfileImg(curUser.get().getUserProfileImg().getBytes(1l, (int)curUser.get().getUserProfileImg().length()));
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					
+										
 					if(monthlyList.isPresent()) 
 						userDto.setTodayStudyTime(monthlyList.get().getTimeMonthlyTime());
 					else
@@ -365,8 +350,14 @@ public class GroupController {
 				}
 			}		
 			Collections.sort(userList);
+			List<UserDto> userListTop3=new ArrayList<>();
+			int max=userList.size();
+			if(max>3)
+				max=3;
+			for(int i=0;i<max;i++)
+				userListTop3.add(userList.get(i));
 			result.clear();
-			result.put("rankingList",userList);
+			result.put("rankingList",userListTop3);
 		}
 		return result;
 	}
@@ -378,6 +369,8 @@ public class GroupController {
 		
 		result.put("success",false);
 		
+		List<List<TimeDaily>> attList=new ArrayList<>();
+		
 		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
 		
 		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
@@ -386,23 +379,38 @@ public class GroupController {
 			if(group.isPresent()) {
 				Optional<GroupMember> groupMember=groupMemberRepository.findByGroupMemberUserNicknameAndGroupMemberGroupId(nickname, groupId);
 				if(groupMember.isPresent()) {
-					Optional<List<GroupMember>> groupMemberList=groupMemberRepository.findByGroupMemberGroupId(groupId);
+					Optional<List<GroupMember>> groupMemberList=groupMemberRepository.findByGroupMemberGroupIdOrderByGroupMemberId(groupId);
 					String[] dates=null;
 					try {
 						dates = commonMethods.getDays(datetime);
 					} catch (ParseException e) {
 						e.printStackTrace();
 					}
+					
 					result.clear();
 					for(GroupMember gm:groupMemberList.get()) {
 						List<TimeDaily> eachTimeDaily=new ArrayList<>();
+						int index=0;
 						for(String s:dates) {
-							Optional<TimeDaily> td=timeDailyRepository.findByTimeDailyUserNicknameAndTimeDailyYearMonthDayAndTimeDailyAction(nickname, s, 0);
-							if(td.isPresent()) 
+							Optional<TimeDaily> td=timeDailyRepository.findByTimeDailyUserNicknameAndTimeDailyYearMonthDayAndTimeDailyAction(gm.getGroupMemberUserNickname(), s, 0);
+							if(td.isPresent()) {
+								td.get().setTimeDailyId(index);
 								eachTimeDaily.add(td.get());
+							}
+							else {
+								TimeDaily newTd=new TimeDaily();
+								newTd.setTimeDailyTime(0);
+								newTd.setTimeDailyAction(0);
+								newTd.setTimeDailyId(index);
+								newTd.setTimeDailyUserNickname(gm.getGroupMemberUserNickname());
+								newTd.setTimeDailyYearMonthDay(s);
+								eachTimeDaily.add(newTd);
+							}
+							index++;
 						}
-						result.put(gm.getGroupMemberUserNickname(),eachTimeDaily);
+						attList.add(eachTimeDaily);
 					}
+					result.put("attendanceList",attList);
 					result.put("success",true);
 				}
 			}
