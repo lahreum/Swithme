@@ -83,7 +83,7 @@ export default {
 
                       // 객체 감지를 위해 이미지를 인공지능 서버로 전송
                       axios
-                        .post('http://localhost:9999/predict', data)
+                        .post('http://localhost:8000/predict', data)
                         .then((response) => {
                           // 객체 감지 결과
                           let detectResult = response.data;
