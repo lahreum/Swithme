@@ -39,7 +39,11 @@
                   centered
                   slider-color="#673fb4"
                 >
-                  <v-tab @click="inItDay" v-for="item in items" :key="item">
+                  <v-tab
+                    @click="inItDay(item)"
+                    v-for="item in items"
+                    :key="item"
+                  >
                     {{ item }}
                   </v-tab>
                 </v-tabs>
@@ -222,6 +226,7 @@
 <script>
 import MiddleNav from "@/components/include/MiddleNav.vue";
 import date from "@/date.js";
+import studyTime from "@/changeSec.js";
 import axios from "axios";
 const storage = window.sessionStorage;
 export default {
@@ -344,11 +349,12 @@ export default {
       console.log(this.monthly);
       this.getRanking();
     },
-    inItDay() {
+    inItDay(item) {
       var param = new Date();
       var day = date.dateFunc(param);
-
+      this.tabs = this.items.indexOf(item);
       console.log("인잇했을때 현재 날짜", day);
+      console.log(this.tabs);
       axios
         .create({
           headers: {
@@ -362,14 +368,38 @@ export default {
         )
         .then((res) => {
           console.log(res);
+          console.log(this.tabs);
           if (this.tabs === 0) {
             this.Day1stTo3rd = res.data.rankingList;
+            for (var i = 0; i < 3; i++) {
+              this.Day1stTo3rd[i].todayStudyTime = studyTime(
+                this.Day1stTo3rd[i].todayStudyTime
+              );
+            }
           } else if (this.tabs === 1) {
             this.Week1stTo3rd = res.data.rankingList;
+            for (i = 0; i < 3; i++) {
+              this.Week1stTo3rd[i].todayStudyTime = studyTime(
+                this.Week1stTo3rd[i].todayStudyTime
+              );
+            }
           } else {
             this.Month1stTo3rd = res.data.rankingList;
+            for (i = 0; i < 3; i++) {
+              this.Month1stTo3rd[i].todayStudyTime = studyTime(
+                this.Month1stTo3rd[i].todayStudyTime
+              );
+            }
           }
         });
+      this.today = new Date();
+      this.daily = new Date();
+      this.getWeekly1();
+      this.monthly = new Date(
+        this.today.getFullYear(),
+        this.today.getMonth(),
+        1
+      );
     },
     getRanking() {
       if (this.tabs === 0) {
@@ -399,10 +429,25 @@ export default {
           console.log(res);
           if (this.tabs === 0) {
             this.Day1stTo3rd = res.data.rankingList;
+            for (var i = 0; i < 3; i++) {
+              this.Day1stTo3rd[i].todayStudyTime = studyTime(
+                this.Day1stTo3rd[i].todayStudyTime
+              );
+            }
           } else if (this.tabs === 1) {
             this.Week1stTo3rd = res.data.rankingList;
+            for (i = 0; i < 3; i++) {
+              this.Week1stTo3rd[i].todayStudyTime = studyTime(
+                this.Week1stTo3rd[i].todayStudyTime
+              );
+            }
           } else {
             this.Month1stTo3rd = res.data.rankingList;
+            for (i = 0; i < 3; i++) {
+              this.Month1stTo3rd[i].todayStudyTime = studyTime(
+                this.Month1stTo3rd[i].todayStudyTime
+              );
+            }
           }
         });
     },
@@ -440,6 +485,12 @@ export default {
             console.log("크리에이티드할떄", day);
             console.log(res);
             this.Day1stTo3rd = res.data.rankingList;
+            console.log(this.Day1stTo3rd);
+            for (var i = 0; i < 3; i++) {
+              this.Day1stTo3rd[i].todayStudyTime = studyTime(
+                this.Day1stTo3rd[i].todayStudyTime
+              );
+            }
           });
       });
   },
