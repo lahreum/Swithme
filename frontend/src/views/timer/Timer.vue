@@ -209,10 +209,12 @@ export default {
       this.UTCminute = currentTime.getUTCMinutes();
       this.UTCsecond = currentTime.getUTCSeconds();
       
-      if(this.UTCminute === 0 && this.UTCsecond === 0) {  // 정각일때마다 초기화 && DB에 누적 분 저장
-
+      if(this.UTCminute === 0 && this.UTCsecond === 0) {  // 정각일때마다 초기화 && DB에 누적된 초 저장
+        console.log('정각이 되었습니다.');
+        this.saveHourlyTime();  // 시간당 초를 저장함
       }
 
+      this.accumulatedSec++;  // 누적 초 저장
       this.sec++;
       if( this.sec >=60) {
         this.min++;
@@ -246,6 +248,8 @@ export default {
     },
     stopStudy() {
       this.$router.push('/');
+      this.saveHourlyTime();      // 방해요소는 날짜 바뀔때랑 공부 종료할때 보내면 되고, 각 방해요소별로 보내야함.
+      this.changeStatusToNotStudy();
       // 비디오 끄기
       // 지금까지 공부한 시간 DB에 저장
     },
@@ -260,6 +264,7 @@ export default {
       .then((res)=>{
         if(res.data.success) {
           console.log('공부상태로 변경됨.');
+          this.$store.commit("FETCHSTUDYING");
         } else {
           console.log('공부상태로 변경 실패');
         }
@@ -270,18 +275,51 @@ export default {
     },
     changeStatusToNotStudy(){
       this.$Axios
-      .put('user/end',{
+      .create({
         headers: {
-            "jwt-auth-token": storage.getItem("jwt-auth-token"),
-        }
+          "jwt-auth-token": storage.getItem("jwt-auth-token"),
+        },
       })
+      .put('user/end')
       .then((res)=>{
         if(res.data.success) {
           console.log('비공부상태로 변경 성공');
+          this.$store.commit("STOPSTUDYING");
+          console.log(this.$store.commit("getUserIsStudying"));
         } else {
           console.log('비공부상태로 변경 실패');
         }
       }) 
+      .catch((error)=>{
+        console.log(error);
+      })
+    },
+    saveHourlyTime(){
+      let today = new Date();
+      let day = date.dateFunc(today);
+
+      let params = new URLSearchParams();
+      params.append('datetime', day);     // 현재 시간과
+      params.append('studyTime', this.accumulatedSec);  // 누적된 초를 보냄
+      
+      console.log(day);
+      console.log(this.accumulatedSec);
+
+      this.$Axios
+      .create({
+        headers: {
+          "jwt-auth-token": storage.getItem("jwt-auth-token"),
+        },
+      })
+      .post('timer/study-time', params)
+      .then((res)=>{
+        if(res.data.success) {
+          console.log('Hourly 공부시간 저장됨!!!!!!!');
+          this.accumulatedSec = 0;    // 저장했으므로 다시 초기화함
+        } else {
+          console.log('공부시간 저장 실패!!!');
+        }
+      })
       .catch((error)=>{
         console.log(error);
       })

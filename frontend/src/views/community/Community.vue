@@ -18,7 +18,7 @@ export default {
     data: function() {
         return {
             navInfo: [
-                'sample1.jpg',
+                'nav6.jpg',
                 '커뮤니티',
                 '같은 시험을 준비하는 사람들과 정보를 공유해보세요.',
             ]
