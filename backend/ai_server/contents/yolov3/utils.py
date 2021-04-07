@@ -115,15 +115,22 @@ def draw_outputs(img, outputs, class_names):
     return img
 
 
-def detect_result(outputs, class_names, detect_cnt):
-    boxes, objectness, classes, nums = outputs
-    boxes, objectness, classes, nums = boxes[0], objectness[0], classes[0], nums[0]
+def detect_result(origin_outputs, origin_class_names, face_outputs, face_class_names):
+    origin_boxes, origin_objectness, origin_classes, origin_nums = origin_outputs
+    origin_boxes, origin_objectness, origin_classes, origin_nums = origin_boxes[0], origin_objectness[0], origin_classes[0], origin_nums[0]
+    face_boxes, face_objectness, face_classes, face_nums = face_outputs
+    face_boxes, face_objectness, face_classes, face_nums = face_boxes[0], face_objectness[0], face_classes[0], face_nums[0]
 
     result = []
 
-    for i in range(nums):
-        if objectness[i] >= 0.7:
-            class_name = class_names[int(classes[i])]
+    for i in range(origin_nums):
+        if origin_objectness[i] >= 0.7:
+            class_name = origin_class_names[int(origin_classes[i])]
+            result.append(class_name)
+
+    for i in range(face_nums):
+        if face_objectness[i] >= 0.7:
+            class_name = face_class_names[int(face_classes[i])]
             result.append(class_name)
 
     return result
