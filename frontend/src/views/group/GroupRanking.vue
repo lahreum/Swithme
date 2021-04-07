@@ -317,19 +317,19 @@ export default {
     toGroupHome() {
       this.$router.push({
         name: "GroupDetail",
-        query: { groupId: this.gId },
+        query: { groupId: this.$route.query.groupId },
       });
     },
     toGroupRanking() {
       this.$router.push({
         name: "GroupRanking",
-        query: { groupId: this.gId },
+        query: { groupId: this.$route.query.groupId },
       });
     },
     toGroupAttendance() {
       this.$router.push({
         name: "GroupAttendance",
-        query: { groupId: this.gId },
+        query: { groupId: this.$route.query.groupId },
       });
     },
     dayMinus() {
