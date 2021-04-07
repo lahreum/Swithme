@@ -302,7 +302,6 @@ public class GroupController {
 					else
 						userDto.setTodayStudyTime(0);
 					userList.add(userDto);
-					System.out.println(userDto.toString());
 				}
 				break;
 			case "week":
@@ -312,6 +311,8 @@ public class GroupController {
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
+				for(String s: dates)
+					System.out.println(s);
 				Optional<List<GroupMember>> groupMemberWeekly=groupMemberRepository.findByGroupMemberGroupId(groupId);
 				for(GroupMember gm:groupMemberWeekly.get()) {
 					Optional<UserInfo> curUser=userRepository.findByUserNickname(gm.getGroupMemberUserNickname());
@@ -321,7 +322,7 @@ public class GroupController {
 						
 						int sum=0;
 						for(String s: dates) {
-							Optional<TimeDaily> timeDailyEach=timeDailyRepository.findByTimeDailyUserNicknameAndTimeDailyYearMonthDayAndTimeDailyAction(nickname, s,0);
+							Optional<TimeDaily> timeDailyEach=timeDailyRepository.findByTimeDailyUserNicknameAndTimeDailyYearMonthDayAndTimeDailyAction(gm.getGroupMemberUserNickname(), s,0);
 							if(timeDailyEach.isPresent()) 
 								sum+=timeDailyEach.get().getTimeDailyTime();
 						}						
@@ -384,11 +385,13 @@ public class GroupController {
 					} catch (ParseException e) {
 						e.printStackTrace();
 					}
+					for(String s:dates)
+						System.out.println(s);
 					result.clear();
 					for(GroupMember gm:groupMemberList.get()) {
 						List<TimeDaily> eachTimeDaily=new ArrayList<>();
 						for(String s:dates) {
-							Optional<TimeDaily> td=timeDailyRepository.findByTimeDailyUserNicknameAndTimeDailyYearMonthDayAndTimeDailyAction(nickname, s, 0);
+							Optional<TimeDaily> td=timeDailyRepository.findByTimeDailyUserNicknameAndTimeDailyYearMonthDayAndTimeDailyAction(gm.getGroupMemberUserNickname(), s, 0);
 							if(td.isPresent()) 
 								eachTimeDaily.add(td.get());
 						}

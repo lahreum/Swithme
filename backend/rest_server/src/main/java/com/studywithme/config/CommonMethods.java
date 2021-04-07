@@ -74,11 +74,21 @@ public class CommonMethods {
 		int whatDay=cal.get(Calendar.DAY_OF_WEEK);
 		
 		cal.add(Calendar.DATE, 1-whatDay);
-		int year=cal.get(Calendar.YEAR)%100;
-		int month=cal.get(Calendar.MONTH)+1;
-		int day=cal.get(Calendar.DATE);
-		for(int i=0;i<7;i++)
-			dates[i]=Integer.toString(year)+Integer.toString(month)+Integer.toString(day);
+
+		for(int i=0;i<7;i++) {
+			int year=cal.get(Calendar.YEAR)%100;
+			int month=cal.get(Calendar.MONTH)+1;
+			int day=cal.get(Calendar.DATE);
+			
+			dates[i]=Integer.toString(year);
+			if(month<10)
+				dates[i]=dates[i]+"0";
+			dates[i]=dates[i]+Integer.toString(month);
+			if(day<10)
+				dates[i]=dates[i]+"0";
+			dates[i]=dates[i]+Integer.toString(day);
+			cal.add(Calendar.DATE, 1);
+		}
 		return dates;
 	}
 }
