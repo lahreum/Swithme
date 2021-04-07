@@ -228,6 +228,8 @@ public class TimerController {
 				newTimeDaily.setTimeDailyYearMonthDay(datetime);
 				timeDailyRepository.save(newTimeDaily);
 			}
+			result.clear();
+			result.put("success",true);
 		}
 		return result;
 	}
