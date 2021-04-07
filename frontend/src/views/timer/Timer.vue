@@ -193,7 +193,7 @@ export default {
     },
     startTimer() {   // 타이머 시작 -> 카메라 on일때만 start 하는 걸로 변경필요. 새로고침하면 정보 사라지는데 어떡하지? vuex에 담아두기???? 
       console.log('start timer!');
-      this.$store.commit("FETCHSTUDYING");
+      this.changeStatusToStudy();
       if (this.running) return;      // 이미 타이머 돌아가고 잇는데 또 시작하라고할때
       
       this.started = setInterval(()=> this.runningTimer(), 1000);	// 1s마다 타이머 함수가 실행되도록 함.
@@ -201,7 +201,7 @@ export default {
     },
     stopTimer() {
       this.running = false; // 타이머가 멈춤
-      this.$store.commit("STOPSTUDYING");
+      this.changeStatusToNotStudy();
       clearInterval(this.started);    // 반복 명령 종료
     },
     runningTimer(){   // 타이머 시작
@@ -248,7 +248,44 @@ export default {
       this.$router.push('/');
       // 비디오 끄기
       // 지금까지 공부한 시간 DB에 저장
-    }
+    },
+    changeStatusToStudy() {
+      this.$Axios
+      .create({
+        headers: {
+          "jwt-auth-token": storage.getItem("jwt-auth-token"),
+        },
+      })
+      .put('user/start')
+      .then((res)=>{
+        if(res.data.success) {
+          console.log('공부상태로 변경됨.');
+        } else {
+          console.log('공부상태로 변경 실패');
+        }
+      })
+      .catch((error)=>{
+        console.log(error);
+      })
+    },
+    changeStatusToNotStudy(){
+      this.$Axios
+      .put('user/end',{
+        headers: {
+            "jwt-auth-token": storage.getItem("jwt-auth-token"),
+        }
+      })
+      .then((res)=>{
+        if(res.data.success) {
+          console.log('비공부상태로 변경 성공');
+        } else {
+          console.log('비공부상태로 변경 실패');
+        }
+      }) 
+      .catch((error)=>{
+        console.log(error);
+      })
+    },
   },
 };
 </script>
