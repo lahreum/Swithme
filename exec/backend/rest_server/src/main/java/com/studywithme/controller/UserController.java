@@ -464,8 +464,22 @@ public class UserController {
 			if(timeMonthly.isPresent())
 				myStudyTimeCurMonth=timeMonthly.get().getTimeMonthlyTime();
 			
+			String myMessage=null;
+			Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
+			if(user.isPresent())
+				myMessage=user.get().getUserMessage();
+			
+			int myRank=0;
+			for(int i=0;i<userList.size();i++) {
+				if(userList.get(i).getNickname().equals(nickname)) {
+					myRank=i+1;
+					break;
+				}
+			}
 			result.clear();
 			result.put("myStudyTime",myStudyTimeCurMonth);
+			result.put("myMessage",myMessage);
+			result.put("myRank",myRank);
 			result.put("allRankingList",userList);
 		}
 		return result;
