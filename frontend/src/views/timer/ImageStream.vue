@@ -111,22 +111,20 @@ export default {
                               this.awayCnt >= 5 &&
                               !this.$store.state.user.isStudying
                             )
-                            this.$emit('resumeTimer');
-                              this.awayCnt = 0;
-                            
+                              this.$emit('resumeTimer');
+                            this.awayCnt = 0;
                           }
 
                           if (!isPhone) {
                             if (
                               this.phoneCnt >= 5 &&
                               !this.$store.state.user.isStudying
-                            ) 
-                            this.$emit('resumeTimer');
-                              this.phoneCnt = 0;
-                            
+                            )
+                              this.$emit('resumeTimer');
+                            this.phoneCnt = 0;
                           } else this.phoneCnt++;
 
-                          if (!isFace) this.sleepCnt++;
+                          if (!isFace && isPerson) this.sleepCnt++;
                           else {
                             if (
                               this.sleepCnt >= 5 &&
@@ -142,9 +140,8 @@ export default {
                               this.talkCnt >= 5 &&
                               !this.$store.state.user.isStudying
                             )
-                            this.$emit('resumeTimer');
-                              this.talkCnt = 0;
-                            
+                              this.$emit('resumeTimer');
+                            this.talkCnt = 0;
                           }
 
                           console.log(
