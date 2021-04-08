@@ -6,9 +6,10 @@
         <v-col cols="2"></v-col>
         <v-col>
           <v-row align="center">
-            <span style="font:bold;font-size:2.5rem;margin-right:2%">{{
-              groupInfo.groupName
-            }}</span>
+            <span
+              style="max-width:85%; font:bold;font-size:2.5rem;margin-right:2%"
+              >{{ groupInfo.groupName }}</span
+            >
             <v-icon
               @click="toGroupModify(groupInfo.groupId)"
               v-if="IsGM"
@@ -45,7 +46,7 @@
             justify="space-between"
             style="font-size:1.5rem; margin:50px 0;"
           >
-            <span>{{ groupInfo.groupNotice }} </span>
+            <span style="max-width:55%;">{{ groupInfo.groupNotice }} </span>
             <span
               ><v-icon>mdi-account</v-icon>{{ groupers.length }}
               <v-icon>mdi-crown</v-icon
