@@ -42,6 +42,14 @@
               @runningTimer="runningTimer"
               @pauseTimer="pauseTimer"
               @resumeTimer="resumeTimer"
+              @awayState="away = true"
+              @phoneState="phone = true"
+              @sleepState="sleep = true"
+              @talkState="talk = true"
+              @awayEnd="away = false"
+              @phoneEnd="phone = false"
+              @sleepEnd="sleep = false"
+              @talkEnd="talk = false"
             />
             <v-img class="timerLogo" src="@/assets/img/logo_bl.png"></v-img>
             <v-btn
@@ -51,6 +59,77 @@
               style="color:white;"
               >튜토리얼</v-btn
             >
+            <div id="detectTable">
+              <v-expansion-panels accordion>
+                <v-expansion-panel
+                  style="background-color: rgba(255,255,255,0.5); border-radius: 20px; min-width: 230px;"
+                >
+                  <v-expansion-panel-header
+                    style="font-size: 1.2rem; letter-spacing: -2px; "
+                  >
+                    방해요소 보기
+                  </v-expansion-panel-header>
+                  <v-expansion-panel-content style="letter-spacing: -1px;">
+                    <v-row
+                      no-gutters
+                      style="letter-spacing: -1px; font-size: 1.1rem; font-weight: bolder;"
+                    >
+                      나는 지금까지..
+                    </v-row>
+                    <v-row
+                      no-gutters
+                      style="letter-spacing: -1px; font-size: 0.8rem; font-weight: ligter;"
+                    >
+                      <v-col>
+                        <v-row no-gutters>
+                          <v-col
+                            style="margin-right: 5px; font-weight: bold;"
+                            align="end"
+                            >자리비움 {{ $store.getters.getAwayTime }}회</v-col
+                          >
+                          <v-col
+                            style="margin-right: 5px; font-weight: bold;"
+                            align="end"
+                            >핸드폰 {{ $store.getters.getPhoneTime }}회</v-col
+                          >
+                        </v-row>
+                        <v-row no-gutters>
+                          <v-col
+                            style="margin-right: 5px; font-weight: bold;"
+                            align="end"
+                            >졸음 {{ $store.getters.getSleepTime }}회</v-col
+                          >
+                          <v-col
+                            style="margin-right: 5px; font-weight: bold;"
+                            align="end"
+                            >잡담 {{ $store.getters.getTalkTime }}회</v-col
+                          >
+                        </v-row>
+                      </v-col>
+                    </v-row>
+                    <hr
+                      style="margin-top: 10px; margin-bottom: 10px; background-color: white;"
+                    />
+                    <div
+                      style="letter-spacingL -1px; font-weight: bolder; font-size: 1.2rem; color: red;"
+                    >
+                      <v-row v-if="away" no-gutters justify="center">
+                        자리비움
+                      </v-row>
+                      <v-row v-if="phone" no-gutters justify="center">
+                        핸드폰
+                      </v-row>
+                      <v-row v-if="sleep" no-gutters justify="center">
+                        졸음
+                      </v-row>
+                      <v-row v-if="talk" no-gutters justify="center">
+                        잡담
+                      </v-row>
+                    </div>
+                  </v-expansion-panel-content>
+                </v-expansion-panel>
+              </v-expansion-panels>
+            </div>
             <v-row
               no-gutters
               class="time-bar timer"
@@ -168,6 +247,10 @@ export default {
       hour: 0,
       min: 0,
       sec: 0,
+      away: false,
+      phone: false,
+      sleep: false,
+      talk: false,
     };
   },
   created() {
@@ -513,6 +596,11 @@ export default {
   top: 10px;
   left: 67%;
   max-width: 150px;
+}
+#detectTable {
+  position: absolute;
+  top: 50px;
+  left: 1%;
 }
 .startStudy {
   vertical-align: middle;
