@@ -88,6 +88,7 @@
                 <TodoList
                   @updateTodoList="updateTodoList"
                   :todoList="todoList"
+                  :date="todayis"
                 />
                 <br />
                 <div @click="stopStudy" style="text-align:center;">
@@ -148,6 +149,7 @@ export default {
             '3. 하단에는 투두리스트를 기준으로 현재 진행률이 표시됩니다. 학습을 종료하고 싶다면 그만하기 버튼을 눌러주세요. 그만하기 버튼을 누르면 메인 홈으로 돌아갑니다.',
         },
       ],
+      todayis: '',
       isStudying: false,
       user: {},
       todoList: [],
@@ -173,7 +175,8 @@ export default {
     this.getUserInfo();
     this.getUserTimer();
     this.getTodoList();
-    // this.startTimer();
+    let today = new Date();
+    this.todayis = date.dateFunc(today);
   },
   methods: {
     getUserInfo() {
