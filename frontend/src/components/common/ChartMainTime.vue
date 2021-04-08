@@ -2,27 +2,36 @@
 import { Pie } from 'vue-chartjs';
 
 export default {
+  props: ['labels', 'timedataset'],
   extends: Pie,
+  created: function() {
+    console.log(this.labels);
+    console.log(this.timedataset);
+  },
   data() {
     return {
       chartData: {
-        labels: ['Italy', 'India', 'Japan', 'USA'],
+        labels: this.labels,
         datasets: [
           {
             borderWidth: 1,
             borderColor: [
-              'rgba(255,99,132,1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)',
+              'rgba(153,204,204,1)',
+              'rgba(204, 255, 051, 1)',
+              'rgba(255, 153, 102, 1)',
+              'rgba(153, 051,000, 1)',
+              'rgba(102, 000, 255, 1)',
+              'rgba(000, 051, 102, 1)',
             ],
             backgroundColor: [
-              'rgba(255, 99, 132, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(255, 206, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)',
+              'rgba(153,204,204,0.5)',
+              'rgba(204, 255, 051, 0.5)',
+              'rgba(255, 153, 102, 0.5)',
+              'rgba(153, 051,000, 0.5)',
+              'rgba(102, 000, 255, 0.5)',
+              'rgba(000, 051, 102, 0.5)',
             ],
-            data: [1000, 500, 1500, 1000],
+            data: this.timedataset,
           },
         ],
       },

@@ -121,8 +121,11 @@
             </v-row>
             <v-row no-gutters justify="center" style="margin-top: 50px;">
               <div style="min-width: 380px;">
-                <v-row justify="center" style="background-color: #D4F4FA;">
-                  <chart-main-time></chart-main-time>
+                <v-row justify="center" v-if="isFinished">
+                  <chart-main-time
+                    :labels="timeLabel"
+                    :timedataset="timeDataset"
+                  ></chart-main-time>
                 </v-row>
               </div>
             </v-row>
@@ -293,6 +296,9 @@ export default {
       .catch((error) => {
         console.log('TODO-LIST ERROR!!!!!', error);
       });
+
+    // 공부 시간대 받아오기
+    this.getEachTimeAverage('day');
   },
   data: function() {
     return {
@@ -313,6 +319,17 @@ export default {
         todoList: [],
       },
       pickedDate: date.dateFunc(new Date()),
+      timeList: [],
+      timeDataset: [0, 0, 0, 0, 0, 0],
+      timeLabel: [
+        'dawn',
+        'morning',
+        'before lunch',
+        'afternoon',
+        'evening',
+        'night',
+      ],
+      isFinished: false,
     };
   },
   methods: {
@@ -335,6 +352,50 @@ export default {
         .catch((error) => {
           console.log('TODO-LIST ERROR!!!!!', error);
         });
+    },
+    getEachTimeAverage(tmpRange) {
+      let today = date.dateFunc(new Date());
+      console.log(today);
+      this.$Axios
+        .create({
+          headers: { 'jwt-auth-token': storage.getItem('jwt-auth-token') },
+        })
+        .get(`timer/hourly/${tmpRange}?datetimeOrigin=2021-04-07 03:21:35`)
+        .then((response) => {
+          if (response.data.eachTimeAverage.length != 0) {
+            console.log(response);
+            this.timeList = response.data.eachTimeAverage;
+            if (this.timeList != null) {
+              this.divideTime();
+              // console.log(this.dawn);
+              // console.log(this.morning);
+              // console.log(this.beforeLunch);
+              // console.log(this.afternoon);
+              // console.log(this.evening);
+              // console.log(this.night);
+            }
+          }
+        });
+    },
+    divideTime() {
+      let tmp = [0, 0, 0, 0, 0, 0];
+      for (let i = 0; i < this.timeList.length; i++) {
+        if (i >= 1 && i <= 4) {
+          tmp[0] += this.timeList[i];
+        } else if (i >= 5 && i <= 8) {
+          tmp[1] += this.timeList[i];
+        } else if (i >= 9 && i <= 12) {
+          tmp[2] += this.timeList[i];
+        } else if (i >= 13 && i <= 16) {
+          tmp[3] += this.timeList[i];
+        } else if (i >= 17 && i <= 20) {
+          tmp[4] += this.timeList[i];
+        } else {
+          tmp[5] += this.timeList[i];
+        }
+      }
+      this.timeDataset = tmp;
+      this.isFinished = true;
     },
   },
 };
