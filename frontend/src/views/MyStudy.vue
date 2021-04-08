@@ -91,9 +91,9 @@
           />
         </v-row>
         <v-row no-gutters justify="center" style="margin-top: 50px;">
-          <div style="width: 800px; min-width: 800px;">
-            <v-row justify="center" style="background-color: #E4F7BA;">
-              (공부시간 막대그래프 자리)
+          <div style="width: 800px; min-width: 800px; ">
+            <v-row justify="center" style="height: 400px;">
+              <chart-my-time></chart-my-time>
             </v-row>
           </div>
         </v-row>
@@ -107,7 +107,9 @@
               justify="start"
               align="end"
             >
-              <v-col cols="10">주요 공부 시간대</v-col>
+              <v-col cols="10">
+                주요 공부시간대
+              </v-col>
               <v-col align="end" style="color: #999999; font-size: 1rem;">
                 (단위: 시)
               </v-col>
@@ -119,8 +121,11 @@
             </v-row>
             <v-row no-gutters justify="center" style="margin-top: 50px;">
               <div style="min-width: 380px;">
-                <v-row justify="center" style="background-color: #D4F4FA;">
-                  (주요 공부시간대 원그래프 자리)
+                <v-row justify="center" v-if="isFinished">
+                  <chart-main-time
+                    :labels="timeLabel"
+                    :timedataset="timeDataset"
+                  ></chart-main-time>
                 </v-row>
               </div>
             </v-row>
@@ -243,44 +248,24 @@
 </template>
 
 <script>
-import MiddleNav from "../components/include/MiddleNav.vue";
-import MyInfo from "@/components/common/MyInfo.vue";
-import TodoList from "@/components/common/TodoList.vue";
-import AppCalendar from "@/components/common/AppCalendar.vue";
-import date from "@/date.js";
-import changeSec from "@/changeSec.js";
+import MiddleNav from '../components/include/MiddleNav.vue';
+import MyInfo from '@/components/common/MyInfo.vue';
+import TodoList from '@/components/common/TodoList.vue';
+import AppCalendar from '@/components/common/AppCalendar.vue';
+import ChartMyTime from '@/components/common/ChartMyTime.vue';
+import ChartMainTime from '@/components/common/ChartMainTime.vue';
+import date from '@/date.js';
+import changeSec from '@/changeSec.js';
 
 const storage = window.sessionStorage;
 export default {
   components: {
-    "middle-nav": MiddleNav,
-    "my-info": MyInfo,
-    "todo-list": TodoList,
-    "app-calendar": AppCalendar,
-  },
-  data: function() {
-    return {
-      navInfo: [
-        "sample1.jpg",
-        "나의 학습",
-        "첫asdf번째 문장입니다. 첫번째 문장입니다. 첫번째 문장입",
-        "두번째 문장입니다~! 두번째 문장입니다~! 두번째 문장입니다~! 두번째",
-      ],
-      user: {
-        userId: "",
-        userNickname: "",
-        userMessage: "",
-        userIsStudying: false,
-        profileImg: "",
-        userType: "",
-        todayStudyTime: "",
-        todoList: [],
-      },
-      myRankLoading: true,
-      pickedDate: date.dateFunc(new Date()),
-      myRankList: [],
-      groupListThatIAm: [],
-    };
+    'middle-nav': MiddleNav,
+    'my-info': MyInfo,
+    'todo-list': TodoList,
+    'app-calendar': AppCalendar,
+    'chart-my-time': ChartMyTime,
+    'chart-main-time': ChartMainTime,
   },
   created: function() {
     // user 정보 받아오기
@@ -357,8 +342,42 @@ export default {
       .catch((error) => {
         console.log("TODO-LIST ERROR!!!!!", error);
       });
-  },
 
+    // 공부 시간대 받아오기
+    this.getEachTimeAverage('day');
+  },
+  data: function() {
+    return {
+      navInfo: [
+        'sample1.jpg',
+        '나의 학습',
+        '첫asdf번째 문장입니다. 첫번째 문장입니다. 첫번째 문장입',
+        '두번째 문장입니다~! 두번째 문장입니다~! 두번째 문장입니다~! 두번째',
+      ],
+      user: {
+        userId: '',
+        userNickname: '',
+        userMessage: '',
+        userIsStudying: false,
+        profileImg: '',
+        userType: '',
+        todayStudyTime: '',
+        todoList: [],
+      },
+      pickedDate: date.dateFunc(new Date()),
+      timeList: [],
+      timeDataset: [0, 0, 0, 0, 0, 0],
+      timeLabel: [
+        'dawn',
+        'morning',
+        'before lunch',
+        'afternoon',
+        'evening',
+        'night',
+      ],
+      isFinished: false,
+    };
+  },
   methods: {
     getPickedDate: function(value) {
       this.pickedDate = value;
@@ -381,6 +400,50 @@ export default {
         .catch((error) => {
           console.log("TODO-LIST ERROR!!!!!", error);
         });
+    },
+    getEachTimeAverage(tmpRange) {
+      let today = date.dateFunc(new Date());
+      console.log(today);
+      this.$Axios
+        .create({
+          headers: { 'jwt-auth-token': storage.getItem('jwt-auth-token') },
+        })
+        .get(`timer/hourly/${tmpRange}?datetimeOrigin=2021-04-07 03:21:35`)
+        .then((response) => {
+          if (response.data.eachTimeAverage.length != 0) {
+            console.log(response);
+            this.timeList = response.data.eachTimeAverage;
+            if (this.timeList != null) {
+              this.divideTime();
+              // console.log(this.dawn);
+              // console.log(this.morning);
+              // console.log(this.beforeLunch);
+              // console.log(this.afternoon);
+              // console.log(this.evening);
+              // console.log(this.night);
+            }
+          }
+        });
+    },
+    divideTime() {
+      let tmp = [0, 0, 0, 0, 0, 0];
+      for (let i = 0; i < this.timeList.length; i++) {
+        if (i >= 1 && i <= 4) {
+          tmp[0] += this.timeList[i];
+        } else if (i >= 5 && i <= 8) {
+          tmp[1] += this.timeList[i];
+        } else if (i >= 9 && i <= 12) {
+          tmp[2] += this.timeList[i];
+        } else if (i >= 13 && i <= 16) {
+          tmp[3] += this.timeList[i];
+        } else if (i >= 17 && i <= 20) {
+          tmp[4] += this.timeList[i];
+        } else {
+          tmp[5] += this.timeList[i];
+        }
+      }
+      this.timeDataset = tmp;
+      this.isFinished = true;
     },
   },
 };
