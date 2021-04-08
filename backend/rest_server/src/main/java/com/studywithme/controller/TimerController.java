@@ -112,10 +112,10 @@ public class TimerController {
 					Optional<List<TimeHourly>> thWeekly=timeHourlyRepository.findByTimeHourlyUserNicknameAndTimeHourlyYearMonthDayHourStartingWith(nickname, s);
 					if(thWeekly.isPresent()) {
 						sum=sumOfTimes(sum,thWeekly.get());
-						for(int i=0;i<24;i++)
-							sum[i]/=daysLength;
 					}
 				}
+				for(int i=0;i<24;i++)
+					sum[i]/=daysLength;
 				break;
 			case "month":
 				int days=Integer.parseInt(datetime.substring(datetime.length()-4,datetime.length()-2));
