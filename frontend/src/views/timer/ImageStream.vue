@@ -109,43 +109,42 @@ export default {
                           else {
                             if (
                               this.awayCnt >= 5 &&
-                              this.$store.getters.getUserIsStudying
-                            ){
-                              this.$emit('resumeTimer');
+                              !this.$store.state.user.isStudying
+                            )
+                            this.$emit('resumeTimer');
                               this.awayCnt = 0;
-                            }
+                            
                           }
 
                           if (!isPhone) {
                             if (
                               this.phoneCnt >= 5 &&
-                              this.$store.getters.getUserIsStudying
-                            ) {
-                              this.$emit('resumeTimer');
+                              !this.$store.state.user.isStudying
+                            ) 
+                            this.$emit('resumeTimer');
                               this.phoneCnt = 0;
-                            }
+                            
                           } else this.phoneCnt++;
 
                           if (!isFace) this.sleepCnt++;
                           else {
                             if (
                               this.sleepCnt >= 5 &&
-                              this.$store.getters.getUserIsStudying
-                            ){
+                              !this.$store.state.user.isStudying
+                            )
                               this.$emit('resumeTimer');
-                              this.sleepCnt = 0;
-                            }
+                            this.sleepCnt = 0;
                           }
 
                           if (personNum > 1 || faceNum > 1) this.talkCnt++;
                           else if (personNum == 1 && faceNum == 1) {
                             if (
                               this.talkCnt >= 5 &&
-                              this.$store.getters.getUserIsStudying
-                            ){
-                              this.$emit('resumeTimer');
+                              !this.$store.state.user.isStudying
+                            )
+                            this.$emit('resumeTimer');
                               this.talkCnt = 0;
-                            }
+                            
                           }
 
                           console.log(
