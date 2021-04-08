@@ -49,7 +49,7 @@
           @click="compareAuthNum"
         >
           <app-btn-middle
-            :isDisabled="isValid"
+            :isDisabled="isDisabled2"
             :btnColor="'#673fb4'"
             :btnName="'확인'"
             :btnNameColor="'#ffffff'"
@@ -101,6 +101,7 @@ export default {
       realAuthNum: 0,
       isValid: false,
       // isDisabled 쓰는 이유... 버튼이 component라서 @click을 바로 못 주니까 임시방편으로 플래그 만든거임 ㅜ
+      isDisabled2: true,
     };
   },
   computed: {
@@ -150,6 +151,7 @@ export default {
         .then((response) => {
           if (response.data.success) {
             this.realAuthNum = response.data.validNum;
+            this.isDisabled2 = false;
           }
         })
         .catch((error) => {
