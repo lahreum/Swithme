@@ -567,7 +567,7 @@ public class GroupController {
 		if(user.isPresent()) {
 			Optional<GroupInfo> groupBefore=groupRepository.findById(group.getGroupId());
 			if(groupBefore.isPresent()&&groupBefore.get().getGroupMasterNickname().equals(nickname)&&
-					(group.getGroupMaxMemberCount()==0||groupBefore.get().getGroupCurMemberCount()<group.getGroupMaxMemberCount())) {
+					groupBefore.get().getGroupCurMemberCount()<group.getGroupMaxMemberCount()) {
 				Optional<GroupMember> groupMember=groupMemberRepository.findByGroupMemberUserNicknameAndGroupMemberGroupId(nickname, group.getGroupId());
 				if(groupMember.isPresent()&&groupMember.get().isGroupMemberIsMaster()) {
 					
