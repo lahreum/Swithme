@@ -26,7 +26,7 @@
         </v-col>
         <v-col cols="3" align-self="center" align="center" @click="getdoubleck">
           <app-btn-middle
-            :isDisabled="isValid"
+            :isDisabled="isDisabled"
             :btnColor="'#673fb4'"
             :btnName="'인증번호 받기'"
             :btnNameColor="'#ffffff'"
@@ -49,7 +49,7 @@
           @click="compareAuthNum"
         >
           <app-btn-middle
-            :isDisabled="isValid"
+            :isDisabled="isDisabled2"
             :btnColor="'#673fb4'"
             :btnName="'확인'"
             :btnNameColor="'#ffffff'"
@@ -78,40 +78,49 @@
 </template>
 
 <script>
-import './user.css';
-import InputBar from '@/components/common/InputBar.vue';
-import EmailInput from '@/components/common/EmailInput.vue';
-import AppBtnMiddle from '@/components/common/AppBtnMiddle.vue';
-import axios from 'axios';
+import "./user.css";
+import InputBar from "@/components/common/InputBar.vue";
+import EmailInput from "@/components/common/EmailInput.vue";
+import AppBtnMiddle from "@/components/common/AppBtnMiddle.vue";
+import axios from "axios";
 
 export default {
   components: {
-    'input-bar': InputBar,
-    'email-input': EmailInput,
-    'app-btn-middle': AppBtnMiddle,
+    "input-bar": InputBar,
+    "email-input": EmailInput,
+    "app-btn-middle": AppBtnMiddle,
   },
   created: function() {
-    this.$emit('move-step', 2);
+    this.$emit("move-step", 2);
   },
   data: function() {
     return {
-      emailFront: '',
-      emailBack: '',
-      myAuthNum: 0,
+      emailFront: "",
+      emailBack: "",
+      myAuthNum: 1234567890,
       realAuthNum: 0,
       isValid: false,
       // isDisabled 쓰는 이유... 버튼이 component라서 @click을 바로 못 주니까 임시방편으로 플래그 만든거임 ㅜ
-      isDisabled: false,
+      isDisabled2: true,
     };
+  },
+  computed: {
+    isDisabled() {
+      if (this.emailFront != "" && this.emailBack != "") {
+        return false;
+      } else {
+        return true;
+      }
+    },
   },
   methods: {
     goRouting() {
       if (this.isValid) {
-        this.$emit('move-forward');
+        this.$emit("move-forward");
         this.$router.push(
-          '/join/join-create?emailF=' +
+          "/join/join-create?emailF=" +
             this.emailFront +
-            '&emailB=' +
+            "&emailB=" +
             this.emailBack
         );
       }
@@ -125,23 +134,24 @@ export default {
     getdoubleck() {
       if (!this.isDisabled) {
         axios
-          .get('user/id?userId=' + this.emailFront + '@' + this.emailBack)
+          .get("user/id?userId=" + this.emailFront + "@" + this.emailBack)
           .then((response) => {
             if (response.data.isPresent) {
-              alert('중복된 이메일 입니다. 다른 이메일 주소를 입력해주세요.');
+              alert("중복된 이메일 입니다. 다른 이메일 주소를 입력해주세요.");
             } else {
               this.getAuthNum();
-              alert('입력하신 이메일로 인증번호를 발송했습니다.');
+              alert("입력하신 이메일로 인증번호를 발송했습니다.");
             }
           });
       }
     },
     getAuthNum() {
       this.$Axios
-        .get('user/email?userEmail=' + this.emailFront + '@' + this.emailBack)
+        .get("user/email?userEmail=" + this.emailFront + "@" + this.emailBack)
         .then((response) => {
           if (response.data.success) {
             this.realAuthNum = response.data.validNum;
+            this.isDisabled2 = false;
           }
         })
         .catch((error) => {
@@ -153,11 +163,11 @@ export default {
     },
     compareAuthNum() {
       if (!this.isDisabled && this.myAuthNum == this.realAuthNum) {
-        alert('이메일 인증이 완료되었습니다.');
+        alert("이메일 인증이 완료되었습니다.");
         this.isDisabled = true;
         this.isValid = true;
       } else if (this.myAuthNum != this.realAuthNum) {
-        alert('인증번호를 정확히 입력해주세요.');
+        alert("인증번호를 정확히 입력해주세요.");
         this.isValid = false;
       }
     },

@@ -1,25 +1,25 @@
 <template>
   <div>
     <middle-nav v-bind:propsdata="navInfo"></middle-nav>
-    <v-container style="padding-top: 3%">
+    <v-container style="padding-top: 3%; ">
       <!-- part: 1 -->
       <v-row
         no-gutters
-        style="font-size: 1.8rem; letter-spacing: -1px"
+        style="font-size: 1.8rem; letter-spacing: -1px;"
         justify="center"
       >
         <v-col cols="4" align="center">
           {{ this.user.userNickname }}님의 학습분석
         </v-col>
       </v-row>
-      <v-row no-gutters justify="center" style="margin-top: 5px">
+      <v-row no-gutters justify="center" style="margin-top: 5px; ">
         <hr
-          style="width: 80%; border: 0; height: 2px; background-color: black"
+          style="width: 80%; border: 0; height: 2px; background-color: black;"
         />
       </v-row>
       <!-- 내 정보 -->
-      <v-row justify="center" no-gutters style="margin-top: 50px">
-        <div style="width: 800px; min-width: 800px">
+      <v-row justify="center" no-gutters style="margin-top: 50px;">
+        <div style="width: 800px; min-width: 800px;">
           <my-info
             :username="user.userNickname"
             :message="user.userMessage"
@@ -34,54 +34,44 @@
 
         <v-row
           no-gutters
-          style="font-size: 1.5rem; letter-spacing: -2px; margin-top: 70px"
+          style="font-size: 1.5rem; letter-spacing: -2px; margin-top: 70px;"
           justify="start"
         >
           <v-col>학습 캘린더</v-col>
         </v-row>
-        <v-row no-gutters justify="center" style="margin-top: 5px">
+        <v-row no-gutters justify="center" style="margin-top: 5px; ">
           <hr
-            style="width: 100%; border: 0; height: 1px; background-color: black"
+            style="width: 100%; border: 0; height: 1px; background-color: black;"
           />
         </v-row>
-        <v-row no-gutters justify="center" style="margin-top: 50px">
-          <div style="width: 800px; min-width: 800px">
+        <v-row no-gutters justify="center" style="margin-top: 50px;">
+          <div style="width: 800px; min-width: 800px;">
             <v-row>
               <v-col
                 cols="7"
                 align="center"
-                style="background-color: #eaeaea; margin-right: 10px"
+                style="background-color: #eaeaea; margin-right: 10px;"
               >
                 <app-calendar @pickedDate="getPickedDate"></app-calendar>
               </v-col>
               <v-col
                 align="center"
-                style="
-                  border-radius: 30px;
-                  background-color: #eaeaea;
-                  margin-left: 10px;
-                "
+                style="border-radius: 30px; background-color: #eaeaea; margin-left: 10px;"
               >
                 <v-row
                   justify="center"
-                  style="
-                    letter-spacing: -3px;
-                    font-size: 3rem;
-                    font-weight: lighter;
-                    margin-top: 2px;
-                    margin-bottom: 2px;
-                  "
+                  style="letter-spacing: -3px; font-size: 3rem; font-weight: lighter; margin-top: 2px; margin-bottom: 2px;"
                 >
                   TODO
                 </v-row>
                 <v-row
-                  style="
-                    margin: 8px;
-                    background-color: white;
-                    padding-bottom: 10px;
-                  "
+                  style="margin: 8px; background-color: white; padding-bottom: 10px;"
                 >
-                  <todo-list :todoList="user.todoList"></todo-list>
+                  <todo-list
+                    :todoList="user.todoList"
+                    :date="pickedDate"
+                    @updateTodoList="getTodoList"
+                  ></todo-list>
                 </v-row>
               </v-col>
             </v-row>
@@ -90,23 +80,23 @@
         <!-- 나의 학습시간 -->
         <v-row
           no-gutters
-          style="font-size: 1.5rem; letter-spacing: -2px; margin-top: 70px"
+          style="font-size: 1.5rem; letter-spacing: -2px; margin-top: 70px;"
           justify="start"
           align="end"
         >
           <v-col cols="10">나의 학습 시간</v-col>
-          <v-col align="end" style="color: #999999; font-size: 1rem">
+          <v-col align="end" style="color: #999999; font-size: 1rem;">
             (단위: 분)
           </v-col>
         </v-row>
-        <v-row no-gutters justify="center" style="margin-top: 5px">
+        <v-row no-gutters justify="center" style="margin-top: 5px; ">
           <hr
-            style="width: 100%; border: 0; height: 1px; background-color: black"
+            style="width: 100%; border: 0; height: 1px; background-color: black;"
           />
         </v-row>
-        <v-row no-gutters justify="center" style="margin-top: 50px">
-          <div style="width: 800px; min-width: 800px">
-            <v-row justify="center" style="height: 400px">
+        <v-row no-gutters justify="center" style="margin-top: 50px;">
+          <div style="width: 800px; min-width: 800px; ">
+            <v-row justify="center" style="height: 400px;">
               <chart-my-time></chart-my-time>
             </v-row>
           </div>
@@ -114,30 +104,27 @@
         <!-- 주요 공부 시간대 & 집중 지속 시간 -->
         <v-row no-gutters>
           <!-- 주요 공부 시간대 -->
-          <v-col cols="6" style="padding-right: 10px">
+          <v-col cols="6" style="padding-right: 10px;">
             <v-row
               no-gutters
-              style="font-size: 1.5rem; letter-spacing: -2px; margin-top: 70px"
+              style="font-size: 1.5rem; letter-spacing: -2px; margin-top: 70px;"
               justify="start"
               align="end"
             >
-              <v-col cols="10"> 주요 공부시간대 </v-col>
-              <v-col align="end" style="color: #999999; font-size: 1rem">
+              <v-col cols="10">
+                주요 공부시간대
+              </v-col>
+              <v-col align="end" style="color: #999999; font-size: 1rem;">
                 (단위: 시)
               </v-col>
             </v-row>
-            <v-row no-gutters justify="center" style="margin-top: 5px">
+            <v-row no-gutters justify="center" style="margin-top: 5px; ">
               <hr
-                style="
-                  width: 100%;
-                  border: 0;
-                  height: 1px;
-                  background-color: black;
-                "
+                style="width: 100%; border: 0; height: 1px; background-color: black;"
               />
             </v-row>
-            <v-row no-gutters justify="center" style="margin-top: 50px">
-              <div style="min-width: 380px">
+            <v-row no-gutters justify="center" style="margin-top: 50px;">
+              <div style="min-width: 380px;">
                 <v-row justify="center" v-if="isFinished">
                   <chart-main-time
                     :labels="timeLabel"
@@ -148,66 +135,84 @@
             </v-row>
           </v-col>
           <!-- 집중 지속 시간 -->
-          <v-col style="padding-left: 10px">
+          <v-col style="padding-left: 10px;">
             <v-row
               no-gutters
-              style="font-size: 1.5rem; letter-spacing: -2px; margin-top: 70px"
+              style="font-size: 1.5rem; letter-spacing: -2px; margin-top: 70px;"
               justify="start"
               align="end"
             >
-              <v-col cols="10">집중 지속시간</v-col>
-              <v-col align="end" style="color: #999999; font-size: 1rem">
+              <v-col cols="10">나의 집중패턴</v-col>
+              <v-col align="end" style="color: #999999; font-size: 1rem;">
                 (단위: 분)
               </v-col>
             </v-row>
-            <v-row no-gutters justify="center" style="margin-top: 5px">
+            <v-row no-gutters justify="center" style="margin-top: 5px; ">
               <hr
-                style="
-                  width: 100%;
-                  border: 0;
-                  height: 1px;
-                  background-color: black;
-                "
+                style="width: 100%; border: 0; height: 1px; background-color: black;"
               />
             </v-row>
-            <v-row no-gutters justify="center" style="margin-top: 50px">
-              <div style="min-width: 380px">
-                <v-row justify="center" style="background-color: #faf4c0">
-                  (집중 지속시간 바코드 그래프 자리)
-                </v-row>
-              </div>
+            <v-row
+              no-gutters
+              justify="center"
+              style="min-width: 380px; height: 400px; margin-top: 50px;"
+              align="center"
+            >
+              <v-row no-gutters>
+                <v-col align="end" align-self="center">
+                  <v-btn icon @click="goBeforeDay">
+                    <v-icon x-large>
+                      mdi-chevron-left
+                    </v-icon>
+                  </v-btn>
+                </v-col>
+                <v-col
+                  cols="6"
+                  align="center"
+                  align-self="center"
+                  style="letter-spacing: -2px; font-size: 2rem; font-weight: bold;"
+                >
+                  {{ dateForFocusChart.getMonth() + 1 }}월
+                  {{ dateForFocusChart.getDate() }}일
+                </v-col>
+                <v-col align="start" align-self="center">
+                  <v-btn icon @click="goAfterDay">
+                    <v-icon x-large>
+                      mdi-chevron-right
+                    </v-icon>
+                  </v-btn>
+                </v-col>
+              </v-row>
+              <chart-focus-time
+                :propdate="dateForFocusChart"
+              ></chart-focus-time>
             </v-row>
           </v-col>
         </v-row>
         <!-- 그룹 내 공부시간 순위 & 주요 방해요인 -->
         <v-row no-gutters>
           <!-- 그룹 내 공부시간 순위 -->
-          <v-col cols="6" style="padding-right: 10px">
+          <v-col cols="6" style="padding-right: 10px;">
             <v-row
               no-gutters
-              style="font-size: 1.5rem; letter-spacing: -2px; margin-top: 70px"
+              style="font-size: 1.5rem; letter-spacing: -2px; margin-top: 70px;"
               justify="start"
               align="end"
             >
               <v-col cols="10">그룹 내 공부시간 순위</v-col>
-              <v-col align="end" style="color: #999999; font-size: 1rem">
+              <v-col align="end" style="color: #999999; font-size: 1rem;">
                 (단위: %)
               </v-col>
             </v-row>
-            <v-row no-gutters justify="center" style="margin-top: 5px">
+            <v-row no-gutters justify="center" style="margin-top: 5px; ">
               <hr
-                style="
-                  width: 100%;
-                  border: 0;
-                  height: 1px;
-                  background-color: black;
-                "
+                style="width: 100%; border: 0; height: 1px; background-color: black;"
               />
             </v-row>
-            <v-row no-gutters justify="center" style="margin-top: 50px">
+            <v-row no-gutters justify="center" style="margin-top: 50px;">
               <div
                 v-if="!myRankLoading"
-                style="min-width: 100%; overflow-x: hidden; max-height: 300px"
+                style="min-width:100%; overflow-x: hidden; max-height:300px; min-height:300px"
               >
                 <v-row
                   v-for="(group, idx) in groupListThatIAm"
@@ -215,14 +220,14 @@
                   justify="center"
                 >
                   <v-col>
-                    <h3 style="max-width: 90%; margin-bottom: 10px">
+                    <h3 style="max-width:90%; margin-bottom:10px;">
                       {{ groupListThatIAm[idx].groupName }}
                     </h3>
-                    <span style="color: #673fb4; font-size: 1.3rem">{{
+                    <span style="color:#673fb4; font-size:1.3rem">{{
                       groupListThatIAm[idx].groupMaxMemberCount
                     }}</span
                     >명 중,
-                    <span style="color: #673fb4; font-size: 1.3rem">{{
+                    <span style="color:#673fb4; font-size:1.3rem">{{
                       myRankList[idx]
                     }}</span
                     >등!
@@ -231,15 +236,10 @@
               </div>
               <div
                 v-else
-                style="min-width: 100%; min-height: 300px; max-height: 300px"
+                style="min-width:100%; min-height:300px; max-height:300px"
               >
                 <v-progress-circular
-                  style="
-                    position: relative;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                  "
+                  style="position:relative; top:50%; left:50%; transform:translate(-50%, -50%);"
                   indeterminate
                   color="purple"
                   :size="50"
@@ -248,34 +248,43 @@
             </v-row>
           </v-col>
           <!-- 주요 방해요인 -->
-          <v-col style="padding-left: 10px">
+          <v-col style="padding-left: 10px;">
             <v-row
               no-gutters
-              style="font-size: 1.5rem; letter-spacing: -2px; margin-top: 70px"
+              style="font-size: 1.5rem; letter-spacing: -2px; margin-top: 70px;"
               justify="start"
               align="end"
             >
               <v-col cols="10">주요 방해요인</v-col>
-              <v-col align="end" style="color: #999999; font-size: 1rem">
+              <v-col align="end" style="color: #999999; font-size: 1rem;">
                 (단위: %)
               </v-col>
             </v-row>
-            <v-row no-gutters justify="center" style="margin-top: 5px">
+            <v-row no-gutters justify="center" style="margin-top: 5px; ">
               <hr
-                style="
-                  width: 100%;
-                  border: 0;
-                  height: 1px;
-                  background-color: black;
-                "
+                style="width: 100%; border: 0; height: 1px; background-color: black;"
               />
             </v-row>
-            <v-row no-gutters justify="center" style="margin-top: 50px">
-              <div style="min-width: 380px">
-                <v-row justify="center" style="background-color: #ffd9ec">
-                  (주요 방해요인 원그래프 자리)
+            <v-row
+              no-gutters
+              justify="center"
+              style="min-width: 380px; height: 400px; margin-top: 50px;"
+              align="center"
+              v-if="isFinished2"
+            >
+              <chart-cause :countdataset="causeCntSet"></chart-cause>
+              <!-- <v-col cols="3" align="end">
+                <img src="@/assets/img/warning.gif" width="50" />
+              </v-col>
+              <v-col style="letter-spacing: -1px;">
+                <v-row no-gutters align="end">
+                  <span style="font-size: 1.3rem; font-weight: bold;">앗,</span>
+                  프리미엄 회원을 위한 기능이에요.
                 </v-row>
-              </div>
+                <v-row no-gutters style="font-size: 0.7rem;">
+                  (저희가 야심차게 준비했다는 것만 알려드릴게요. *속닥속닥*)
+                </v-row>
+              </v-col> -->
             </v-row>
           </v-col>
         </v-row>
@@ -291,6 +300,8 @@ import TodoList from '@/components/common/TodoList.vue';
 import AppCalendar from '@/components/common/AppCalendar.vue';
 import ChartMyTime from '@/components/common/ChartMyTime.vue';
 import ChartMainTime from '@/components/common/ChartMainTime.vue';
+import ChartFocusTime from '@/components/common/ChartFocusTime.vue';
+import ChartCause from '@/components/common/ChartCause.vue';
 import date from '@/date.js';
 import changeSec from '@/changeSec.js';
 
@@ -303,8 +314,10 @@ export default {
     'app-calendar': AppCalendar,
     'chart-my-time': ChartMyTime,
     'chart-main-time': ChartMainTime,
+    'chart-focus-time': ChartFocusTime,
+    'chart-cause': ChartCause,
   },
-  created: function () {
+  created: function() {
     // user 정보 받아오기
     this.$Axios
       .create({
@@ -319,7 +332,6 @@ export default {
         this.user.profileImg = response.data.profileImg;
       });
 
-    // 공부 시간 받아오기
     let today = new Date();
     let day = date.dateFunc(today);
 
@@ -332,13 +344,13 @@ export default {
       })
       .get(`group/that-i-am?datetime=${day}`)
       .then((res) => {
-        console.log(res);
-        console.log(res.data.groupListThatIAm[0].groupName);
+        // console.log(res.data.groupListThatIAm[0].groupName);
         this.myRankList = res.data.myRankList;
         this.groupListThatIAm = res.data.groupListThatIAm;
         this.myRankLoading = false;
       });
 
+    // 공부 시간 받아오기
     this.$Axios
       .create({
         headers: {
@@ -347,16 +359,13 @@ export default {
       })
       .get('timer/today?datetime=' + day)
       .then((response) => {
-        // console.log('RESPONSEEEEEEE!!!!', response);
         if (
           response.data.todayStudyTime == null ||
           response.data.todayStudyTime === 0
         ) {
           this.user.todayStudyTime = '0:00:00';
-          // console.log('TYPE♡♡♡♡♡♡', typeof response.data.todayStudyTime);
         } else {
           this.user.todayStudyTime = changeSec(response.data.todayStudyTime);
-          // this.user.todayStudyTime = response.data.todayStudyTime;
         }
       })
       .catch((error) => {
@@ -381,15 +390,18 @@ export default {
       });
 
     // 공부 시간대 받아오기
-    this.getEachTimeAverage('day');
+    this.getEachTimeAverage('month');
+
+    // 방해요소 가져오기
+    this.getDisturbingCause();
   },
-  data: function () {
+  data: function() {
     return {
       navInfo: [
-        'sample1.jpg',
+        'nav3.jpg',
         '나의 학습',
-        '첫asdf번째 문장입니다. 첫번째 문장입니다. 첫번째 문장입',
-        '두번째 문장입니다~! 두번째 문장입니다~! 두번째 문장입니다~! 두번째',
+        '스윗미에서는 인공지능을 통해 얻은 데이터로 학습 패턴을 분석해드립니다.',
+        '공부를 더욱 효율적으로 할 수 있도록 도와드릴게요.',
       ],
       user: {
         userId: '',
@@ -402,24 +414,21 @@ export default {
         todoList: [],
       },
       pickedDate: date.dateFunc(new Date()),
+      causeCntSet: [0, 0, 0, 0],
       timeList: [],
       timeDataset: [0, 0, 0, 0, 0, 0],
-      timeLabel: [
-        'dawn',
-        'morning',
-        'before lunch',
-        'afternoon',
-        'evening',
-        'night',
-      ],
+      timeLabel: ['새벽', '아침', '오전', '오후', '저녁', '밤'],
       isFinished: false,
+      isFinished2: false,
       myRankLoading: true,
       myRankList: [],
       groupListThatIAm: [],
+      dateForFocusChart: new Date(),
+      // flagDay: 1,
     };
   },
   methods: {
-    getPickedDate: function (value) {
+    getPickedDate: function(value) {
       this.pickedDate = value;
       console.log(this.myRankList);
       console.log(this.groupListThatIAm);
@@ -451,16 +460,9 @@ export default {
         .get(`timer/hourly/${tmpRange}?datetimeOrigin=${today}`)
         .then((response) => {
           if (response.data.eachTimeAverage.length != 0) {
-            console.log(response);
             this.timeList = response.data.eachTimeAverage;
             if (this.timeList != null) {
               this.divideTime();
-              // console.log(this.dawn);
-              // console.log(this.morning);
-              // console.log(this.beforeLunch);
-              // console.log(this.afternoon);
-              // console.log(this.evening);
-              // console.log(this.night);
             }
           }
         });
@@ -484,6 +486,61 @@ export default {
       }
       this.timeDataset = tmp;
       this.isFinished = true;
+    },
+    getTodoList(value) {
+      if (value) {
+        this.getPickedDate(this.pickedDate);
+      }
+    },
+    getDisturbingCause(value) {
+      console.log(value);
+      let tmpDC = [0, 0, 0, 0, 0];
+
+      this.$Axios
+        .create({
+          headers: { 'jwt-auth-token': storage.getItem('jwt-auth-token') },
+        })
+        .get(`timer/not-study?datetime=2021-04-08`)
+        .then((response) => {
+          if (response.data.disturbingCause.length != 0) {
+            for (let i = 0; i < response.data.disturbingCause.length; i++) {
+              if (response.data.disturbingCause[i].timeDailyAction == 1) {
+                tmpDC[0] += 1;
+              } else if (
+                response.data.disturbingCause[i].timeDailyAction == 2
+              ) {
+                tmpDC[1] += 1;
+              } else if (
+                response.data.disturbingCause[i].timeDailyAction == 3
+              ) {
+                tmpDC[2] += 1;
+              } else if (
+                response.data.disturbingCause[i].timeDailyAction == 4
+              ) {
+                tmpDC[3] += 1;
+              } else {
+                console.log('공부 Action');
+              }
+            }
+            this.causeCntSet = tmpDC;
+          }
+          this.isFinished2 = true;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    goBeforeDay() {
+      this.tmp = new Date(this.dateForFocusChart);
+      this.dateForFocusChart = new Date(
+        this.tmp.setDate(this.tmp.getDate() - 1)
+      );
+    },
+    goAfterDay() {
+      this.tmp = new Date(this.dateForFocusChart);
+      this.dateForFocusChart = new Date(
+        this.tmp.setDate(this.tmp.getDate() + 1)
+      );
     },
   },
 };

@@ -2,7 +2,6 @@ import Vue from 'vue';
 import App from './App.vue';
 import VueRouter from 'vue-router';
 import routes from './routes';
-// import { store } from './vuex/store'; // vuex 전역 세팅
 import store from './vuex/store';
 import vuetify from './plugins/vuetify';
 import VueFullPage from 'vue-fullpage.js';

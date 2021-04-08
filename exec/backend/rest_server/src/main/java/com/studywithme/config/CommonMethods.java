@@ -1,5 +1,11 @@
 package com.studywithme.config;
 
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -8,6 +14,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
+
+import javax.imageio.ImageIO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -90,5 +98,32 @@ public class CommonMethods {
 			cal.add(Calendar.DATE, 1);
 		}
 		return dates;
+	}
+	
+	public byte[] resize(byte[] originImg) throws IOException {
+		BufferedImage origin=ImageIO.read(new ByteArrayInputStream(originImg));
+		
+		int imageWidth=origin.getWidth();
+		int imageHeight=origin.getHeight();
+		
+		double ratio=Math.sqrt((double)90000/(double)(imageHeight*imageWidth));
+		
+		if(ratio>1)
+			return originImg;
+		
+		int newWidth=(int)(imageWidth*ratio);
+		int newHeight=(int)(imageHeight*ratio);
+		
+		Image resizeImage=origin.getScaledInstance(newWidth, newHeight, Image.SCALE_DEFAULT);
+		
+		BufferedImage newImage=new BufferedImage(newWidth,newHeight,origin.getType());
+		Graphics g=newImage.getGraphics();
+		g.drawImage(resizeImage,0,0,null);
+		g.dispose();
+		
+		ByteArrayOutputStream output=new ByteArrayOutputStream();
+		ImageIO.write(newImage,"png",output);
+	
+		return output.toByteArray();
 	}
 }

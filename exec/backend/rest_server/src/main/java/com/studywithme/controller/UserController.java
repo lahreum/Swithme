@@ -214,7 +214,9 @@ public class UserController {
 		if(user.isPresent()) {
 			String subject="비밀번호 변경 링크입니다.";
 					
-			String link="여기에 링크써줘";
+			String token=jwtService.create(user.get());
+			
+			String link="https://j4b103.p.ssafy.io/my-page-modify?jwt="+token;
 			String body="안녕하세요 "+user.get().getUserNickname()+"님!\n"+
 					"다음 링크로 이동하시면 비밀번호를 바꾸실 수 있습니다.\n"+
 					link;
@@ -250,13 +252,15 @@ public class UserController {
 	}
 	
 	@PutMapping("/password")//파라미터가 애매함 -> 링크로 들어간경우와 직접 들어간경우 나눠서 해야하나?
-	@ApiOperation(value="비밀번호 변경",notes="id와 바꿀 password를 파라미터로 받아 db 업데이트\n인터셉터에서 제외해야하나?")
-	public Object changePassword(@RequestParam("userId") String userId,@RequestParam("newPassword") String newPassword) {
+	@ApiOperation(value="비밀번호 변경",notes="jwt 토큰과 바꿀 password를 파라미터로 받아 db 업데이트\n인터셉터에서 제외해야하나?")
+	public Object changePassword(@RequestParam("jwt") String token,@RequestParam("newPassword") String newPassword) {
 		Map<String,Object> result=new HashMap<>();
 		
 		result.put("success",false);
 		
-		Optional<UserInfo> user=userRepository.findById(userId);
+		String nickname=commonMethods.getUserNickname(token);
+	
+		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(user.isPresent()) {
 			user.get().setUserPassword(commonMethods.getHashed(newPassword));
 			userRepository.save(user.get());
@@ -346,6 +350,7 @@ public class UserController {
 		if (user.isPresent()) {
 			try {
 				bytes = file.getBytes();
+				bytes=commonMethods.resize(bytes);
 				try {
 					Blob blob = new javax.sql.rowset.serial.SerialBlob(bytes);
 
@@ -425,7 +430,7 @@ public class UserController {
 		
 	@GetMapping("/ranking")
 	@ApiOperation(value="랭킹 리스트",notes="파라미터로 받은 datetime의 해당 월의 월간 순위 반환")
-	public Object getAllRanking(@RequestParam("datetime") String datetime) {
+	public Object getAllRanking(@RequestParam("datetime") String datetime, HttpServletRequest req) {
 		Map<String,Object> result=new HashMap<>();
 		
 		result.put("allRankingList",null);
@@ -452,7 +457,30 @@ public class UserController {
 					userList.add(userDto);
 				}
 			}
+			
+			int myStudyTimeCurMonth=0;
+			String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
+			Optional<TimeMonthly> timeMonthly=timeMonthlyRepository.findByTimeMonthlyUserNicknameAndTimeMonthlyYearMonth(nickname, datetime);
+			
+			if(timeMonthly.isPresent())
+				myStudyTimeCurMonth=timeMonthly.get().getTimeMonthlyTime();
+			
+			String myMessage="";
+			Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
+			if(user.isPresent())
+				myMessage=user.get().getUserMessage();
+			
+			int myRank=0;
+			for(int i=0;i<userList.size();i++) {
+				if(userList.get(i).getNickname().equals(nickname)) {
+					myRank=i+1;
+					break;
+				}
+			}
 			result.clear();
+			result.put("myStudyTime",myStudyTimeCurMonth);
+			result.put("myMessage",myMessage);
+			result.put("myRank",myRank);
 			result.put("allRankingList",userList);
 		}
 		return result;

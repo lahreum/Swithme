@@ -23,7 +23,7 @@ import ProgressBar from '@/components/common/ProgressBar.vue';
 const storage = window.sessionStorage;
 
 export default {
-  props:["todoList"],
+  props: ['todoList', 'date'],
   components: {
     TodoInput,
     Todo,
@@ -41,9 +41,9 @@ export default {
     changed: function() {
       this.$emit('updateTodoList', this.changed);
       this.changed = false;
-    }
+    },
   },
-  created(){
+  created() {
     this.todoList = this.todoList || [];
   },
   mounted() {
@@ -61,9 +61,9 @@ export default {
       // };
       // this.list.push(todoObj);
       // this.setLs();
-      console.log('addTodo 드러옴');
       let params = new URLSearchParams();
       params.append('content', message);
+      params.append('datetime', this.date);
 
       this.$Axios
         .post('todo', params, {

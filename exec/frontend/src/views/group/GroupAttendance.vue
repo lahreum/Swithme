@@ -48,7 +48,7 @@
               :size="150"
               :width="30"
               :value="AttendanceRate"
-              color="primary"
+              color="rgb(0, 184, 148)"
             >
               <div style="text-align:center">
                 <h4>출석률</h4>
@@ -56,12 +56,14 @@
               </div>
             </v-progress-circular>
           </v-row>
-          <v-simple-table>
+          <v-simple-table
+            style="max-width:1150px;border:1rem solid orange; border-radius:20px"
+          >
             <template v-slot:default>
               <thead>
-                <tr style="background-color:#1976d2">
+                <tr>
                   <th
-                    style="font-size:1.5rem;text-align:center;border:1px solid black"
+                    style="font-size:1.4rem;background-color:rgb(0, 184, 148);text-align:center;border:1px solid black;color:white"
                     v-for="w in week"
                     :key="w"
                   >
@@ -82,18 +84,15 @@
                   </td>
                   <td
                     style="font-size:1.2rem; text-align:center; border:1px solid black"
+                    :style="
+                      grouper[n - 1].timeDailyTime === '00:00:00'
+                        ? 'background-color :white'
+                        : 'background-color :rgb(186, 220, 88);color:white'
+                    "
                     v-for="n in 7"
                     :key="n"
                   >
-                    <h4
-                      v-if="grouper[n - 1].timeDailyTime !== '00:00:00'"
-                      style="background-color:#673fb4"
-                    >
-                      {{ grouper[n - 1].timeDailyTime }}
-                    </h4>
-                    <h4 v-else>
-                      {{ grouper[n - 1].timeDailyTime }}
-                    </h4>
+                    {{ grouper[n - 1].timeDailyTime }}
                   </td>
                 </tr>
               </tbody>
@@ -280,4 +279,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.df {
+  color: rgb(46, 204, 113);
+}
+</style>

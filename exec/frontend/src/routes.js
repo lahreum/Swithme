@@ -45,6 +45,10 @@ export default [
     path: '/community',
     name: 'Community',
     component: Community,
+    beforeEnter: (to, from, next) => {
+      if (storage.getItem('jwt-auth-token') != null) next();
+      else alert('로그인이 필요한 서비스입니다.');
+    },
     children: [
       {
         path: '/',
@@ -118,16 +122,28 @@ export default [
     path: '/my-study',
     name: 'MyStudy',
     component: MyStudy,
+    beforeEnter: (to, from, next) => {
+      if (storage.getItem('jwt-auth-token') != null) next();
+      else alert('로그인이 필요한 서비스입니다.');
+    },
   },
   {
     path: '/ranking',
     name: 'Ranking',
     component: Ranking,
+    beforeEnter: (to, from, next) => {
+      if (storage.getItem('jwt-auth-token') != null) next();
+      else alert('로그인이 필요한 서비스입니다.');
+    },
   },
   {
     path: '/group',
     name: 'GroupMain',
     component: GroupMain,
+    beforeEnter: (to, from, next) => {
+      if (storage.getItem('jwt-auth-token') != null) next();
+      else alert('로그인이 필요한 서비스입니다.');
+    },
   },
   {
     path: '/group-create',
@@ -163,6 +179,10 @@ export default [
     path: '/my-page',
     name: 'MyPage',
     component: MyPage,
+    beforeEnter: (to, from, next) => {
+      if (storage.getItem('jwt-auth-token') != null) next();
+      else alert('로그인이 필요한 서비스입니다.');
+    },
   },
   {
     path: '/my-page-modify',

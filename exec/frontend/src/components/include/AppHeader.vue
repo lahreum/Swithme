@@ -273,7 +273,17 @@ export default {
   created() {
     // console.log('마운티드됨?');
     if (storage.getItem('jwt-auth-token')) {
-      console.log();
+      axios
+        .create({
+          headers: {
+            'jwt-auth-token': storage.getItem('jwt-auth-token'),
+          },
+        })
+        .get('user')
+        .then((res) => {
+          this.userInfo = res.data.data;
+          console.log(this.userInfo);
+        });
     } else {
       this.$store.commit('userInit');
     }

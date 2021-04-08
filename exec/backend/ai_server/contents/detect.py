@@ -28,7 +28,7 @@ def detect(image):
     origin_boxes, origin_scores, origin_classes, origin_nums = origin_yolo.predict(image_in)
     face_boxes, face_scores, face_classes, face_nums = face_yolo.predict(image_in)
 
-    # 결과
+    # # 결과
     origin_outputs = (origin_boxes, origin_scores, origin_classes, origin_nums)
     face_outputs = (face_boxes, face_scores, face_classes, face_nums)
 

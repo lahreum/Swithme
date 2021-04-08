@@ -38,8 +38,18 @@
             ></v-progress-circular>
             <ImageStream
               v-show="$store.state.isStartCam"
+              @startCam="startTimer"
+              @runningTimer="runningTimer"
               @pauseTimer="pauseTimer"
               @resumeTimer="resumeTimer"
+              @awayState="away = true"
+              @phoneState="phone = true"
+              @sleepState="sleep = true"
+              @talkState="talk = true"
+              @awayEnd="away = false"
+              @phoneEnd="phone = false"
+              @sleepEnd="sleep = false"
+              @talkEnd="talk = false"
             />
             <v-img class="timerLogo" src="@/assets/img/logo_bl.png"></v-img>
             <v-btn
@@ -49,6 +59,77 @@
               style="color:white;"
               >튜토리얼</v-btn
             >
+            <div id="detectTable">
+              <v-expansion-panels accordion>
+                <v-expansion-panel
+                  style="background-color: rgba(255,255,255,0.5); border-radius: 20px; min-width: 230px;"
+                >
+                  <v-expansion-panel-header
+                    style="font-size: 1.2rem; letter-spacing: -2px; "
+                  >
+                    방해요소 보기
+                  </v-expansion-panel-header>
+                  <v-expansion-panel-content style="letter-spacing: -1px;">
+                    <v-row
+                      no-gutters
+                      style="letter-spacing: -1px; font-size: 1.1rem; font-weight: bolder;"
+                    >
+                      나는 지금까지..
+                    </v-row>
+                    <v-row
+                      no-gutters
+                      style="letter-spacing: -1px; font-size: 0.8rem; font-weight: ligter;"
+                    >
+                      <v-col>
+                        <v-row no-gutters>
+                          <v-col
+                            style="margin-right: 5px; font-weight: bold;"
+                            align="end"
+                            >자리비움 {{ $store.getters.getAwayTime }}회</v-col
+                          >
+                          <v-col
+                            style="margin-right: 5px; font-weight: bold;"
+                            align="end"
+                            >핸드폰 {{ $store.getters.getPhoneTime }}회</v-col
+                          >
+                        </v-row>
+                        <v-row no-gutters>
+                          <v-col
+                            style="margin-right: 5px; font-weight: bold;"
+                            align="end"
+                            >졸음 {{ $store.getters.getSleepTime }}회</v-col
+                          >
+                          <v-col
+                            style="margin-right: 5px; font-weight: bold;"
+                            align="end"
+                            >잡담 {{ $store.getters.getTalkTime }}회</v-col
+                          >
+                        </v-row>
+                      </v-col>
+                    </v-row>
+                    <hr
+                      style="margin-top: 10px; margin-bottom: 10px; background-color: white;"
+                    />
+                    <div
+                      style="letter-spacingL -1px; font-weight: bolder; font-size: 1.2rem; color: red;"
+                    >
+                      <v-row v-if="away" no-gutters justify="center">
+                        자리비움
+                      </v-row>
+                      <v-row v-if="phone" no-gutters justify="center">
+                        핸드폰
+                      </v-row>
+                      <v-row v-if="sleep" no-gutters justify="center">
+                        졸음
+                      </v-row>
+                      <v-row v-if="talk" no-gutters justify="center">
+                        잡담
+                      </v-row>
+                    </div>
+                  </v-expansion-panel-content>
+                </v-expansion-panel>
+              </v-expansion-panels>
+            </div>
             <v-row
               no-gutters
               class="time-bar timer"
@@ -86,6 +167,7 @@
                 <TodoList
                   @updateTodoList="updateTodoList"
                   :todoList="todoList"
+                  :date="todayis"
                 />
                 <br />
                 <div @click="stopStudy" style="text-align:center;">
@@ -111,6 +193,7 @@ import TodoList from '@/components/common/TodoList.vue';
 import ProfileNormal from '@/components/common/ProfileNormal.vue';
 import AppBtnLarge from '@/components/common/AppBtnLarge.vue';
 import date from '@/date.js';
+
 const storage = window.sessionStorage;
 
 export default {
@@ -145,6 +228,7 @@ export default {
             '3. 하단에는 투두리스트를 기준으로 현재 진행률이 표시됩니다. 학습을 종료하고 싶다면 그만하기 버튼을 눌러주세요. 그만하기 버튼을 누르면 메인 홈으로 돌아갑니다.',
         },
       ],
+      todayis: '',
       isStudying: false,
       user: {},
       todoList: [],
@@ -158,19 +242,24 @@ export default {
       timeBegan: null,
       timeStopped: null,
       stoppedDuration: 0,
-      started: null,
-      running: false,
+      // started: null,
+      // running: false,
       hour: 0,
       min: 0,
       sec: 0,
+      away: false,
+      phone: false,
+      sleep: false,
+      talk: false,
     };
   },
   created() {
+    this.$store.commit('setIsStartCam', false);
     this.getUserInfo();
     this.getUserTimer();
     this.getTodoList();
-    this.startTimer();
-    // setTimeout(this.startTimer, 5000);
+    let today = new Date();
+    this.todayis = date.dateFunc(today);
   },
   methods: {
     getUserInfo() {
@@ -217,12 +306,10 @@ export default {
         });
     },
     pauseTimer() {
-      this.$store.state.user.userIsStudying = false;
       console.log('pauseTimer');
       this.stopTimer();
     },
     resumeTimer() {
-      this.$store.state.user.userIsStudying = true;
       console.log('resumeTimer');
       this.startTimer();
     },
@@ -266,48 +353,52 @@ export default {
       this.dialog = true;
     },
     startTimer() {
+      console.log('startTimer');
       // 타이머 시작 -> 카메라 on일때만 start 하는 걸로 변경필요. 새로고침하면 정보 사라지는데 어떡하지? vuex에 담아두기????
-      console.log('start timer!');
       this.changeStatusToStudy();
-      if (this.running) return; // 이미 타이머 돌아가고 잇는데 또 시작하라고할때
+      // if (this.running) return; // 이미 타이머 돌아가고 잇는데 또 시작하라고할때
 
-      this.started = setInterval(() => this.runningTimer(), 1000); // 1s마다 타이머 함수가 실행되도록 함.
-      this.running = true; // 타이머가 실행되고 있음
+      // this.started = setInterval(() => this.runningTimer(), 1000); // 1s마다 타이머 함수가 실행되도록 함.
+
+      // this.running = true; // 타이머가 실행되고 있음
     },
     stopTimer() {
-      this.running = false; // 타이머가 멈춤
+      console.log('stopTimer');
+      // this.running = false; // 타이머가 멈춤
       this.changeStatusToNotStudy();
 
-      clearInterval(this.started); // 반복 명령 종료
+      // clearInterval(this.started); // 반복 명령 종료
     },
     runningTimer() {
-      // 타이머 시작
-      var currentTime = new Date(); // 정각마다 공부한 시간을 저장하기 위해서
-      this.UTCminute = currentTime.getUTCMinutes();
-      this.UTCsecond = currentTime.getUTCSeconds();
+      if (this.$store.state.isStartCam) {
+        // 타이머 시작
+        var currentTime = new Date(); // 정각마다 공부한 시간을 저장하기 위해서
+        this.UTCminute = currentTime.getUTCMinutes();
+        this.UTCsecond = currentTime.getUTCSeconds();
 
-      if (this.UTCminute === 0 && this.UTCsecond === 0) {
-        // 정각일때마다 초기화 && DB에 누적된 초 저장
-        console.log('정각이 되었습니다.');
-        this.saveHourlyTime(); // 시간당 초를 저장함
-      }
-
-      this.accumulatedSec++; // 누적 초 저장
-      this.sec++;
-      if (this.sec >= 60) {
-        this.min++;
-        this.sec = 0;
-        if (this.min >= 60) {
-          this.hour++;
-          this.min = 0;
+        if (this.UTCminute === 0 && this.UTCsecond === 0) {
+          // 정각일때마다 초기화 && DB에 누적된 초 저장
+          console.log('정각이 되었습니다.');
+          this.saveHourlyTime(); // 시간당 초를 저장함
         }
+
+        this.accumulatedSec++; // 누적 초 저장
+        this.sec++;
+        if (this.sec >= 60) {
+          this.min++;
+          this.sec = 0;
+          if (this.min >= 60) {
+            this.hour++;
+            this.min = 0;
+          }
+        }
+        this.time =
+          this.zeroPrefix(this.hour, 2) +
+          ':' +
+          this.zeroPrefix(this.min, 2) +
+          ':' +
+          this.zeroPrefix(this.sec, 2);
       }
-      this.time =
-        this.zeroPrefix(this.hour, 2) +
-        ':' +
-        this.zeroPrefix(this.min, 2) +
-        ':' +
-        this.zeroPrefix(this.sec, 2);
     },
     zeroPrefix(num, digit) {
       var zero = '';
@@ -329,7 +420,7 @@ export default {
         this.zeroPrefix(this.sec, 2);
     },
     stopStudy() {
-      this.$store.commit('setIsStartCam');
+      this.$store.commit('setIsStartCam', false);
       this.$router.push('/');
       this.saveHourlyTime(); // 방해요소는 날짜 바뀔때랑 공부 종료할때 보내면 되고, 각 방해요소별로 보내야함.
       this.changeStatusToNotStudy();
@@ -347,8 +438,9 @@ export default {
         .put('user/start')
         .then((res) => {
           if (res.data.success) {
-            console.log('공부상태로 변경됨.');
+            // console.log('공부상태로 변경됨.');
             this.$store.commit('FETCHSTUDYING');
+            this.runningTimer();
           } else {
             console.log('공부상태로 변경 실패');
           }
@@ -367,7 +459,7 @@ export default {
         .put('user/end')
         .then((res) => {
           if (res.data.success) {
-            console.log('비공부상태로 변경 성공');
+            // console.log('비공부상태로 변경 성공');
             this.$store.commit('STOPSTUDYING');
           } else {
             console.log('비공부상태로 변경 실패');
@@ -385,8 +477,8 @@ export default {
       params.append('datetime', day); // 현재 시간에서 10초 이전의 시간을 보냄(알맞은 시간에) 저장되기 위해서)
       params.append('studyTime', this.accumulatedSec); // 누적된 초를 보냄
 
-      console.log(day);
-      console.log(this.accumulatedSec);
+      // console.log(day);
+      // console.log(this.accumulatedSec);
 
       this.$Axios
         .create({
@@ -434,7 +526,7 @@ export default {
           .post('timer/not-study-time', params)
           .then((res) => {
             if (res.data.success) {
-              console.log('딴 짓한 시간 잘 저장됨');
+              // console.log('딴 짓한 시간 잘 저장됨');
             } else {
               console.log('딴 짓한 시간이 저장되지 않음');
             }
@@ -504,6 +596,11 @@ export default {
   top: 10px;
   left: 67%;
   max-width: 150px;
+}
+#detectTable {
+  position: absolute;
+  top: 50px;
+  left: 1%;
 }
 .startStudy {
   vertical-align: middle;

@@ -113,7 +113,7 @@ export default {
   data: function() {
     return {
       navInfo: [
-        'sample2.png',
+        'nav4.jpg',
         '랭킹',
         '첫번째 문장입니다. 첫번째 문장입니다. 첫번째 문장입',
         '두번째 문장입니다~! 두번째 문장입니다~! 두번째 문장입니다~! 두번째',

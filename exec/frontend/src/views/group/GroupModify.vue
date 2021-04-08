@@ -259,7 +259,7 @@ export default {
         console.log("수정페이지만들어질때", res);
         this.groupInfo = res.data.groupInfo;
         this.imageUrl = res.data.groupProfileImg;
-        this.minNum = this.groupInfo.groupMaxMemberCount;
+        this.minNum = this.groupInfo.groupCurMemberCount;
         console.log(res.data.groupInfo.groupGoalTitle);
         if (this.groupInfo.groupGoalDate !== undefined) {
           // this.groupInfo["groupGoalDate"] = "";
