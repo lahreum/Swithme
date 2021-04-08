@@ -45,7 +45,7 @@
             justify="space-between"
             style="font-size:1.5rem; margin:50px 0;"
           >
-            {{ groupInfo.groupNotice }}
+            <span>{{ groupInfo.groupNotice }} </span>
             <span
               ><v-icon>mdi-account</v-icon>{{ groupers.length }}
               <v-icon>mdi-crown</v-icon
@@ -77,7 +77,8 @@
 
           <v-row style="margin-bottom:50px;">
             <v-col cols="3" style="font-size:1.5rem;"
-              >지금 {{ studying.length }}명이 열공중!</v-col
+              >지금 <span style="color:#673fb4">{{ studying.length }}</span
+              >명이 열공중!</v-col
             >
             <v-col>
               <v-chip v-if="groupInfo.groupGoalTitle !== NULL" outlined>
