@@ -608,6 +608,7 @@ public class GroupController {
 					byte[] bytes;
 					try {
 						bytes = file.getBytes();
+						bytes=commonMethods.resize(bytes);
 						try {
 							Blob blob = new javax.sql.rowset.serial.SerialBlob(bytes);
 
