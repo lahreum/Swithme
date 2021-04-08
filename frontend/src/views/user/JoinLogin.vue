@@ -17,6 +17,7 @@
               <input-bar
                 :placeholder="'아이디(이메일)입력'"
                 @pass-input="getUserId"
+                @pressEnter="loginRequest"
               ></input-bar>
             </v-col>
           </v-row>
@@ -26,6 +27,7 @@
                 :type="'password'"
                 :placeholder="'8글자의 문자와 숫자 입력'"
                 @pass-input="getPassword"
+                @pressEnter="loginRequest"
               ></input-bar>
             </v-col>
           </v-row>
@@ -50,66 +52,72 @@
 </template>
 
 <script>
-import InputBar from '@/components/common/InputBar.vue';
-import AppBtnMiddle from '@/components/common/AppBtnMiddle.vue';
+import InputBar from "@/components/common/InputBar.vue";
+import AppBtnMiddle from "@/components/common/AppBtnMiddle.vue";
 
 const storage = window.sessionStorage;
 
 export default {
   created: function() {
-    this.$emit('move-step', 4);
+    this.$emit("move-step", 4);
   },
   components: {
-    'input-bar': InputBar,
-    'app-btn-middle': AppBtnMiddle,
+    "input-bar": InputBar,
+    "app-btn-middle": AppBtnMiddle,
   },
   data: function() {
     return {
-      btnColor: '#673FB4',
-      btnName: '로그인',
-      btnNameColor: 'white',
-      userId: '',
-      password: '',
+      btnColor: "#673FB4",
+      btnName: "로그인",
+      btnNameColor: "white",
+      userId: "",
+      password: "",
       userInfo: {},
     };
   },
   methods: {
     loginRequest: function() {
       let params = new URLSearchParams();
-      params.append('userId', this.userId);
-      params.append('userPassword', this.password);
+      params.append("userId", this.userId);
+      params.append("userPassword", this.password);
 
       this.$Axios
-        .post('user/login', params)
+        .post("user/login", params)
         .then((response) => {
+          console.log(response);
           if (response.data.success) {
             storage.setItem(
-              'jwt-auth-token',
-              response.headers['jwt-auth-token']
+              "jwt-auth-token",
+              response.headers["jwt-auth-token"]
             );
-            this.getUserInfo(storage.getItem('jwt-auth-token'));
+            this.getUserInfo(storage.getItem("jwt-auth-token"));
+          } else {
+            alert("로그인 도중 오류 발생!");
           }
         })
         .catch((error) => {
           console.log(error);
-          alert('로그인 도중 오류 발생!');
+          alert("로그인 도중 오류 발생!");
         });
     },
     getUserInfo(value) {
       this.$Axios
         .create({
           headers: {
-            'jwt-auth-token': value,
+            "jwt-auth-token": value,
           },
         })
-        .get('/user')
+        .get("/user")
         .then((response) => {
           this.userInfo = response.data.data;
-          this.$store.commit('LOGIN', this.userInfo);
-          this.$router.push('/');
+          this.userInfo["profileImg"] = response.data.profileImg;
+          this.userInfo["isLogin"] = true;
+
+          this.$store.commit("LOGIN", this.userInfo);
+          this.$router.push("/");
         })
         .catch((error) => {
-          alert('사용자 정보를 얻어오는데 실패했습니다.');
+          alert("사용자 정보를 얻어오는데 실패했습니다.");
           console.log(error);
         });
     },
