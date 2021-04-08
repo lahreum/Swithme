@@ -148,12 +148,24 @@
                 style="width: 100%; border: 0; height: 1px; background-color: black;"
               />
             </v-row>
-            <v-row no-gutters justify="center" style="margin-top: 50px;">
-              <div style="min-width: 380px;">
-                <v-row justify="center" style="background-color: #FAF4C0;">
-                  (집중 지속시간 바코드 그래프 자리)
+            <v-row
+              no-gutters
+              justify="center"
+              style="min-width: 380px; height: 400px; margin-top: 50px;"
+              align="center"
+            >
+              <v-col cols="3" align="end">
+                <img src="@/assets/img/warning.gif" width="50" />
+              </v-col>
+              <v-col style="letter-spacing: -1px;">
+                <v-row no-gutters align="end">
+                  <span style="font-size: 1.3rem; font-weight: bold;">앗,</span>
+                  프리미엄 회원을 위한 기능이에요.
                 </v-row>
-              </div>
+                <v-row no-gutters style="font-size: 0.7rem;">
+                  (저희가 야심차게 준비했다는 것만 알려드릴게요. *속닥속닥*)
+                </v-row>
+              </v-col>
             </v-row>
           </v-col>
         </v-row>
@@ -233,12 +245,24 @@
                 style="width: 100%; border: 0; height: 1px; background-color: black;"
               />
             </v-row>
-            <v-row no-gutters justify="center" style="margin-top: 50px;">
-              <div style="min-width: 380px;">
-                <v-row justify="center" style="background-color: #FFD9EC;">
-                  (주요 방해요인 원그래프 자리)
+            <v-row
+              no-gutters
+              justify="center"
+              style="min-width: 380px; height: 400px; margin-top: 50px;"
+              align="center"
+            >
+              <v-col cols="3" align="end">
+                <img src="@/assets/img/warning.gif" width="50" />
+              </v-col>
+              <v-col style="letter-spacing: -1px;">
+                <v-row no-gutters align="end">
+                  <span style="font-size: 1.3rem; font-weight: bold;">앗,</span>
+                  프리미엄 회원을 위한 기능이에요.
                 </v-row>
-              </div>
+                <v-row no-gutters style="font-size: 0.7rem;">
+                  (저희가 야심차게 준비했다는 것만 알려드릴게요. *속닥속닥*)
+                </v-row>
+              </v-col>
             </v-row>
           </v-col>
         </v-row>
@@ -349,7 +373,7 @@ export default {
   data: function() {
     return {
       navInfo: [
-        'sample1.jpg',
+        'nav3.jpg',
         '나의 학습',
         '첫asdf번째 문장입니다. 첫번째 문장입니다. 첫번째 문장입',
         '두번째 문장입니다~! 두번째 문장입니다~! 두번째 문장입니다~! 두번째',
