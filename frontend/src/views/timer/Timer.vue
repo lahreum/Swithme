@@ -2,27 +2,38 @@
   <div>
     <v-dialog
       v-model="dialog"
-      width="800px">
-      <v-carousel>
-        <v-carousel-item
-          v-for="tutorial in tutorials"
-          :key="tutorial.idx"
-          :src="tutorial.src"
-        >
-        </v-carousel-item>
-      </v-carousel>
+      width="700">
+      <v-card>
+        <div style="float:right;padding:10px;">
+          <v-icon @click="dialog = !dialog">mdi-close</v-icon>
+        </div>
+        <v-card-title style="text-align:center;">
+          <v-img src="@/assets/img/logo_bl.png" max-width="200"></v-img>
+          <span id="tutorialTitle">어떻게 사용해요?</span>
+        </v-card-title>
+          <v-carousel v-model="step" height="400">
+            <v-carousel-item 
+              v-for="tutorial in tutorials"
+              :key="tutorial.idx"
+              :src="tutorial.src">
+            </v-carousel-item>
+          </v-carousel>
+        <v-card-text><p id="tutorialContent">{{tutorials[step].content}}</p></v-card-text>
+      </v-card>
     </v-dialog>
-    
+
     <div style="width:100%;">
       <v-container class="outbox">
         <v-row no-gutters>
           <!-- 왼쪽 스트리밍 화면 -->
           <v-col cols="9">
+            <v-progress-circular class="loadingCircular"
+              indeterminate
+              color="#673fb4"
+            ></v-progress-circular>
             <ImageStream @pauseTimer="pauseTimer" @resumeTimer="resumeTimer"/>
             <v-img class="timerLogo" src="@/assets/img/logo_bl.png"></v-img>
-            <v-btn class="timerTutorial" @click="openTutorial">튜토리얼</v-btn>
-            <!-- <v-btn color="red" height="70" max-width="200" v-if="firstStart" class="startStudy" @click="startStudy">START</v-btn> -->
-            <!-- <TimeBar class="timer"/> -->
+            <v-btn class="timerTutorial" @click="openTutorial" color="#673fb4" style="color:white;">튜토리얼</v-btn>
             <v-row no-gutters class="time-bar timer" justify="center" align="center">
               {{ time }}
             </v-row>
@@ -88,21 +99,22 @@ export default {
   data: function() {
     return{
       dialog: false,
+      step: 0,
       tutorials:[
         {
           idx: 1,
-          src: '@/assets/img/study_tutorial1.png',
-          content: "불필요한 것에 신경쓰지 않고 공부만 할 수 있습니다. SWITHME는 얼굴과 행동,사물을 분석하여 집중/비집중 여부를 파악해주니까요! 하단에는 집중한 시간이 표시됩니다."
+          src:'https://ifh.cc/g/Z2hjFW.jpg',
+          content: "1. 불필요한 것에 신경쓰지 않고 공부만 할 수 있습니다. SWITHME는 얼굴과 행동,사물을 분석하여 집중/비집중 여부를 파악해주니까요! 하단에는 집중한 시간이 표시됩니다."
         },
         {
           idx: 2,
-          src: '@/assets/img/study_tutorial2.png',
-          content: "필요하다면 TO DO LIST를 활용해보세요. 상단에서 TO DO LIST를 추가하고, 완료하거나 삭제할 수 있습니다. 지난 투두리스트는 '나의학습'에서 확인할 수 있습니다."
+          src: "https://ifh.cc/g/zmJZj8.jpg",
+          content: "2. 필요하다면 TO DO LIST를 활용해보세요. 상단에서 TO DO LIST를 추가하고, 완료하거나 삭제할 수 있습니다. 지난 투두리스트는 '나의학습'에서 확인할 수 있습니다."
         },
         {
           idx: 3,
-          src: '@/assets/img/study_tutorial3.png',
-          content: "하단에는 투두리스트를 기준으로 현재 진행률이 표시됩니다. 학습을 종료하고 싶다면 그만하기 버튼을 눌러주세요. 그만하기 버튼을 누르면 메인 홈으로 돌아갑니다."
+          src: "https://ifh.cc/g/A5gphR.jpg",
+          content: "3. 하단에는 투두리스트를 기준으로 현재 진행률이 표시됩니다. 학습을 종료하고 싶다면 그만하기 버튼을 눌러주세요. 그만하기 버튼을 누르면 메인 홈으로 돌아갑니다."
         }
       ],
       isStudying: false,
@@ -128,8 +140,8 @@ export default {
   created(){
     this.getUserInfo();
     this.getUserTimer();
-    this.startTimer();
     this.getTodoList();
+    setTimeout(this.startTimer,5000);
   },
   methods: {
     getUserInfo() {
@@ -466,5 +478,19 @@ export default {
   background-color: #2b243a;
   font-size: 3.2rem;
   color: white;
+}
+#tutorialTitle{
+  font-weight: 500;
+  padding-left: 10px;
+}
+#tutorialContent {
+  font-weight: 500;
+  font-size: 17px;
+  padding: 20px;
+}
+.loadingCircular {
+  position: absolute;
+  left:600px;
+  top:300px;
 }
 </style>

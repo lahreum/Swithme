@@ -195,6 +195,7 @@
                   :btnColor="'#673fb4'"
                   :btnName="'로그인'"
                   :btnNameColor="'white'"
+                  v-on:keyup.enter="login"
                 ></app-btn-large>
               </div>
               <!-- <a href="https://j4b103.p.ssafy.io/service/oauth/google" -->
