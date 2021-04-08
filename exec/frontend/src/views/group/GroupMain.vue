@@ -5,7 +5,9 @@
       <v-row>
         <v-col cols="2"></v-col>
         <v-col>
-          <h1 style="text-align:center">3월의 추천 그룹</h1>
+          <h1 style="margin:50px 0;text-align:center">
+            {{ today.getMonth() + 1 }}월의 추천 그룹
+          </h1>
           <hr />
 
           <div style="height:430px; margin:5% 0;">
@@ -258,6 +260,7 @@ export default {
       checkGId: "",
       checkGPw: "",
       pwRules: "",
+      today: new Date(),
 
       navInfo: [
         "nav5.jpg",
