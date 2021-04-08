@@ -55,23 +55,23 @@
 </template>
 
 <script>
-import MiddleNav from '../components/include/MiddleNav.vue';
-import ProfileLarge from '@/components/common/ProfileLarge.vue';
-import AppBtnLarge from '@/components/common/AppBtnLarge.vue';
+import MiddleNav from "../components/include/MiddleNav.vue";
+import ProfileLarge from "@/components/common/ProfileLarge.vue";
+import AppBtnLarge from "@/components/common/AppBtnLarge.vue";
 
 const storage = window.sessionStorage;
 export default {
   components: {
-    'middle-nav': MiddleNav,
-    'profile-large': ProfileLarge,
-    'app-btn-large': AppBtnLarge,
+    "middle-nav": MiddleNav,
+    "profile-large": ProfileLarge,
+    "app-btn-large": AppBtnLarge,
   },
   created: function() {
     this.$Axios
       .create({
-        headers: { 'jwt-auth-token': storage.getItem('jwt-auth-token') },
+        headers: { "jwt-auth-token": storage.getItem("jwt-auth-token") },
       })
-      .get('user')
+      .get("user")
       .then((response) => {
         this.user.nickname = response.data.data.userNickname;
         this.user.userId = response.data.data.userId;
@@ -85,22 +85,25 @@ export default {
   data: function() {
     return {
       navInfo: [
-        'sample2.png',
-        '마이페이지',
-        '첫번째 문장입니다. 첫번째 문장입니다. 첫번째 문장입',
-        '두번째 문장입니다~! 두번째 문장입니다~! 두번째 문장입니다~! 두번째',
+        "sample2.png",
+        "마이페이지",
+        "첫번째 문장입니다. 첫번째 문장입니다. 첫번째 문장입",
+        "두번째 문장입니다~! 두번째 문장입니다~! 두번째 문장입니다~! 두번째",
       ],
       user: {
-        nickname: '',
-        userId: '',
-        message: '',
-        profileImg: '',
+        nickname: "",
+        userId: "",
+        message: "",
+        profileImg: "",
       },
     };
   },
   methods: {
     goRouting: function() {
-      this.$router.push('/my-page-modify');
+      this.$router.push({
+        name: "MyPageModify",
+        query: { jwt: storage.getItem("jwt-auth-token") },
+      });
     },
   },
 };

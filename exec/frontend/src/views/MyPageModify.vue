@@ -238,7 +238,7 @@ export default {
   created: function() {
     this.$Axios
       .create({
-        headers: { "jwt-auth-token": storage.getItem("jwt-auth-token") },
+        headers: { "jwt-auth-token": this.$route.query.jwt },
       })
       .get("user")
       .then((response) => {
@@ -354,18 +354,17 @@ export default {
         if (this.$refs.password.validate()) {
           let params = new URLSearchParams();
           params.append("newPassword", this.new.password);
-          params.append("userId", this.user.userId);
+          params.append("jwt", this.$route.query.jwt);
 
           this.$Axios
-            .create({
-              headers: {
-                "jwt-auth-token": storage.getItem("jwt-auth-token"),
-              },
-            })
             .put("user/password", params)
             .then((response) => {
               if (response.data.success) {
                 alert("새로운 비밀번호로 변경되었습니다.");
+                if (storage.getItem("jwt-auth-token") === null) {
+                  alert("변경한 비밀번호로 로그인해주세요");
+                  this.$router.push("/");
+                }
                 window.location.reload();
               } else {
                 alert("비밀번호 변경 도중 오류가 발생했습니다.");
