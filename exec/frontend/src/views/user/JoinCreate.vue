@@ -117,49 +117,49 @@
 </template>
 
 <script>
-import './user.css';
-import InputBar from '@/components/common/InputBar.vue';
-import AppBtnMiddle from '@/components/common/AppBtnMiddle.vue';
-import axios from 'axios';
+import "./user.css";
+import InputBar from "@/components/common/InputBar.vue";
+import AppBtnMiddle from "@/components/common/AppBtnMiddle.vue";
+import axios from "axios";
 
 export default {
   components: {
-    'input-bar': InputBar,
-    'app-btn-middle': AppBtnMiddle,
+    "input-bar": InputBar,
+    "app-btn-middle": AppBtnMiddle,
   },
   created: function() {
-    this.$emit('move-step', 3);
+    this.$emit("move-step", 3);
     let emailF = this.$route.query.emailF;
     let emailB = this.$route.query.emailB;
-    this.email = emailF + '@' + emailB;
+    this.email = emailF + "@" + emailB;
   },
   mounted: function() {
     this.isMounted = true;
   },
   data: function() {
     return {
-      email: '',
-      userNickname: '',
-      password: '',
-      passwordConfirm: '',
+      email: "",
+      userNickname: "",
+      password: "",
+      passwordConfirm: "",
       isduplComplete: false,
       isValidNickname: false,
       isMounted: false,
       // isAllValid: false,
       nicknameRules: [
         // (v) => v == null,
-        (v) => !!v || '닉네임을 입력해주세요.',
-        (v) => (v && v.length <= 8) || '닉네임은 8자 이하로 입력해주세요.',
+        (v) => !!v || "닉네임을 입력해주세요.",
+        (v) => (v && v.length <= 8) || "닉네임은 8자 이하로 입력해주세요.",
       ],
       passwordRules: [
-        (v) => !!v || '비밀번호를 입력해주세요.',
-        (v) => (v && v.length >= 8) || '비밀번호는 8자 이상으로 입력해주세요.',
-        (v) => /(?=.*[A-Za-z])/.test(v) || '문자와 숫자를 꼭 포함해주세요.',
-        (v) => /(?=.*\d)/.test(v) || '문자와 숫자를 꼭 포함해주세요.',
+        (v) => !!v || "비밀번호를 입력해주세요.",
+        (v) => (v && v.length >= 8) || "비밀번호는 8자 이상으로 입력해주세요.",
+        (v) => /(?=.*[A-Za-z])/.test(v) || "문자와 숫자를 꼭 포함해주세요.",
+        (v) => /(?=.*\d)/.test(v) || "문자와 숫자를 꼭 포함해주세요.",
       ],
       passwordConfirmRules: [
-        (v) => !!v || '비밀번호를 입력해주세요.',
-        (v) => v == this.password || '비밀번호와 일치해야해요.',
+        (v) => !!v || "비밀번호를 입력해주세요.",
+        (v) => v == this.password || "비밀번호와 일치해야해요.",
       ],
     };
   },
@@ -177,6 +177,7 @@ export default {
       if (this.userNickname == 0 || this.userNickname.length > 8) {
         this.isValidNickname = false;
         this.isduplComplete = false;
+
         // this.isAllValid = false;
       } else {
         this.isValidNickname = true;
@@ -193,26 +194,30 @@ export default {
       this.password = value;
     },
     joinRequest: function() {
-      if (this.isAllValid) {
+      if (this.isAllValid && this.isduplComplete) {
         axios
-          .post('user/signup', {
+          .post("user/signup", {
             userId: this.email,
-            userMessage: '',
+            userMessage: "",
             userNickname: this.userNickname,
             userPassword: this.password,
           })
           .then((response) => {
             if (response.data.success) {
-              this.$emit('move-forward');
-              this.$router.push('/join/join-complete');
+              this.$emit("move-forward");
+              this.$router.push("/join/join-complete");
             } else {
-              alert('회원가입 도중 문제가 생겼습니다.');
-              this.$router.push('/');
+              alert("회원가입 도중 문제가 생겼습니다.");
+              this.$router.push("/");
             }
           })
           .catch((error) => {
             console.log(error);
           });
+      } else {
+        if (this.isAllValid) {
+          alert("닉네임 중복확인을 해주세요");
+        }
       }
       // if (this.$refs.form.validate()) {
       //   alert(this.$refs.form.validate());
@@ -223,12 +228,13 @@ export default {
     duplChk: function() {
       if (this.isValidNickname) {
         axios
-          .get('user/nickname?userNickname=' + this.userNickname)
+          .get("user/nickname?userNickname=" + this.userNickname)
           .then((response) => {
             if (response.data.isPresent) {
-              alert('이미 존재하는 닉네임입니다.');
+              alert("이미 존재하는 닉네임입니다.");
+              this.isduplComplete = false;
             } else {
-              alert('사용할 수 있는 닉네임입니다.');
+              alert("사용할 수 있는 닉네임입니다.");
               this.isduplComplete = true;
             }
           })

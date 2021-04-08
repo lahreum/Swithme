@@ -35,8 +35,7 @@
           style="letter-spacing: -2px; font-weight: bold; font-size: 3rem;"
           align="end"
         >
-          <span style="font-size: 2rem;">총 </span> {{ transTotalTime }}
-          <span style="font-size: 2rem;"> 시간</span>
+          {{ transTotalTime }}
         </v-row>
         <v-row no-gutters style="width: 80%;">
           <v-progress-linear
@@ -94,12 +93,10 @@ import changeSec from '@/changeSec.js';
 
 const storage = window.sessionStorage;
 export default {
-  props: ['date'],
+  props: ['propdate'],
   data: function() {
     return {
       patternList: [],
-      //   listedTime: [],
-      //   listedAction: [],
       totalTime: 1,
       transTotalTime: '',
       focusTime: 0,
@@ -108,12 +105,21 @@ export default {
       transNotFocusTime: '',
       focusPercentage: 0,
       notFocusPercentage: 100,
+      inputDate: '',
       isMounted: false,
     };
   },
   created() {
     let today = date.dateFunc(new Date());
     this.getDisturbingCause(today);
+  },
+  watch: {
+    propdate() {
+      this.inputDate = date.dateFunc(this.propdate);
+      console.log('?!?!?!?!?', this.inputDate);
+      this.initialize();
+      this.getDisturbingCause(this.inputDate);
+    },
   },
   methods: {
     getDisturbingCause(date) {
@@ -122,7 +128,7 @@ export default {
         .create({
           headers: { 'jwt-auth-token': storage.getItem('jwt-auth-token') },
         })
-        .get(`timer/not-study?datetime=2021-04-08`)
+        .get(`timer/not-study?datetime=${date}`)
         .then((response) => {
           if (response.data.disturbingCause.length != 0) {
             this.patternList = response.data.disturbingCause;
@@ -155,6 +161,17 @@ export default {
       this.notFocusPercentage = (100 - this.focusPercentage).toFixed(1);
 
       this.isMounted = true;
+    },
+    initialize() {
+      this.patternList = [];
+      this.totalTime = 1;
+      this.transTotalTime = '';
+      this.focusTime = 0;
+      this.transFocusTime = '';
+      this.notFocusTime = 0;
+      this.transNotFocusTime = '';
+      this.focusPercentage = 0;
+      this.notFocusPercentage = 100;
     },
   },
 };
