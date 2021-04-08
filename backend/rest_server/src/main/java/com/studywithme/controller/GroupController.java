@@ -650,8 +650,6 @@ public class GroupController {
 				myTime+=td.get().getTimeDailyTime();
 		}
 		
-		
-		
 		if(groupMemberList.isPresent()) {
 			for(GroupMember gm:groupMemberList.get()) {
 				int cur=0;
@@ -663,10 +661,8 @@ public class GroupController {
 				studyTimeListOfGroupMembers.add(cur);
 			}
 		}
-		for(int i:studyTimeListOfGroupMembers)
-			System.out.print(i);
-		System.out.println();
-		Collections.sort(studyTimeListOfGroupMembers);
+		
+		Collections.sort(studyTimeListOfGroupMembers,Collections.reverseOrder());
 		for(int i=0;i<studyTimeListOfGroupMembers.size();i++) {
 			if(myTime==studyTimeListOfGroupMembers.get(i)) {
 				myRank=i+1;
