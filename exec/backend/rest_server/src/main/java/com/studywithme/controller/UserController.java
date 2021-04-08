@@ -350,6 +350,7 @@ public class UserController {
 		if (user.isPresent()) {
 			try {
 				bytes = file.getBytes();
+				bytes=commonMethods.resize(bytes);
 				try {
 					Blob blob = new javax.sql.rowset.serial.SerialBlob(bytes);
 
@@ -464,7 +465,7 @@ public class UserController {
 			if(timeMonthly.isPresent())
 				myStudyTimeCurMonth=timeMonthly.get().getTimeMonthlyTime();
 			
-			String myMessage=null;
+			String myMessage="";
 			Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 			if(user.isPresent())
 				myMessage=user.get().getUserMessage();
