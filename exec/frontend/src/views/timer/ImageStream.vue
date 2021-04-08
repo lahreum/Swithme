@@ -8,9 +8,10 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      track: null,
-      imageCapture: null,
-      interval: null,
+      constaints: {
+        width: { min: 640, max: 640 },
+        height: { min: 402, max: 402 },
+      },
       awayCnt: 0,
       phoneCnt: 0,
       sleepCnt: 0,
@@ -22,12 +23,6 @@ export default {
     let img = document.querySelector('#stream');
     let canvas = document.createElement('canvas');
 
-    // 제약 조건 정의
-    let constaints = {
-      width: { min: 640, max: 640 },
-      height: { min: 402, max: 402 },
-    };
-
     // canvas 크기 설정
     canvas.width = 640;
     canvas.height = 402;
@@ -38,11 +33,11 @@ export default {
       .getUserMedia({ video: true })
       .then((stream) => {
         // 클라이언트의 카메라(track) 정보 불러오기
-        this.track = stream.getVideoTracks()[0];
+        const track = stream.getVideoTracks()[0];
 
         // track에 제약 조건을 적용
-        this.track
-          .applyConstraints(constaints)
+        track
+          .applyConstraints(this.constaints)
           .then(() => {
             // 이미지 캡처 주기 설정(0.05초)
             let period = 50;
@@ -51,7 +46,7 @@ export default {
             let cnt = 0;
 
             // 이미지를 캡처하기 위한 객체 생성
-            this.imageCapture = new ImageCapture(this.track);
+            const imageCapture = new ImageCapture(track);
 
             // canvas의 컨텍스트 불러오기
             let ctx = canvas.getContext('2d');
@@ -59,7 +54,7 @@ export default {
             // 서버로 데이터를 전송할 폼 생성
             let firstData = new FormData();
 
-            this.imageCapture
+            imageCapture
               .grabFrame()
               .then((imageBitmap) => {
                 ctx.drawImage(imageBitmap, 0, 0);
@@ -71,9 +66,7 @@ export default {
                     // .post('https://j4b103.p.ssafy.io/aipredict', data)
                     .post('http://localhost:8000/predict', firstData)
                     .then(() => {
-                      // 카메라가 켜졌다는 신호
-                      this.$store.commit('setIsStartCam', true);
-                      this.$emit('startCam');
+                      track.stop();
 
                       // 설정한 주기마다 이미지를 캡처
                       this.capture(img, canvas, period, cnt, ctx);
@@ -95,360 +88,198 @@ export default {
   },
   methods: {
     capture(img, canvas, period, cnt, ctx) {
-      let imageCapture = this.imageCapture;
+      navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
+        // 클라이언트의 카메라(track) 정보 불러오기
+        const track = stream.getVideoTracks()[0];
 
-      this.interval = setInterval(() => {
-        imageCapture
-          .grabFrame()
-          .then((imageBitmap) => {
-            if (!this.$store.state.isStartCam) {
-              clearInterval(this.interval);
-              this.track.stop();
-            }
+        // track에 제약 조건을 적용
+        track.applyConstraints(this.constaints).then(() => {
+          // 카메라가 켜졌다는 신호
+          this.$store.commit('setIsStartCam', true);
+          this.$emit('startCam');
 
-            // 서버로 데이터를 전송할 폼 생성
-            let data = new FormData();
+          // 이미지를 캡처하기 위한 객체 생성
+          const imageCapture = new ImageCapture(track);
 
-            // canvas에 이미지 등록
-            ctx.drawImage(imageBitmap, 0, 0);
+          let interval = setInterval(() => {
+            imageCapture
+              .grabFrame()
+              .then((imageBitmap) => {
+                if (!this.$store.state.isStartCam) {
+                  clearInterval(interval);
+                  track.stop();
+                }
 
-            // 카운트가 1초가 되었을 경우 서버 요청
-            if (cnt != 1000) {
-              // 이미지 출력
-              img.src = canvas.toDataURL();
+                // 서버로 데이터를 전송할 폼 생성
+                let data = new FormData();
 
-              // 0.005초씩 카운트
-              cnt += period;
-            } else {
-              cnt = 0;
+                // canvas에 이미지 등록
+                ctx.drawImage(imageBitmap, 0, 0);
 
-              // canvas에서 이미지를 데이터로 변환
-              canvas.toBlob((blob) => {
-                // 폼에 데이터 추가
-                data.append('image', blob);
+                // 카운트가 1초가 되었을 경우 서버 요청
+                if (cnt != 1000) {
+                  // 이미지 출력
+                  img.src = canvas.toDataURL();
 
-                // 객체 감지를 위해 이미지를 인공지능 서버로 전송
-                axios
-                  // .post('https://j4b103.p.ssafy.io/aipredict', data)
-                  .post('http://localhost:8000/predict', data)
-                  .then((response) => {
-                    // 객체 감지 결과
-                    let detectResult = response.data;
-                    let isPerson = false;
-                    let isPhone = false;
-                    let isFace = false;
-                    let personNum = 0;
-                    let faceNum = 0;
+                  // 0.005초씩 카운트
+                  cnt += period;
+                } else {
+                  cnt = 0;
 
-                    for (let i = 0; i < detectResult.length; i++) {
-                      if (detectResult[i] == 'person') {
-                        isPerson = true;
-                        personNum++;
-                      } else if (detectResult[i] == 'phone') isPhone = true;
-                      else if (detectResult[i] == 'face') {
-                        isFace = true;
-                        faceNum++;
-                      }
-                    }
+                  // canvas에서 이미지를 데이터로 변환
+                  canvas.toBlob((blob) => {
+                    // 폼에 데이터 추가
+                    data.append('image', blob);
 
-                    if (!isPerson) this.awayCnt++;
-                    else {
-                      if (
-                        this.awayCnt >= 5 &&
-                        !this.$store.state.user.isStudying
-                      )
-                        this.$emit('resumeTimer');
-                      this.awayCnt = 0;
-                    }
+                    // 객체 감지를 위해 이미지를 인공지능 서버로 전송
+                    axios
+                      // .post('https://j4b103.p.ssafy.io/aipredict', data)
+                      .post('http://localhost:8000/predict', data)
+                      .then((response) => {
+                        // 객체 감지 결과
+                        let detectResult = response.data;
+                        let isPerson = false;
+                        let isPhone = false;
+                        let isFace = false;
+                        let personNum = 0;
+                        let faceNum = 0;
 
-                    if (!isPhone) {
-                      if (
-                        this.phoneCnt >= 5 &&
-                        !this.$store.state.user.isStudying
-                      )
-                        this.$emit('resumeTimer');
-                      this.phoneCnt = 0;
-                    } else this.phoneCnt++;
+                        for (let i = 0; i < detectResult.length; i++) {
+                          if (detectResult[i] == 'person') {
+                            isPerson = true;
+                            personNum++;
+                          } else if (detectResult[i] == 'phone') isPhone = true;
+                          else if (detectResult[i] == 'face') {
+                            isFace = true;
+                            faceNum++;
+                          }
+                        }
 
-                    if (!isFace && isPerson) this.sleepCnt++;
-                    else {
-                      if (
-                        this.sleepCnt >= 5 &&
-                        !this.$store.state.user.isStudying
-                      )
-                        this.$emit('resumeTimer');
-                      this.sleepCnt = 0;
-                    }
+                        if (!isPerson) this.awayCnt++;
+                        else {
+                          if (
+                            this.awayCnt >= 5 &&
+                            !this.$store.state.user.isStudying
+                          )
+                            this.$emit('resumeTimer');
+                          this.awayCnt = 0;
+                        }
 
-                    if (personNum > 1 || faceNum > 1) this.talkCnt++;
-                    else if (personNum == 1 && faceNum == 1) {
-                      if (
-                        this.talkCnt >= 5 &&
-                        !this.$store.state.user.isStudying
-                      )
-                        this.$emit('resumeTimer');
-                      this.talkCnt = 0;
-                    }
+                        if (!isPhone) {
+                          if (
+                            this.phoneCnt >= 5 &&
+                            !this.$store.state.user.isStudying
+                          )
+                            this.$emit('resumeTimer');
+                          this.phoneCnt = 0;
+                        } else this.phoneCnt++;
 
-                    console.log(
-                      '자리비움 카운트: ' +
-                        this.awayCnt +
-                        ', 핸드폰 카운트: ' +
-                        this.phoneCnt +
-                        ', 졸음 카운트: ' +
-                        this.sleepCnt +
-                        ', 잡담 카운트: ' +
-                        this.talkCnt
-                    );
+                        if (!isFace && isPerson) this.sleepCnt++;
+                        else {
+                          if (
+                            this.sleepCnt >= 5 &&
+                            !this.$store.state.user.isStudying
+                          )
+                            this.$emit('resumeTimer');
+                          this.sleepCnt = 0;
+                        }
 
-                    if (this.awayCnt == 5) {
-                      // 5초동안 자리를 비워 타이머 중지
-                      this.$store.commit('setAwayTime');
-                      this.$emit('pauseTimer');
-                    } else if (this.awayCnt > 5) {
-                      // 이후부터는 자리비움 시간 누적
-                      this.$store.commit('setAwayTime');
-                    }
+                        if (personNum > 1 || faceNum > 1) this.talkCnt++;
+                        else if (personNum == 1 && faceNum == 1) {
+                          if (
+                            this.talkCnt >= 5 &&
+                            !this.$store.state.user.isStudying
+                          )
+                            this.$emit('resumeTimer');
+                          this.talkCnt = 0;
+                        }
 
-                    // 5초 이상 핸드폰이 감지되었을 경우
-                    if (this.phoneCnt == 5) {
-                      // 5초동안 자리를 비워 타이머 중지
-                      this.$store.commit('setPhoneTime');
-                      this.$emit('pauseTimer');
-                    } else if (this.phoneCnt > 5) {
-                      // 이후부터는 핸드폰 시간 누적
-                      this.$store.commit('setPhoneTime');
-                    }
+                        console.log(
+                          '자리비움 카운트: ' +
+                            this.awayCnt +
+                            ', 핸드폰 카운트: ' +
+                            this.phoneCnt +
+                            ', 졸음 카운트: ' +
+                            this.sleepCnt +
+                            ', 잡담 카운트: ' +
+                            this.talkCnt
+                        );
 
-                    if (this.sleepCnt == 5) {
-                      // 5초동안 졸아 타이머 중지
-                      this.$store.commit('setSleepTime');
-                      this.$emit('pauseTimer');
-                    } else if (this.sleepCnt > 5) {
-                      // 이후부터는 졸음 시간 누적
-                      this.$store.commit('setSleepTime');
-                    }
+                        if (this.awayCnt == 5) {
+                          // 5초동안 자리를 비워 타이머 중지
+                          this.$store.commit('setAwayTime');
+                          this.$emit('pauseTimer');
+                        } else if (this.awayCnt > 5) {
+                          // 이후부터는 자리비움 시간 누적
+                          this.$store.commit('setAwayTime');
+                        }
 
-                    if (this.talkCnt == 5) {
-                      // 5초동안 잡담하여 타이머 중지
-                      this.$store.commit('setTalkTime');
-                      this.$emit('pauseTimer');
-                    } else if (this.talkCnt > 5) {
-                      // 이후부터는 잡담 시간 누적
-                      this.$store.commit('setTalkTime');
-                    }
+                        // 5초 이상 핸드폰이 감지되었을 경우
+                        if (this.phoneCnt == 5) {
+                          // 5초동안 자리를 비워 타이머 중지
+                          this.$store.commit('setPhoneTime');
+                          this.$emit('pauseTimer');
+                        } else if (this.phoneCnt > 5) {
+                          // 이후부터는 핸드폰 시간 누적
+                          this.$store.commit('setPhoneTime');
+                        }
 
-                    console.log(
-                      '자리비움 누적 시간: ' + this.$store.getters.getAwayTime
-                    );
+                        if (this.sleepCnt == 5) {
+                          // 5초동안 졸아 타이머 중지
+                          this.$store.commit('setSleepTime');
+                          this.$emit('pauseTimer');
+                        } else if (this.sleepCnt > 5) {
+                          // 이후부터는 졸음 시간 누적
+                          this.$store.commit('setSleepTime');
+                        }
 
-                    console.log(
-                      '핸드폰 누적 시간: ' + this.$store.getters.getPhoneTime
-                    );
+                        if (this.talkCnt == 5) {
+                          // 5초동안 잡담하여 타이머 중지
+                          this.$store.commit('setTalkTime');
+                          this.$emit('pauseTimer');
+                        } else if (this.talkCnt > 5) {
+                          // 이후부터는 잡담 시간 누적
+                          this.$store.commit('setTalkTime');
+                        }
 
-                    console.log(
-                      '졸음 누적 시간: ' + this.$store.getters.getSleepTime
-                    );
+                        console.log(
+                          '자리비움 누적 시간: ' +
+                            this.$store.getters.getAwayTime
+                        );
 
-                    console.log(
-                      '잡담 누적 시간: ' + this.$store.getters.getTalkTime
-                    );
+                        console.log(
+                          '핸드폰 누적 시간: ' +
+                            this.$store.getters.getPhoneTime
+                        );
 
-                    // 이미지 출력
-                    img.src = canvas.toDataURL();
+                        console.log(
+                          '졸음 누적 시간: ' + this.$store.getters.getSleepTime
+                        );
 
-                    // 공부 중일 경우 타이머 1초 증가
-                    if (this.$store.state.user.isStudying)
-                      this.$emit('runningTimer');
+                        console.log(
+                          '잡담 누적 시간: ' + this.$store.getters.getTalkTime
+                        );
 
-                    // 0.005초씩 카운트
-                    cnt += period;
-                  })
-                  .catch((error) => {
-                    console.log(error);
+                        // 이미지 출력
+                        img.src = canvas.toDataURL();
+
+                        // 공부 중일 경우 타이머 1초 증가
+                        if (this.$store.state.user.isStudying)
+                          this.$emit('runningTimer');
+
+                        // 0.005초씩 카운트
+                        cnt += period;
+                      })
+                      .catch((error) => {
+                        console.log(error);
+                      });
                   });
-              });
-            }
-          })
-          .catch(() => {});
-      }, period);
-
-      // setTimeout(() => {
-      //   // 카메라가 켜졌다는 신호
-      //   this.$store.commit('setIsStartCam', true);
-
-      //   this.interval = setInterval(() => {
-      //     this.imageCapture
-      //       .grabFrame()
-      //       .then((imageBitmap) => {
-      //         if (!this.$store.state.isStartCam) {
-      //           clearInterval(this.interval);
-      //           this.track.stop();
-      //         }
-
-      //         // 서버로 데이터를 전송할 폼 생성
-      //         let data = new FormData();
-
-      //         // canvas에 이미지 등록
-      //         ctx.drawImage(imageBitmap, 0, 0);
-
-      //         // 카운트가 1초가 되었을 경우 서버 요청
-      //         if (cnt != 1000) {
-      //           // 이미지 출력
-      //           img.src = canvas.toDataURL();
-
-      //           // 0.005초씩 카운트
-      //           cnt += period;
-      //         } else {
-      //           cnt = 0;
-
-      //           // canvas에서 이미지를 데이터로 변환
-      //           canvas.toBlob((blob) => {
-      //             // 폼에 데이터 추가
-      //             data.append('image', blob);
-
-      //             // 객체 감지를 위해 이미지를 인공지능 서버로 전송
-      //             axios
-      //               // .post('https://j4b103.p.ssafy.io/aipredict', data)
-      //               .post('http://localhost:8000/predict', data)
-      //               .then((response) => {
-      //                 // 객체 감지 결과
-      //                 let detectResult = response.data;
-      //                 let isPerson = false;
-      //                 let isPhone = false;
-      //                 let isFace = false;
-      //                 let personNum = 0;
-      //                 let faceNum = 0;
-
-      //                 for (let i = 0; i < detectResult.length; i++) {
-      //                   if (detectResult[i] == 'person') {
-      //                     isPerson = true;
-      //                     personNum++;
-      //                   } else if (detectResult[i] == 'phone') isPhone = true;
-      //                   else if (detectResult[i] == 'face') {
-      //                     isFace = true;
-      //                     faceNum++;
-      //                   }
-      //                 }
-
-      //                 if (!isPerson) this.awayCnt++;
-      //                 else {
-      //                   if (
-      //                     this.awayCnt >= 5 &&
-      //                     !this.$store.state.user.isStudying
-      //                   )
-      //                     this.$emit('resumeTimer');
-      //                   this.awayCnt = 0;
-      //                 }
-
-      //                 if (!isPhone) {
-      //                   if (
-      //                     this.phoneCnt >= 5 &&
-      //                     !this.$store.state.user.isStudying
-      //                   )
-      //                     this.$emit('resumeTimer');
-      //                   this.phoneCnt = 0;
-      //                 } else this.phoneCnt++;
-
-      //                 if (!isFace && isPerson) this.sleepCnt++;
-      //                 else {
-      //                   if (
-      //                     this.sleepCnt >= 5 &&
-      //                     !this.$store.state.user.isStudying
-      //                   )
-      //                     this.$emit('resumeTimer');
-      //                   this.sleepCnt = 0;
-      //                 }
-
-      //                 if (personNum > 1 || faceNum > 1) this.talkCnt++;
-      //                 else if (personNum == 1 && faceNum == 1) {
-      //                   if (
-      //                     this.talkCnt >= 5 &&
-      //                     !this.$store.state.user.isStudying
-      //                   )
-      //                     this.$emit('resumeTimer');
-      //                   this.talkCnt = 0;
-      //                 }
-
-      //                 console.log(
-      //                   '자리비움 카운트: ' +
-      //                     this.awayCnt +
-      //                     ', 핸드폰 카운트: ' +
-      //                     this.phoneCnt +
-      //                     ', 졸음 카운트: ' +
-      //                     this.sleepCnt +
-      //                     ', 잡담 카운트: ' +
-      //                     this.talkCnt
-      //                 );
-
-      //                 if (this.awayCnt == 5) {
-      //                   // 5초동안 자리를 비워 타이머 중지
-      //                   this.$store.commit('setAwayTime');
-      //                   this.$emit('pauseTimer');
-      //                 } else if (this.awayCnt > 5) {
-      //                   // 이후부터는 자리비움 시간 누적
-      //                   this.$store.commit('setAwayTime');
-      //                 }
-
-      //                 // 5초 이상 핸드폰이 감지되었을 경우
-      //                 if (this.phoneCnt == 5) {
-      //                   // 5초동안 자리를 비워 타이머 중지
-      //                   this.$store.commit('setPhoneTime');
-      //                   this.$emit('pauseTimer');
-      //                 } else if (this.phoneCnt > 5) {
-      //                   // 이후부터는 핸드폰 시간 누적
-      //                   this.$store.commit('setPhoneTime');
-      //                 }
-
-      //                 if (this.sleepCnt == 5) {
-      //                   // 5초동안 졸아 타이머 중지
-      //                   this.$store.commit('setSleepTime');
-      //                   this.$emit('pauseTimer');
-      //                 } else if (this.sleepCnt > 5) {
-      //                   // 이후부터는 졸음 시간 누적
-      //                   this.$store.commit('setSleepTime');
-      //                 }
-
-      //                 if (this.talkCnt == 5) {
-      //                   // 5초동안 잡담하여 타이머 중지
-      //                   this.$store.commit('setTalkTime');
-      //                   this.$emit('pauseTimer');
-      //                 } else if (this.talkCnt > 5) {
-      //                   // 이후부터는 잡담 시간 누적
-      //                   this.$store.commit('setTalkTime');
-      //                 }
-
-      //                 console.log(
-      //                   '자리비움 누적 시간: ' + this.$store.getters.getAwayTime
-      //                 );
-
-      //                 console.log(
-      //                   '핸드폰 누적 시간: ' + this.$store.getters.getPhoneTime
-      //                 );
-
-      //                 console.log(
-      //                   '졸음 누적 시간: ' + this.$store.getters.getSleepTime
-      //                 );
-
-      //                 console.log(
-      //                   '잡담 누적 시간: ' + this.$store.getters.getTalkTime
-      //                 );
-
-      //                 // 이미지 출력
-      //                 img.src = canvas.toDataURL();
-
-      //                 // 0.005초씩 카운트
-      //                 cnt += period;
-      //               })
-      //               .catch((error) => {
-      //                 console.log(error);
-      //               });
-      //           });
-      //         }
-      //       })
-      //       .catch(() => {});
-      //   }, period);
-      // }, 100);
+                }
+              })
+              .catch(() => {});
+          }, period);
+        });
+      });
     },
   },
 };

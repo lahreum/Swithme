@@ -163,8 +163,8 @@ export default {
       timeBegan: null,
       timeStopped: null,
       stoppedDuration: 0,
-      started: null,
-      running: false,
+      // started: null,
+      // running: false,
       hour: 0,
       min: 0,
       sec: 0,
@@ -273,15 +273,15 @@ export default {
       console.log('startTimer');
       // 타이머 시작 -> 카메라 on일때만 start 하는 걸로 변경필요. 새로고침하면 정보 사라지는데 어떡하지? vuex에 담아두기????
       this.changeStatusToStudy();
-      if (this.running) return; // 이미 타이머 돌아가고 잇는데 또 시작하라고할때
+      // if (this.running) return; // 이미 타이머 돌아가고 잇는데 또 시작하라고할때
 
       // this.started = setInterval(() => this.runningTimer(), 1000); // 1s마다 타이머 함수가 실행되도록 함.
 
-      this.running = true; // 타이머가 실행되고 있음
+      // this.running = true; // 타이머가 실행되고 있음
     },
     stopTimer() {
       console.log('stopTimer');
-      this.running = false; // 타이머가 멈춤
+      // this.running = false; // 타이머가 멈춤
       this.changeStatusToNotStudy();
 
       // clearInterval(this.started); // 반복 명령 종료
@@ -355,7 +355,7 @@ export default {
         .put('user/start')
         .then((res) => {
           if (res.data.success) {
-            console.log('공부상태로 변경됨.');
+            // console.log('공부상태로 변경됨.');
             this.$store.commit('FETCHSTUDYING');
             this.runningTimer();
           } else {
@@ -376,7 +376,7 @@ export default {
         .put('user/end')
         .then((res) => {
           if (res.data.success) {
-            console.log('비공부상태로 변경 성공');
+            // console.log('비공부상태로 변경 성공');
             this.$store.commit('STOPSTUDYING');
           } else {
             console.log('비공부상태로 변경 실패');
@@ -394,8 +394,8 @@ export default {
       params.append('datetime', day); // 현재 시간에서 10초 이전의 시간을 보냄(알맞은 시간에) 저장되기 위해서)
       params.append('studyTime', this.accumulatedSec); // 누적된 초를 보냄
 
-      console.log(day);
-      console.log(this.accumulatedSec);
+      // console.log(day);
+      // console.log(this.accumulatedSec);
 
       this.$Axios
         .create({
@@ -443,7 +443,7 @@ export default {
           .post('timer/not-study-time', params)
           .then((res) => {
             if (res.data.success) {
-              console.log('딴 짓한 시간 잘 저장됨');
+              // console.log('딴 짓한 시간 잘 저장됨');
             } else {
               console.log('딴 짓한 시간이 저장되지 않음');
             }
