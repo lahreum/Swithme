@@ -39,18 +39,20 @@ public class TodoController {
 
 	@PostMapping("")
 	@ApiOperation(value="투두리스트 추가",notes="파라미터로 받은 내용을 db에 저장하는 데 성공했다면 true 반환")
-	public Object writeTodo(@RequestParam("content") String content,HttpServletRequest req) {
+	public Object writeTodo(@RequestParam("content") String content,@RequestParam(required=false,value="datetime") String datetime,HttpServletRequest req) {
 		Map<String,Object> result=new HashMap<>();
 		
 		result.put("success",false);
 		
 		String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
-		
+		System.out.println(datetime);
 		Optional<UserInfo> user=userRepository.findByUserNickname(nickname);
 		if(user.isPresent()) {
 			Todo todo=new Todo();
 			todo.setTodoContent(content);
 			todo.setTodoUserNickname(nickname);
+			if(datetime!=null)
+				todo.setTodoDate(datetime);
 			todoRepository.save(todo);			
 			
 			result.clear();
