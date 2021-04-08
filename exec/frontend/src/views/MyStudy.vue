@@ -142,7 +142,7 @@
               justify="start"
               align="end"
             >
-              <v-col cols="10">집중 지속시간</v-col>
+              <v-col cols="10">나의 집중패턴</v-col>
               <v-col align="end" style="color: #999999; font-size: 1rem;">
                 (단위: 분)
               </v-col>
@@ -158,18 +158,31 @@
               style="min-width: 380px; height: 400px; margin-top: 50px;"
               align="center"
             >
-              <v-col cols="3" align="end">
-                <img src="@/assets/img/warning.gif" width="50" />
-              </v-col>
-              <v-col style="letter-spacing: -1px;">
-                <v-row no-gutters align="end">
-                  <span style="font-size: 1.3rem; font-weight: bold;">앗,</span>
-                  프리미엄 회원을 위한 기능이에요.
-                </v-row>
-                <v-row no-gutters style="font-size: 0.7rem;">
-                  (저희가 야심차게 준비했다는 것만 알려드릴게요. *속닥속닥*)
-                </v-row>
-              </v-col>
+              <v-row no-gutters>
+                <v-col align="end" align-self="center">
+                  <v-btn icon @click="goBeforeDay">
+                    <v-icon x-large>
+                      mdi-chevron-left
+                    </v-icon>
+                  </v-btn>
+                </v-col>
+                <v-col
+                  cols="7"
+                  align="center"
+                  align-self="center"
+                  style="letter-spacing: -1px; font-size: 2rem;"
+                >
+                  {{ dateForFocusChart.substr(0, 10) }}
+                </v-col>
+                <v-col align="start" align-self="center">
+                  <v-btn icon @click="goAfterDay">
+                    <v-icon x-large>
+                      mdi-chevron-right
+                    </v-icon>
+                  </v-btn>
+                </v-col>
+              </v-row>
+              <chart-focus-time></chart-focus-time>
             </v-row>
           </v-col>
         </v-row>
@@ -254,8 +267,10 @@
               justify="center"
               style="min-width: 380px; height: 400px; margin-top: 50px;"
               align="center"
+              v-if="isFinished2"
             >
-              <v-col cols="3" align="end">
+              <chart-cause :countdataset="causeCntSet"></chart-cause>
+              <!-- <v-col cols="3" align="end">
                 <img src="@/assets/img/warning.gif" width="50" />
               </v-col>
               <v-col style="letter-spacing: -1px;">
@@ -266,7 +281,7 @@
                 <v-row no-gutters style="font-size: 0.7rem;">
                   (저희가 야심차게 준비했다는 것만 알려드릴게요. *속닥속닥*)
                 </v-row>
-              </v-col>
+              </v-col> -->
             </v-row>
           </v-col>
         </v-row>
@@ -282,6 +297,8 @@ import TodoList from '@/components/common/TodoList.vue';
 import AppCalendar from '@/components/common/AppCalendar.vue';
 import ChartMyTime from '@/components/common/ChartMyTime.vue';
 import ChartMainTime from '@/components/common/ChartMainTime.vue';
+import ChartFocusTime from '@/components/common/ChartFocusTime.vue';
+import ChartCause from '@/components/common/ChartCause.vue';
 import date from '@/date.js';
 import changeSec from '@/changeSec.js';
 
@@ -294,6 +311,8 @@ export default {
     'app-calendar': AppCalendar,
     'chart-my-time': ChartMyTime,
     'chart-main-time': ChartMainTime,
+    'chart-focus-time': ChartFocusTime,
+    'chart-cause': ChartCause,
   },
   created: function() {
     // user 정보 받아오기
@@ -310,7 +329,6 @@ export default {
         this.user.profileImg = response.data.profileImg;
       });
 
-    // 공부 시간 받아오기
     let today = new Date();
     let day = date.dateFunc(today);
 
@@ -323,13 +341,13 @@ export default {
       })
       .get(`group/that-i-am?datetime=${day}`)
       .then((res) => {
-        console.log(res);
-        console.log(res.data.groupListThatIAm[0].groupName);
+        // console.log(res.data.groupListThatIAm[0].groupName);
         this.myRankList = res.data.myRankList;
         this.groupListThatIAm = res.data.groupListThatIAm;
         this.myRankLoading = false;
       });
 
+    // 공부 시간 받아오기
     this.$Axios
       .create({
         headers: {
@@ -338,16 +356,13 @@ export default {
       })
       .get('timer/today?datetime=' + day)
       .then((response) => {
-        // console.log('RESPONSEEEEEEE!!!!', response);
         if (
           response.data.todayStudyTime == null ||
           response.data.todayStudyTime === 0
         ) {
           this.user.todayStudyTime = '0:00:00';
-          // console.log('TYPE♡♡♡♡♡♡', typeof response.data.todayStudyTime);
         } else {
           this.user.todayStudyTime = changeSec(response.data.todayStudyTime);
-          // this.user.todayStudyTime = response.data.todayStudyTime;
         }
       })
       .catch((error) => {
@@ -373,6 +388,9 @@ export default {
 
     // 공부 시간대 받아오기
     this.getEachTimeAverage('month');
+
+    // 방해요소 가져오기
+    this.getDisturbingCause();
   },
   data: function() {
     return {
@@ -393,13 +411,17 @@ export default {
         todoList: [],
       },
       pickedDate: date.dateFunc(new Date()),
+      causeCntSet: [0, 0, 0, 0],
       timeList: [],
       timeDataset: [0, 0, 0, 0, 0, 0],
       timeLabel: ['새벽', '아침', '오전', '오후', '저녁', '밤'],
       isFinished: false,
+      isFinished2: false,
       myRankLoading: true,
       myRankList: [],
       groupListThatIAm: [],
+      dateForFocusChart: date.dateFunc(new Date()),
+      // flagDay: 1,
     };
   },
   methods: {
@@ -432,19 +454,12 @@ export default {
         .create({
           headers: { 'jwt-auth-token': storage.getItem('jwt-auth-token') },
         })
-        .get(`timer/hourly/${tmpRange}?datetimeOrigin=2021-04-07 03:21:35`)
+        .get(`timer/hourly/${tmpRange}?datetimeOrigin=${today}`)
         .then((response) => {
           if (response.data.eachTimeAverage.length != 0) {
-            console.log(response);
             this.timeList = response.data.eachTimeAverage;
             if (this.timeList != null) {
               this.divideTime();
-              // console.log(this.dawn);
-              // console.log(this.morning);
-              // console.log(this.beforeLunch);
-              // console.log(this.afternoon);
-              // console.log(this.evening);
-              // console.log(this.night);
             }
           }
         });
@@ -473,6 +488,61 @@ export default {
       if (value) {
         this.getPickedDate(this.pickedDate);
       }
+    },
+    getDisturbingCause(value) {
+      console.log(value);
+      let tmpDC = [0, 0, 0, 0, 0];
+
+      this.$Axios
+        .create({
+          headers: { 'jwt-auth-token': storage.getItem('jwt-auth-token') },
+        })
+        .get(`timer/not-study?datetime=2021-04-08`)
+        .then((response) => {
+          if (response.data.disturbingCause.length != 0) {
+            for (let i = 0; i < response.data.disturbingCause.length; i++) {
+              if (response.data.disturbingCause[i].timeDailyAction == 1) {
+                tmpDC[0] += 1;
+              } else if (
+                response.data.disturbingCause[i].timeDailyAction == 2
+              ) {
+                tmpDC[1] += 1;
+              } else if (
+                response.data.disturbingCause[i].timeDailyAction == 3
+              ) {
+                tmpDC[2] += 1;
+              } else if (
+                response.data.disturbingCause[i].timeDailyAction == 4
+              ) {
+                tmpDC[3] += 1;
+              } else {
+                console.log('공부 Action');
+              }
+            }
+            this.causeCntSet = tmpDC;
+          }
+          this.isFinished2 = true;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    goBeforeDay() {
+      console.log('구현중');
+      // var tmpDate = new Date();
+      // console.log('===========================');
+      // console.log(tmpDate);
+      // console.log(tmpDate.getDate() - 1);
+      // console.log(tmpDate.setDate(tmpDate.getDate() - 1));
+    },
+    goAfterDay() {
+      console.log('구현중');
+      // let tmp = new Date();
+      // this.dateForFocusChart = date.dateFunc(
+      //   tmp.setDate(tmp.getDate() + this.flagDay)
+      // );
+      // console.log(this.dateForFocusChart);
+      // this.flagDay++;
     },
   },
 };
