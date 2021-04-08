@@ -12,60 +12,61 @@
         </v-carousel-item>
       </v-carousel>
     </v-dialog>
-  <div style="width:100%;">
-    <v-container class="outbox">
-      <v-row no-gutters>
-        <!-- 왼쪽 스트리밍 화면 -->
-        <v-col cols="9">
-          <ImageStream @pauseTimer="pauseTimer" @resumeTimer="resumeTimer"/>
-          <v-img class="timerLogo" src="@/assets/img/logo_bl.png"></v-img>
-          <v-btn class="timerTutorial" @click="openTutorial">튜토리얼</v-btn>
-          <!-- <v-btn color="red" height="70" max-width="200" v-if="firstStart" class="startStudy" @click="startStudy">START</v-btn> -->
-          <!-- <TimeBar class="timer"/> -->
-          <v-row no-gutters class="time-bar timer" justify="center" align="center">
-            {{ time }}
-          </v-row>
-        </v-col>
+    
+    <div style="width:100%;">
+      <v-container class="outbox">
+        <v-row no-gutters>
+          <!-- 왼쪽 스트리밍 화면 -->
+          <v-col cols="9">
+            <ImageStream @pauseTimer="pauseTimer" @resumeTimer="resumeTimer"/>
+            <v-img class="timerLogo" src="@/assets/img/logo_bl.png"></v-img>
+            <v-btn class="timerTutorial" @click="openTutorial">튜토리얼</v-btn>
+            <!-- <v-btn color="red" height="70" max-width="200" v-if="firstStart" class="startStudy" @click="startStudy">START</v-btn> -->
+            <!-- <TimeBar class="timer"/> -->
+            <v-row no-gutters class="time-bar timer" justify="center" align="center">
+              {{ time }}
+            </v-row>
+          </v-col>
 
-        <!-- 오른쪽 투두리스트 화면 -->
-        <v-col cols="3">
-          <div style="background-color: #EEEEEE;">
-            <!-- 회원정보 -->
-            <div>
-              <div class="user">
-                <ProfileNormal
-                  class="profile"
-                  :src="'data:image/png;base64,' +profileImg"
-                />
+          <!-- 오른쪽 투두리스트 화면 -->
+          <v-col cols="3">
+            <div style="background-color: #EEEEEE;">
+              <!-- 회원정보 -->
+              <div>
+                <div class="user">
+                  <ProfileNormal
+                    class="profile"
+                    :src="'data:image/png;base64,' +profileImg"
+                  />
+                </div>
+                <div class="user">
+                  <span><strong>{{ user.userNickname }}</strong></span
+                  ><br />
+                  <span>{{ user.userMessage }}</span>
+                </div>
               </div>
-              <div class="user">
-                <span><strong>{{ user.userNickname }}</strong></span
-                ><br />
-                <span>{{ user.userMessage }}</span>
+              <!-- 투두리스트 -->
+              <div>
+                <p class="todolist">TO DO LIST</p>
               </div>
+              <v-card style="border-radius:60%;">
+                <p class="date">{{ curruentDate }}</p>
+                <TodoList @updateTodoList="updateTodoList" :todoList="todoList" />
+                <br />
+                <div @click="stopStudy" style="text-align:center;">
+                  <AppBtnLarge
+                    :btnColor="`#424242`"
+                    :btnName="'그만하기'"
+                    :btnNameColor="'white'"
+                  />
+                </div>
+                <br />
+              </v-card>
             </div>
-            <!-- 투두리스트 -->
-            <div>
-              <p class="todolist">TO DO LIST</p>
-            </div>
-            <v-card style="border-radius:60%;">
-              <p class="date">{{ curruentDate }}</p>
-              <TodoList @updateTodoList="updateTodoList" :todoList="todoList" />
-              <br />
-              <div @click="stopStudy" style="text-align:center;">
-                <AppBtnLarge
-                  :btnColor="`#424242`"
-                  :btnName="'그만하기'"
-                  :btnNameColor="'white'"
-                />
-              </div>
-              <br />
-            </v-card>
-          </div>
-        </v-col>
-      </v-row>
-    </v-container>
-  </div>
+          </v-col>
+        </v-row>
+      </v-container>
+    </div>
   </div>
 </template>
 
@@ -330,7 +331,7 @@ export default {
       let day = date.dateFunc(today);
 
       let params = new URLSearchParams();
-      params.append('datetime', day);     // 현재 시간과
+      params.append('datetime', day);     // 현재 시간에서 10초 이전의 시간을 보냄(알맞은 시간에) 저장되기 위해서)
       params.append('studyTime', this.accumulatedSec);  // 누적된 초를 보냄
       
       console.log(day);
@@ -345,7 +346,6 @@ export default {
       .post('timer/study-time', params)
       .then((res)=>{
         if(res.data.success) {
-          console.log('Hourly 공부시간 저장됨!!!!!!!');
           this.accumulatedSec = 0;    // 저장했으므로 다시 초기화함
         } else {
           console.log('공부시간 저장 실패!!!');
@@ -393,7 +393,7 @@ export default {
         })
       }
       //방해 요인 시간을 0으로 만듬
-      // this.$store.commit("InitializeInterruption");
+      this.$store.commit("InitializeInterruption");
     },
     updateTodoList(value){
       if(value) {   // todoList 추가되었으면 다시 getTodoList()

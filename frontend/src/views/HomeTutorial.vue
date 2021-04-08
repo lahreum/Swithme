@@ -1,8 +1,8 @@
 <template>
   <div>
     <middle-nav v-bind:propsdata="navInfo"></middle-nav>
-    <br><br><br><br><br><br>
-    <div style="width:60%; margin:0 auto;">
+    <br><br><br>
+    <div style="width:60%; margin:auto;">
       <div>
         <div data-aos="fade-down"
           data-aos-easing="linear"
@@ -17,7 +17,7 @@
           <v-img src="@/assets/img/tutorial2.png" width="600"></v-img>
         </div>
       </div>
-      <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+      <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
       <div>
         <div data-aos="fade-down"
           data-aos-easing="linear"
@@ -26,13 +26,13 @@
           <h3>공부 외에는 SWITHME에게 맡겨주세요.<br>계속 타이머를 켜놓으면<br>자동으로 공부시간 측정 및 패턴 분석까지</h3><br>
         </div>
         <div data-aos="fade-right" data-aos-duration="1500" style="float:left;">
-          <v-img src="@/assets/img/tutorial3.png" width="500"></v-img>
+          <v-img src="@/assets/img/tutorial3.png" width="400"></v-img>
         </div>
-        <div data-aos="fade-left" data-aos-duration="1500" style="float:right;">
-          <v-img src="@/assets/img/tutorial4.png" width="300"></v-img>
+        <div data-aos="fade-left" data-aos-duration="1500" style="float:right;padding-top:50px;">
+          <v-img src="@/assets/img/tutorial4.png" width="400"></v-img>
         </div>
       </div>
-      <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+      <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
       <div data-aos="fade-down"
         data-aos-easing="linear"
         data-aos-duration="1000">
@@ -40,12 +40,12 @@
         <h3>스터디그룹을 생성해서<br>같은 시험을 준비하는 사람들과<br>함께 공부해보세요.</h3><br>
       </div>
       <div data-aos="fade-right" data-aos-duration="1500" style="float:left;">
-        <v-img src="@/assets/img/tutorial5.png" width="500"></v-img>
+        <v-img src="@/assets/img/tutorial5.png" width="400"></v-img>
       </div>
-      <div data-aos="fade-left" data-aos-duration="1500" style="float:right;">
-        <v-img src="@/assets/img/tutorial6.png" width="300"></v-img>
+      <div data-aos="fade-left" data-aos-duration="1500" style="float:right;padding-top:50px;">
+        <v-img src="@/assets/img/tutorial6.png" width="400"></v-img>
       </div>
-      <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+      <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
       <div data-aos="fade-down"
         data-aos-easing="linear"
         data-aos-duration="1000">
