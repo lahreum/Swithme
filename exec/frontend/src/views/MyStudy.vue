@@ -167,12 +167,13 @@
                   </v-btn>
                 </v-col>
                 <v-col
-                  cols="7"
+                  cols="6"
                   align="center"
                   align-self="center"
-                  style="letter-spacing: -1px; font-size: 2rem;"
+                  style="letter-spacing: -2px; font-size: 2rem; font-weight: bold;"
                 >
-                  {{ dateForFocusChart.substr(0, 10) }}
+                  {{ dateForFocusChart.getMonth() + 1 }}월
+                  {{ dateForFocusChart.getDate() }}일
                 </v-col>
                 <v-col align="start" align-self="center">
                   <v-btn icon @click="goAfterDay">
@@ -182,7 +183,9 @@
                   </v-btn>
                 </v-col>
               </v-row>
-              <chart-focus-time></chart-focus-time>
+              <chart-focus-time
+                :propdate="dateForFocusChart"
+              ></chart-focus-time>
             </v-row>
           </v-col>
         </v-row>
@@ -420,7 +423,7 @@ export default {
       myRankLoading: true,
       myRankList: [],
       groupListThatIAm: [],
-      dateForFocusChart: date.dateFunc(new Date()),
+      dateForFocusChart: new Date(),
       // flagDay: 1,
     };
   },
@@ -528,21 +531,16 @@ export default {
         });
     },
     goBeforeDay() {
-      alert('구현중');
-      // var tmpDate = new Date();
-      // console.log('===========================');
-      // console.log(tmpDate);
-      // console.log(tmpDate.getDate() - 1);
-      // console.log(tmpDate.setDate(tmpDate.getDate() - 1));
+      this.tmp = new Date(this.dateForFocusChart);
+      this.dateForFocusChart = new Date(
+        this.tmp.setDate(this.tmp.getDate() - 1)
+      );
     },
     goAfterDay() {
-      alert('구현중');
-      // let tmp = new Date();
-      // this.dateForFocusChart = date.dateFunc(
-      //   tmp.setDate(tmp.getDate() + this.flagDay)
-      // );
-      // console.log(this.dateForFocusChart);
-      // this.flagDay++;
+      this.tmp = new Date(this.dateForFocusChart);
+      this.dateForFocusChart = new Date(
+        this.tmp.setDate(this.tmp.getDate() + 1)
+      );
     },
   },
 };
