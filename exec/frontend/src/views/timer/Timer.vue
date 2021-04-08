@@ -38,6 +38,8 @@
             ></v-progress-circular>
             <ImageStream
               v-show="$store.state.isStartCam"
+              @startCam="startTimer"
+              @runningTimer="runningTimer"
               @pauseTimer="pauseTimer"
               @resumeTimer="resumeTimer"
             />
@@ -112,6 +114,7 @@ import TodoList from '@/components/common/TodoList.vue';
 import ProfileNormal from '@/components/common/ProfileNormal.vue';
 import AppBtnLarge from '@/components/common/AppBtnLarge.vue';
 import date from '@/date.js';
+
 const storage = window.sessionStorage;
 
 export default {
@@ -168,10 +171,10 @@ export default {
     };
   },
   created() {
+    this.$store.commit('setIsStartCam', false);
     this.getUserInfo();
     this.getUserTimer();
     this.getTodoList();
-    this.startTimer();
     let today = new Date();
     this.todayis = date.dateFunc(today);
   },
@@ -267,48 +270,52 @@ export default {
       this.dialog = true;
     },
     startTimer() {
+      console.log('startTimer');
       // 타이머 시작 -> 카메라 on일때만 start 하는 걸로 변경필요. 새로고침하면 정보 사라지는데 어떡하지? vuex에 담아두기????
-      console.log('start timer!');
       this.changeStatusToStudy();
       if (this.running) return; // 이미 타이머 돌아가고 잇는데 또 시작하라고할때
 
-      this.started = setInterval(() => this.runningTimer(), 1000); // 1s마다 타이머 함수가 실행되도록 함.
+      // this.started = setInterval(() => this.runningTimer(), 1000); // 1s마다 타이머 함수가 실행되도록 함.
+
       this.running = true; // 타이머가 실행되고 있음
     },
     stopTimer() {
+      console.log('stopTimer');
       this.running = false; // 타이머가 멈춤
       this.changeStatusToNotStudy();
 
-      clearInterval(this.started); // 반복 명령 종료
+      // clearInterval(this.started); // 반복 명령 종료
     },
     runningTimer() {
-      // 타이머 시작
-      var currentTime = new Date(); // 정각마다 공부한 시간을 저장하기 위해서
-      this.UTCminute = currentTime.getUTCMinutes();
-      this.UTCsecond = currentTime.getUTCSeconds();
+      if (this.$store.state.isStartCam) {
+        // 타이머 시작
+        var currentTime = new Date(); // 정각마다 공부한 시간을 저장하기 위해서
+        this.UTCminute = currentTime.getUTCMinutes();
+        this.UTCsecond = currentTime.getUTCSeconds();
 
-      if (this.UTCminute === 0 && this.UTCsecond === 0) {
-        // 정각일때마다 초기화 && DB에 누적된 초 저장
-        console.log('정각이 되었습니다.');
-        this.saveHourlyTime(); // 시간당 초를 저장함
-      }
-
-      this.accumulatedSec++; // 누적 초 저장
-      this.sec++;
-      if (this.sec >= 60) {
-        this.min++;
-        this.sec = 0;
-        if (this.min >= 60) {
-          this.hour++;
-          this.min = 0;
+        if (this.UTCminute === 0 && this.UTCsecond === 0) {
+          // 정각일때마다 초기화 && DB에 누적된 초 저장
+          console.log('정각이 되었습니다.');
+          this.saveHourlyTime(); // 시간당 초를 저장함
         }
+
+        this.accumulatedSec++; // 누적 초 저장
+        this.sec++;
+        if (this.sec >= 60) {
+          this.min++;
+          this.sec = 0;
+          if (this.min >= 60) {
+            this.hour++;
+            this.min = 0;
+          }
+        }
+        this.time =
+          this.zeroPrefix(this.hour, 2) +
+          ':' +
+          this.zeroPrefix(this.min, 2) +
+          ':' +
+          this.zeroPrefix(this.sec, 2);
       }
-      this.time =
-        this.zeroPrefix(this.hour, 2) +
-        ':' +
-        this.zeroPrefix(this.min, 2) +
-        ':' +
-        this.zeroPrefix(this.sec, 2);
     },
     zeroPrefix(num, digit) {
       var zero = '';
@@ -330,7 +337,7 @@ export default {
         this.zeroPrefix(this.sec, 2);
     },
     stopStudy() {
-      this.$store.commit('setIsStartCam');
+      this.$store.commit('setIsStartCam', false);
       this.$router.push('/');
       this.saveHourlyTime(); // 방해요소는 날짜 바뀔때랑 공부 종료할때 보내면 되고, 각 방해요소별로 보내야함.
       this.changeStatusToNotStudy();
@@ -350,6 +357,7 @@ export default {
           if (res.data.success) {
             console.log('공부상태로 변경됨.');
             this.$store.commit('FETCHSTUDYING');
+            this.runningTimer();
           } else {
             console.log('공부상태로 변경 실패');
           }

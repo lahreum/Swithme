@@ -1,3 +1,4 @@
+import os
 import cv2
 import numpy as np
 from contents.detect import detect
@@ -7,6 +8,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
 # 파라미터 설정
+os.environ['TF_XLA_FLAGS'] = '--tf_xla_enable_xla_devices'
 origin_yolo_max_boxes = 10
 face_yolo_max_boxes = 10
 origin_num_classes = 80

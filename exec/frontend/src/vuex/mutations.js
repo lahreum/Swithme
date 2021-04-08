@@ -45,7 +45,7 @@ export default {
   RECOMMENDGROUP(state, payload) {
     state.Rgroup = payload;
   },
-  setIsStartCam(state) {
-    state.isStartCam = !state.isStartCam;
+  setIsStartCam(state, payload) {
+    state.isStartCam = payload;
   },
 };
