@@ -67,7 +67,11 @@
                 <v-row
                   style="margin: 8px; background-color: white; padding-bottom: 10px;"
                 >
-                  <todo-list :todoList="user.todoList"></todo-list>
+                  <todo-list
+                    :todoList="user.todoList"
+                    :date="pickedDate"
+                    @updateTodoList="getTodoList"
+                  ></todo-list>
                 </v-row>
               </v-col>
             </v-row>
@@ -391,14 +395,7 @@ export default {
       pickedDate: date.dateFunc(new Date()),
       timeList: [],
       timeDataset: [0, 0, 0, 0, 0, 0],
-      timeLabel: [
-        'dawn',
-        'morning',
-        'before lunch',
-        'afternoon',
-        'evening',
-        'night',
-      ],
+      timeLabel: ['새벽', '아침', '오전', '오후', '저녁', '밤'],
       isFinished: false,
       myRankLoading: true,
       myRankList: [],
@@ -471,6 +468,11 @@ export default {
       }
       this.timeDataset = tmp;
       this.isFinished = true;
+    },
+    getTodoList(value) {
+      if (value) {
+        this.getPickedDate(this.pickedDate);
+      }
     },
   },
 };
