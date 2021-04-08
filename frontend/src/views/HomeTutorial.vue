@@ -29,7 +29,7 @@
           <v-img src="@/assets/img/tutorial3.png" width="400"></v-img>
         </div>
         <div data-aos="fade-left" data-aos-duration="1500" style="float:right;padding-top:50px;">
-          <v-img src="@/assets/img/tutorial4.png" width="400"></v-img>
+          <v-img src="@/assets/img/tutorial4.jpg" width="400"></v-img>
         </div>
       </div>
       <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
@@ -40,7 +40,7 @@
         <h3>스터디그룹을 생성해서<br>같은 시험을 준비하는 사람들과<br>함께 공부해보세요.</h3><br>
       </div>
       <div data-aos="fade-right" data-aos-duration="1500" style="float:left;">
-        <v-img src="@/assets/img/tutorial5.png" width="400"></v-img>
+        <v-img src="@/assets/img/tutorial5.jpg" width="400"></v-img>
       </div>
       <div data-aos="fade-left" data-aos-duration="1500" style="float:right;padding-top:50px;">
         <v-img src="@/assets/img/tutorial6.png" width="400"></v-img>

@@ -13,7 +13,7 @@
           @click="goMain"
         />
       </v-col>
-      <v-col cols="7">
+      <v-col cols="8">
         <v-row no-gutters align="center">
           <router-link
             class="menu-item"
@@ -60,11 +60,12 @@
         </v-row>
       </v-col>
       <!-- 로그인, 프로필 영역 -->
-      <v-col cols="3">
+      <v-col cols="2">
         <v-row
           no-gutters
           v-if="!$store.getters.getUserIsLogin"
-          justify="end" class="pr-10"
+          justify="center"
+          style="margin-left: 60px"
         >
           <div
             style="cursor: pointer"
@@ -99,15 +100,19 @@
             bottom
           >
             <template v-slot:activator="{ on }">
-              <v-col class="pr-10" align="end">
+              <v-col cols="2">
                 <profile-small
                   :src="'data:image/png;base64,' + $store.getters.getUserImage"
                 ></profile-small>
-                <span style="cursor: pointer; margin-left: 10px;"
+              </v-col>
+              <v-col
+                style="cursor: pointer"
                 align="start"
                 align-self="center"
                 v-on="on"
-                :class="{ 'white-text': darkmode, 'black-text': !darkmode }">{{ $store.getters.getUserNickname }}님, 안녕하세요!</span>
+                :class="{ 'white-text': darkmode, 'black-text': !darkmode }"
+              >
+                {{ $store.getters.getUserNickname }}님, 안녕하세요!
               </v-col>
             </template>
             <v-list>
@@ -190,10 +195,9 @@
                   :btnColor="'#673fb4'"
                   :btnName="'로그인'"
                   :btnNameColor="'white'"
-                  v-on:keyup.enter="login"
                 ></app-btn-large>
               </div>
-              <!-- <a href="https://j4b103.p.ssafy.io/service/oauth/google" -->      
+              <!-- <a href="https://j4b103.p.ssafy.io/service/oauth/google" -->
               <a href="http://localhost:9999/oauth/google"
                 ><v-img
                   @click="dialog = false"
