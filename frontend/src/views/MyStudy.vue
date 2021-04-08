@@ -180,7 +180,7 @@
             <v-row no-gutters justify="center" style="margin-top: 50px;">
               <div
                 v-if="!myRankLoading"
-                style="min-width:100%; overflow-x: hidden; max-height:300px"
+                style="min-width:100%; overflow-x: hidden; max-height:300px; min-height:300px"
               >
                 <v-row
                   v-for="(group, idx) in groupListThatIAm"
@@ -271,9 +271,9 @@ export default {
     // user 정보 받아오기
     this.$Axios
       .create({
-        headers: { "jwt-auth-token": storage.getItem("jwt-auth-token") },
+        headers: { 'jwt-auth-token': storage.getItem('jwt-auth-token') },
       })
-      .get("user")
+      .get('user')
       .then((response) => {
         this.user.userId = response.data.data.userId;
         this.user.userNickname = response.data.data.userNickname;
@@ -290,7 +290,7 @@ export default {
     this.$Axios
       .create({
         headers: {
-          "jwt-auth-token": storage.getItem("jwt-auth-token"),
+          'jwt-auth-token': storage.getItem('jwt-auth-token'),
         },
       })
       .get(`group/that-i-am?datetime=${day}`)
@@ -305,17 +305,17 @@ export default {
     this.$Axios
       .create({
         headers: {
-          "jwt-auth-token": storage.getItem("jwt-auth-token"),
+          'jwt-auth-token': storage.getItem('jwt-auth-token'),
         },
       })
-      .get("timer/today?datetime=" + day)
+      .get('timer/today?datetime=' + day)
       .then((response) => {
         // console.log('RESPONSEEEEEEE!!!!', response);
         if (
           response.data.todayStudyTime == null ||
           response.data.todayStudyTime === 0
         ) {
-          this.user.todayStudyTime = "0:00:00";
+          this.user.todayStudyTime = '0:00:00';
           // console.log('TYPE♡♡♡♡♡♡', typeof response.data.todayStudyTime);
         } else {
           this.user.todayStudyTime = changeSec(response.data.todayStudyTime);
@@ -329,9 +329,9 @@ export default {
     // 투두리스트 받아오기
     this.$Axios
       .create({
-        headers: { "jwt-auth-token": storage.getItem("jwt-auth-token") },
+        headers: { 'jwt-auth-token': storage.getItem('jwt-auth-token') },
       })
-      .get("todo?datetime=" + this.pickedDate)
+      .get('todo?datetime=' + this.pickedDate)
       .then((response) => {
         if (response.data.todoList.length != 0) {
           this.user.todoList = response.data.todoList;
@@ -340,11 +340,11 @@ export default {
         }
       })
       .catch((error) => {
-        console.log("TODO-LIST ERROR!!!!!", error);
+        console.log('TODO-LIST ERROR!!!!!', error);
       });
 
     // 공부 시간대 받아오기
-    this.getEachTimeAverage('day');
+    this.getEachTimeAverage('month');
   },
   data: function() {
     return {
@@ -376,6 +376,9 @@ export default {
         'night',
       ],
       isFinished: false,
+      myRankLoading: true,
+      myRankList: [],
+      groupListThatIAm: [],
     };
   },
   methods: {
@@ -387,9 +390,9 @@ export default {
       // 투두리스트 받아오기
       this.$Axios
         .create({
-          headers: { "jwt-auth-token": storage.getItem("jwt-auth-token") },
+          headers: { 'jwt-auth-token': storage.getItem('jwt-auth-token') },
         })
-        .get("todo?datetime=" + this.pickedDate)
+        .get('todo?datetime=' + this.pickedDate)
         .then((response) => {
           if (response.data.todoList.length != 0) {
             this.user.todoList = response.data.todoList;
@@ -398,7 +401,7 @@ export default {
           }
         })
         .catch((error) => {
-          console.log("TODO-LIST ERROR!!!!!", error);
+          console.log('TODO-LIST ERROR!!!!!', error);
         });
     },
     getEachTimeAverage(tmpRange) {
