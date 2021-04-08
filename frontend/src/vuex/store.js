@@ -9,14 +9,16 @@ Vue.use(Vuex);
 
 const state = {
   user: {},
-  host: 'http://localhost:9999/',
   boardDetailId: 0,
   categoryId: 1,
   categoryName: '',
   isLogin: false,
   awayTime: 0,
   phoneTime: 0,
-  Rgroup:{},
+  sleepTime: 0,
+  talkTime: 0,
+  Rgroup: {},
+  isStartCam: false,
 };
 
 export default new Vuex.Store({

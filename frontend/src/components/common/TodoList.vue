@@ -23,7 +23,7 @@ import ProgressBar from '@/components/common/ProgressBar.vue';
 const storage = window.sessionStorage;
 
 export default {
-  props: ['todoList', 'date'],
+  props:["todoList"],
   components: {
     TodoInput,
     Todo,
@@ -33,18 +33,24 @@ export default {
     return {
       // list: [],
       progress: 0,
+      changed: false,
       // todoList: [],
     };
+  },
+  watch: {
+    changed: function() {
+      this.$emit('updateTodoList', this.changed);
+      this.changed = false;
+    }
+  },
+  created(){
+    this.todoList = this.todoList || [];
   },
   mounted() {
     // const list = JSON.parse(localStorage.getItem('list'));
     // this.list = list || [];
+    this.UpdateProgress();
     // this.UpdateProgress();
-    this.todoList = this.todoList || [];
-    this.UpdateProgress();
-  },
-  created() {
-    this.UpdateProgress();
   },
   methods: {
     addTodo(message) {
@@ -68,6 +74,7 @@ export default {
         .then((res) => {
           if (res.data.success) {
             console.log('todolist가 잘 추가되었음');
+            this.changed = true;
             this.UpdateProgress();
           } else {
             console.log('todolist 추가 못함');
@@ -97,6 +104,7 @@ export default {
         .then((res) => {
           if (res.data.success) {
             console.log('todolist done');
+            this.changed = true;
             this.UpdateProgress();
           } else {
             console.log('todolist done fail');
@@ -120,6 +128,7 @@ export default {
         .then((res) => {
           if (res.data.success) {
             console.log('todolist 삭제 성공');
+            this.changed = true;
             this.UpdateProgress();
           } else {
             console.log('todolist 삭제 실패');
@@ -143,6 +152,8 @@ export default {
         }
       }
       this.progress = parseInt((100 * doneTodos) / lengthList);
+      this.changed = true;
+      console.log('updateProgress 하면서 부모로 emit 보냄');
     },
   },
 };

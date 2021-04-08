@@ -27,6 +27,6 @@ public class Todo {
 	private String todoContent;
 	@Column(insertable=false)
 	private boolean todoFinish;
-	@Column(insertable=false,updatable=false)
+	@Column(updatable=false)
 	private String todoDate;
 }

@@ -26,5 +26,11 @@ export default {
   },
   getRecommendGroup(state){
     return state.Rgroup
-  }
+  },
+  getSleepTime(state) {
+    return state.sleepTime;
+  },
+  getTalkTime(state) {
+    return state.talkTime;
+  },
 };

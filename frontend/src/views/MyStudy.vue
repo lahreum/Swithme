@@ -178,10 +178,40 @@
               />
             </v-row>
             <v-row no-gutters justify="center" style="margin-top: 50px;">
-              <div style="min-width: 380px;">
-                <v-row justify="center" style="background-color: #FAE0D4;">
-                  (그룹 내 공부시간 순위 자리)
+              <div
+                v-if="!myRankLoading"
+                style="min-width:100%; overflow-x: hidden; max-height:300px"
+              >
+                <v-row
+                  v-for="(group, idx) in groupListThatIAm"
+                  :key="idx"
+                  justify="center"
+                >
+                  <v-col>
+                    <h3 style="max-width:90%; margin-bottom:10px;">
+                      {{ groupListThatIAm[idx].groupName }}
+                    </h3>
+                    <span style="color:#673fb4; font-size:1.3rem">{{
+                      groupListThatIAm[idx].groupMaxMemberCount
+                    }}</span
+                    >명 중,
+                    <span style="color:#673fb4; font-size:1.3rem">{{
+                      myRankList[idx]
+                    }}</span
+                    >등!
+                  </v-col>
                 </v-row>
+              </div>
+              <div
+                v-else
+                style="min-width:100%; min-height:300px; max-height:300px"
+              >
+                <v-progress-circular
+                  style="position:relative; top:50%; left:50%; transform:translate(-50%, -50%);"
+                  indeterminate
+                  color="purple"
+                  :size="50"
+                ></v-progress-circular>
               </div>
             </v-row>
           </v-col>
@@ -241,9 +271,9 @@ export default {
     // user 정보 받아오기
     this.$Axios
       .create({
-        headers: { 'jwt-auth-token': storage.getItem('jwt-auth-token') },
+        headers: { "jwt-auth-token": storage.getItem("jwt-auth-token") },
       })
-      .get('user')
+      .get("user")
       .then((response) => {
         this.user.userId = response.data.data.userId;
         this.user.userNickname = response.data.data.userNickname;
@@ -256,20 +286,36 @@ export default {
     let today = new Date();
     let day = date.dateFunc(today);
 
+    // 그룹 내 공부시간 순위
     this.$Axios
       .create({
         headers: {
-          'jwt-auth-token': storage.getItem('jwt-auth-token'),
+          "jwt-auth-token": storage.getItem("jwt-auth-token"),
         },
       })
-      .get('timer/today?datetime=' + day)
+      .get(`group/that-i-am?datetime=${day}`)
+      .then((res) => {
+        console.log(res);
+        console.log(res.data.groupListThatIAm[0].groupName);
+        this.myRankList = res.data.myRankList;
+        this.groupListThatIAm = res.data.groupListThatIAm;
+        this.myRankLoading = false;
+      });
+
+    this.$Axios
+      .create({
+        headers: {
+          "jwt-auth-token": storage.getItem("jwt-auth-token"),
+        },
+      })
+      .get("timer/today?datetime=" + day)
       .then((response) => {
         // console.log('RESPONSEEEEEEE!!!!', response);
         if (
           response.data.todayStudyTime == null ||
           response.data.todayStudyTime === 0
         ) {
-          this.user.todayStudyTime = '0:00:00';
+          this.user.todayStudyTime = "0:00:00";
           // console.log('TYPE♡♡♡♡♡♡', typeof response.data.todayStudyTime);
         } else {
           this.user.todayStudyTime = changeSec(response.data.todayStudyTime);
@@ -283,9 +329,9 @@ export default {
     // 투두리스트 받아오기
     this.$Axios
       .create({
-        headers: { 'jwt-auth-token': storage.getItem('jwt-auth-token') },
+        headers: { "jwt-auth-token": storage.getItem("jwt-auth-token") },
       })
-      .get('todo?datetime=' + this.pickedDate)
+      .get("todo?datetime=" + this.pickedDate)
       .then((response) => {
         if (response.data.todoList.length != 0) {
           this.user.todoList = response.data.todoList;
@@ -294,7 +340,7 @@ export default {
         }
       })
       .catch((error) => {
-        console.log('TODO-LIST ERROR!!!!!', error);
+        console.log("TODO-LIST ERROR!!!!!", error);
       });
 
     // 공부 시간대 받아오기
@@ -335,13 +381,15 @@ export default {
   methods: {
     getPickedDate: function(value) {
       this.pickedDate = value;
+      console.log(this.myRankList);
+      console.log(this.groupListThatIAm);
 
       // 투두리스트 받아오기
       this.$Axios
         .create({
-          headers: { 'jwt-auth-token': storage.getItem('jwt-auth-token') },
+          headers: { "jwt-auth-token": storage.getItem("jwt-auth-token") },
         })
-        .get('todo?datetime=' + this.pickedDate)
+        .get("todo?datetime=" + this.pickedDate)
         .then((response) => {
           if (response.data.todoList.length != 0) {
             this.user.todoList = response.data.todoList;
@@ -350,7 +398,7 @@ export default {
           }
         })
         .catch((error) => {
-          console.log('TODO-LIST ERROR!!!!!', error);
+          console.log("TODO-LIST ERROR!!!!!", error);
         });
     },
     getEachTimeAverage(tmpRange) {

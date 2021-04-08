@@ -169,6 +169,7 @@
                   ><input-bar
                     @pass-input="getEmail"
                     placeholder="이메일"
+                    @pressEnter="login"
                   ></input-bar
                 ></v-col>
               </v-row>
@@ -178,6 +179,7 @@
                   ><input-bar
                     :type="'password'"
                     @pass-input="getPw"
+                    @pressEnter="login"
                     placeholder="비밀번호"
                   ></input-bar
                 ></v-col>
@@ -315,7 +317,6 @@ export default {
           this.userInfo = res.data.data;
           this.userInfo["profileImg"] = res.data.profileImg;
           this.userInfo["isLogin"] = true;
-          console.log("히히", this.userInfo);
           this.$store.commit("LOGIN", this.userInfo);
 
           this.profileImg = this.$store.getters.getUserImage;

@@ -21,6 +21,12 @@ export default {
   STOPSTUDYING(state) {
     state.user.isStudying = false;
   },
+  InitializeInterruption(state) {
+    state.awayTime = 0;
+    state.phoneTime = 0;
+    state.sleepTime = 0;
+    state.talkTime = 0;
+  },
   userInit(state) {
     state.user = {};
   },
@@ -30,7 +36,16 @@ export default {
   setPhoneTime(state) {
     state.phoneTime++;
   },
-  RECOMMENDGROUP(state, payload){
+  setSleepTime(state) {
+    state.sleepTime++;
+  },
+  setTalkTime(state) {
+    state.talkTime++;
+  },
+  RECOMMENDGROUP(state, payload) {
     state.Rgroup = payload;
-  }
+  },
+  setIsStartCam(state) {
+    state.isStartCam = !state.isStartCam;
+  },
 };
