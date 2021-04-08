@@ -217,10 +217,12 @@ export default {
         });
     },
     pauseTimer() {
+      this.$store.state.user.userIsStudying = false;
       console.log('pauseTimer');
       this.stopTimer();
     },
     resumeTimer() {
+      this.$store.state.user.userIsStudying = true;
       console.log('resumeTimer');
       this.startTimer();
     },
