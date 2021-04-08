@@ -429,7 +429,7 @@ public class UserController {
 		
 	@GetMapping("/ranking")
 	@ApiOperation(value="랭킹 리스트",notes="파라미터로 받은 datetime의 해당 월의 월간 순위 반환")
-	public Object getAllRanking(@RequestParam("datetime") String datetime) {
+	public Object getAllRanking(@RequestParam("datetime") String datetime, HttpServletRequest req) {
 		Map<String,Object> result=new HashMap<>();
 		
 		result.put("allRankingList",null);
@@ -456,7 +456,16 @@ public class UserController {
 					userList.add(userDto);
 				}
 			}
+			
+			int myStudyTimeCurMonth=0;
+			String nickname=commonMethods.getUserNickname(req.getHeader("jwt-auth-token"));
+			Optional<TimeMonthly> timeMonthly=timeMonthlyRepository.findByTimeMonthlyUserNicknameAndTimeMonthlyYearMonth(nickname, datetime);
+			
+			if(timeMonthly.isPresent())
+				myStudyTimeCurMonth=timeMonthly.get().getTimeMonthlyTime();
+			
 			result.clear();
+			result.put("myStudyTime",myStudyTimeCurMonth);
 			result.put("allRankingList",userList);
 		}
 		return result;
