@@ -91,9 +91,9 @@
           />
         </v-row>
         <v-row no-gutters justify="center" style="margin-top: 50px;">
-          <div style="width: 800px; min-width: 800px;">
-            <v-row justify="center" style="background-color: #E4F7BA;">
-              (공부시간 막대그래프 자리)
+          <div style="width: 800px; min-width: 800px; ">
+            <v-row justify="center" style="height: 400px;">
+              <chart-my-time></chart-my-time>
             </v-row>
           </div>
         </v-row>
@@ -107,7 +107,9 @@
               justify="start"
               align="end"
             >
-              <v-col cols="10">주요 공부 시간대</v-col>
+              <v-col cols="10">
+                주요 공부시간대
+              </v-col>
               <v-col align="end" style="color: #999999; font-size: 1rem;">
                 (단위: 시)
               </v-col>
@@ -120,7 +122,7 @@
             <v-row no-gutters justify="center" style="margin-top: 50px;">
               <div style="min-width: 380px;">
                 <v-row justify="center" style="background-color: #D4F4FA;">
-                  (주요 공부시간대 원그래프 자리)
+                  <chart-main-time></chart-main-time>
                 </v-row>
               </div>
             </v-row>
@@ -217,6 +219,8 @@ import MiddleNav from '../components/include/MiddleNav.vue';
 import MyInfo from '@/components/common/MyInfo.vue';
 import TodoList from '@/components/common/TodoList.vue';
 import AppCalendar from '@/components/common/AppCalendar.vue';
+import ChartMyTime from '@/components/common/ChartMyTime.vue';
+import ChartMainTime from '@/components/common/ChartMainTime.vue';
 import date from '@/date.js';
 import changeSec from '@/changeSec.js';
 
@@ -227,6 +231,8 @@ export default {
     'my-info': MyInfo,
     'todo-list': TodoList,
     'app-calendar': AppCalendar,
+    'chart-my-time': ChartMyTime,
+    'chart-main-time': ChartMainTime,
   },
   created: function() {
     // user 정보 받아오기
