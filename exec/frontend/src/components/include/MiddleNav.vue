@@ -9,10 +9,10 @@
     :src="require(`@/assets/img/nav/${propsdata[0]}`)"
     gradient="
     90deg,
-    rgba(0, 0, 0, 0.3),
-    rgba(0, 0, 0, 0.1),
+    rgba(102, 000, 204, 0.2),
+    rgba(0, 0, 0, 0.7),
     rgba(0, 0, 0, 0.3)"
-    position="center 20%"
+    position="center 15%"
   >
     <v-row no-gutters style="height: 300px;">
       <v-col align="center" align-self="center">

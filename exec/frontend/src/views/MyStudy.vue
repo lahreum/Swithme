@@ -397,8 +397,8 @@ export default {
       navInfo: [
         'nav3.jpg',
         '나의 학습',
-        '첫asdf번째 문장입니다. 첫번째 문장입니다. 첫번째 문장입',
-        '두번째 문장입니다~! 두번째 문장입니다~! 두번째 문장입니다~! 두번째',
+        '스윗미에서는 인공지능을 통해 얻은 데이터로 학습 패턴을 분석해드립니다.',
+        '공부를 더욱 효율적으로 할 수 있도록 도와드릴게요.',
       ],
       user: {
         userId: '',
@@ -528,7 +528,7 @@ export default {
         });
     },
     goBeforeDay() {
-      console.log('구현중');
+      alert('구현중');
       // var tmpDate = new Date();
       // console.log('===========================');
       // console.log(tmpDate);
@@ -536,7 +536,7 @@ export default {
       // console.log(tmpDate.setDate(tmpDate.getDate() - 1));
     },
     goAfterDay() {
-      console.log('구현중');
+      alert('구현중');
       // let tmp = new Date();
       // this.dateForFocusChart = date.dateFunc(
       //   tmp.setDate(tmp.getDate() + this.flagDay)
