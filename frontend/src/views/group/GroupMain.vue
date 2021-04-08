@@ -259,7 +259,7 @@ export default {
       pwRules: "",
 
       navInfo: [
-        "sample2.png",
+        "nav5.jpg",
         "그룹",
         "목표가 같은 사람들끼리 모여 달려보세요.",
         "목표로 가는 길이 덜 힘들고, 더욱 든든해질 거예요",
