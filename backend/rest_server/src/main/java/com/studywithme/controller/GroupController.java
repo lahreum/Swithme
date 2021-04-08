@@ -160,7 +160,6 @@ public class GroupController {
 				try {
 					gpd.setGroupProfileImg(list.get().get(i).getGroupProfileImg().getBytes(1l, (int)list.get().get(i).getGroupProfileImg().length()));
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				profileList.add(gpd);
@@ -199,7 +198,6 @@ public class GroupController {
 						gpd.setGroupProfileImg(groupList.get(i).getGroupProfileImg().getBytes(1l, (int)groupList.get(i).getGroupProfileImg().length()));
 						groupProfileList.add(gpd);
 					} catch (SQLException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					groupList.get(i).setGroupProfileImg(null);
@@ -241,7 +239,6 @@ public class GroupController {
 					try {
 						curUser.setProfileImg(curUserOpt.get().getUserProfileImg().getBytes(1l, (int)curUserOpt.get().getUserProfileImg().length()));
 					} catch (SQLException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					curUser.setStudying(curUserOpt.get().isUserIsStudying());
@@ -258,7 +255,6 @@ public class GroupController {
 				try {
 					result.put("groupProfileImg",group.get().getGroupProfileImg().getBytes(1l, (int)group.get().getGroupProfileImg().length()));
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				group.get().setGroupProfileImg(null);
@@ -420,7 +416,7 @@ public class GroupController {
 	
 	@GetMapping("/that-i-am")
 	@ApiOperation(value="내가 속한 그룹 리스트",notes="내가 속한 그룹 리스트를 반환")
-	public Object getGroupListThatIAm(HttpServletRequest req) {
+	public Object getGroupListThatIAm(HttpServletRequest req,@RequestParam("datetime") String datetime) {
 		Map<String,Object> result=new HashMap<>();
 		
 		result.put("groupListThatIAm",null);
@@ -432,25 +428,31 @@ public class GroupController {
 			Optional<List<GroupMember>> groupMemberList=groupMemberRepository.findByGroupMemberUserNickname(nickname);
 			List<GroupInfo> groupList=new ArrayList<>();
 			List<GroupProfileDto> groupProfileList=new ArrayList<>();
-			for(GroupMember gm : groupMemberList.get()) {
-				Optional<GroupInfo> group=groupRepository.findById(gm.getGroupMemberGroupId());
-				if(group.isPresent()) {
-					try {
-						GroupProfileDto gpd=new GroupProfileDto();
-						gpd.setGroupId(group.get().getGroupId());
-						gpd.setGroupProfileImg(group.get().getGroupProfileImg().getBytes(1l, (int)group.get().getGroupProfileImg().length()));
-						groupProfileList.add(gpd);
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+			List<Integer> myRankList=new ArrayList<>();
+			if (groupMemberList.isPresent()) {
+				for (GroupMember gm : groupMemberList.get()) {
+					Optional<GroupInfo> group = groupRepository.findById(gm.getGroupMemberGroupId());
+					if (group.isPresent()) {
+						try {
+							GroupProfileDto gpd = new GroupProfileDto();
+							gpd.setGroupId(group.get().getGroupId());
+							gpd.setGroupProfileImg(group.get().getGroupProfileImg().getBytes(1l,
+									(int) group.get().getGroupProfileImg().length()));
+							groupProfileList.add(gpd);
+						} catch (SQLException e) {
+							e.printStackTrace();
+						}
+						group.get().setGroupProfileImg(null);
+						groupList.add(group.get());
+						//TODO
+						myRankList.add(myRankInGroup(group.get().getGroupId(),nickname,datetime));
 					}
-					group.get().setGroupProfileImg(null);
-					groupList.add(group.get());
 				}
+				result.clear();
+				result.put("myRankList", myRankList);
+				result.put("groupListThatIAm", groupList);
+				result.put("groupProfileList", groupProfileList);
 			}
-			result.clear();
-			result.put("groupListThatIAm",groupList);
-			result.put("groupProfileList",groupProfileList);
 		}
 		return result;
 	}
@@ -625,6 +627,50 @@ public class GroupController {
 			}
 		}
 		return result;
+	}
+	
+	//------------------------------------------------------------
+	public int myRankInGroup(int groupId,String nickname,String datetime) {
+		int myTime=0;
+		int myRank=0;
+		
+		String[] dates=null;
+		List<Integer> studyTimeListOfGroupMembers=new ArrayList<>();
+		
+		Optional<List<GroupMember>> groupMemberList=groupMemberRepository.findByGroupMemberGroupId(groupId);
+		try {
+			dates=commonMethods.getDays(datetime);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		for(String s: dates) {
+			Optional<TimeDaily> td=timeDailyRepository.findByTimeDailyUserNicknameAndTimeDailyYearMonthDayAndTimeDailyAction(nickname, s, 0);
+			if(td.isPresent())
+				myTime+=td.get().getTimeDailyTime();
+		}
+		
+		if(groupMemberList.isPresent()) {
+			for(GroupMember gm:groupMemberList.get()) {
+				int cur=0;
+				for(String s: dates) {
+					Optional<TimeDaily> td= timeDailyRepository.findByTimeDailyUserNicknameAndTimeDailyYearMonthDayAndTimeDailyAction(gm.getGroupMemberUserNickname(), s, 0);
+					if(td.isPresent())
+						cur+=td.get().getTimeDailyTime();
+				}
+				studyTimeListOfGroupMembers.add(cur);
+			}
+		}
+		
+		Collections.sort(studyTimeListOfGroupMembers,Collections.reverseOrder());
+		for(int i=0;i<studyTimeListOfGroupMembers.size();i++) {
+			if(myTime==studyTimeListOfGroupMembers.get(i)) {
+				myRank=i+1;
+				break;
+			}
+		}
+		
+		return myRank;
 	}
 	
 }

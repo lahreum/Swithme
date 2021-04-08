@@ -18,6 +18,7 @@
               <input-bar
                 :type="'password'"
                 @pass-input="getPassword"
+                @pressEnter="routingRequest"
               ></input-bar
             ></v-col>
             <v-col

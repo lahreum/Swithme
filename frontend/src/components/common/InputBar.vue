@@ -9,21 +9,25 @@
     v-model="input"
     @input="passEvent"
     @change="passEvent"
+    @keyup.enter="pressEnter"
   ></v-text-field>
 </template>
 
 <script>
 export default {
-  name: 'InputBar',
-  props: ['placeholder', 'type', 'isDisabled', 'rules'],
+  name: "InputBar",
+  props: ["placeholder", "type", "isDisabled", "rules"],
   data: function() {
     return {
-      input: '',
+      input: "",
     };
   },
   methods: {
     passEvent: function() {
-      this.$emit('pass-input', this.input);
+      this.$emit("pass-input", this.input);
+    },
+    pressEnter() {
+      this.$emit("pressEnter");
     },
   },
 };

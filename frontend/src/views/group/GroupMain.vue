@@ -14,8 +14,8 @@
 
           <div>
             <v-row align="end">
-              <v-col cols="3"><h1>그룹 목록</h1></v-col>
-              <v-col cols="5" style="font-size: 1rem;">
+              <v-col style="font-size:2.5rem" cols="2">그룹 목록</v-col>
+              <v-col cols="6" style="font-size: 1rem;">
                 지금
                 <span style="font-size:1.2rem;color:#673fb4">{{
                   groups.length
@@ -229,6 +229,7 @@ import GroupSelect from "@/components/common/GroupSelect.vue";
 import SearchBar from "@/components/common/SearchBar.vue";
 import AppBtnSmall from "@/components/common/AppBtnSmall.vue";
 import GroupRecommend from "@/components/common/GroupRecommend.vue";
+import date from "@/date.js";
 import axios from "axios";
 
 const storage = window.sessionStorage;
@@ -259,7 +260,7 @@ export default {
       pwRules: "",
 
       navInfo: [
-        "sample2.png",
+        "nav5.jpg",
         "그룹",
         "목표가 같은 사람들끼리 모여 달려보세요.",
         "목표로 가는 길이 덜 힘들고, 더욱 든든해질 거예요",
@@ -277,6 +278,9 @@ export default {
       this.AllGroup = this.groups.slice(0, this.moreSeeIdx);
     },
     MakeMyGroup() {
+      let today = new Date();
+      let day = date.dateFunc(today);
+
       this.caseNum = 2;
       this.MyGroup = [];
       axios
@@ -285,7 +289,7 @@ export default {
             "jwt-auth-token": storage.getItem("jwt-auth-token"),
           },
         })
-        .get("group/that-i-am")
+        .get(`group/that-i-am?datetime=${day}`)
         .then((res) => {
           console.log("내가잇는그룹", res);
           this.MyGroup = res.data.groupListThatIAm;
@@ -298,8 +302,6 @@ export default {
             }
           }
         });
-      // console.log(this.MyGroup);
-      // console.log(this.caseNum);
     },
     MakeHotGroup() {
       this.caseNum = 3;
@@ -308,32 +310,21 @@ export default {
         return b.groupMaxMemberCount - a.groupMaxMemberCount;
       });
       this.HotGroup = this.HotGroup.slice(0, 8);
-      // console.log(this.HotGroup);
     },
     MakeNewGroup() {
       this.caseNum = 4;
       this.NewGroup = [];
       var Today = new Date();
-      // console.log(Today);
-      // var year = date.getFullYear();
-      // var month = ("0" + (1 + date.getMonth())).slice(-2);
-      // var day = ("0" + date.getDate()).slice(-2);
       for (var i = this.groups.length - 1; i >= 0; i--) {
         console.log(i);
         var groupMadeDate = this.groups[i].groupCreatedDate;
         var groupDate = new Date(groupMadeDate.substring(0, 10));
-        // console.log("그룹만들어진날짜==", groupDate);
-        // console.log(
-        //   "오늘날짜 빼기 그룹만들어진날짜",
-        //   (Today.getTime() - groupDate.getTime()) / 1000 / 60 / 60 / 24
-        // );
         if ((Today.getTime() - groupDate.getTime()) / 1000 / 60 / 60 / 24 < 3) {
           this.NewGroup.push(this.groups[i]);
         }
       }
     },
     search(s) {
-      // console.log("넘어온거", s);
       this.caseNum = 5;
       this.SearchedGroup = [];
       for (var i = 0; i < this.groups.length; i++) {
@@ -356,13 +347,12 @@ export default {
           })
           .get("group")
           .then((res) => {
-            // console.log("그룹메인created될때", res);
             this.groups = res.data.groupList;
             for (var i = 0; i < this.groups.length; i++) {
               this.groups[i]["src"] =
                 res.data.groupProfileList[i].groupProfileImg;
             }
-            // console.log(this.groups);
+
             this.AllGroup = this.groups.slice(0, 12);
           })
           .catch((err) => {
@@ -390,7 +380,6 @@ export default {
       }
     },
     toGroupDetail(gId, gPw) {
-      console.log("$$$$$$4", gPw);
       if (gPw !== undefined) {
         this.dialog = true;
         this.checkGId = gId;
@@ -416,7 +405,6 @@ export default {
     },
   },
   created() {
-    console.log("그룹메인크리에이티드됨???");
     axios
       .create({
         headers: {
@@ -425,7 +413,6 @@ export default {
       })
       .get("group")
       .then((res) => {
-        console.log("그룹받아오는거성공할때", res);
         this.groups = res.data.groupList;
         for (var i = 0; i < this.groups.length; i++) {
           this.groups[i]["src"] = res.data.groupProfileList[i].groupProfileImg;

@@ -91,9 +91,9 @@
           />
         </v-row>
         <v-row no-gutters justify="center" style="margin-top: 50px;">
-          <div style="width: 800px; min-width: 800px;">
-            <v-row justify="center" style="background-color: #E4F7BA;">
-              (공부시간 막대그래프 자리)
+          <div style="width: 800px; min-width: 800px; ">
+            <v-row justify="center" style="height: 400px;">
+              <chart-my-time></chart-my-time>
             </v-row>
           </div>
         </v-row>
@@ -107,7 +107,9 @@
               justify="start"
               align="end"
             >
-              <v-col cols="10">주요 공부 시간대</v-col>
+              <v-col cols="10">
+                주요 공부시간대
+              </v-col>
               <v-col align="end" style="color: #999999; font-size: 1rem;">
                 (단위: 시)
               </v-col>
@@ -119,8 +121,11 @@
             </v-row>
             <v-row no-gutters justify="center" style="margin-top: 50px;">
               <div style="min-width: 380px;">
-                <v-row justify="center" style="background-color: #D4F4FA;">
-                  (주요 공부시간대 원그래프 자리)
+                <v-row justify="center" v-if="isFinished">
+                  <chart-main-time
+                    :labels="timeLabel"
+                    :timedataset="timeDataset"
+                  ></chart-main-time>
                 </v-row>
               </div>
             </v-row>
@@ -173,10 +178,40 @@
               />
             </v-row>
             <v-row no-gutters justify="center" style="margin-top: 50px;">
-              <div style="min-width: 380px;">
-                <v-row justify="center" style="background-color: #FAE0D4;">
-                  (그룹 내 공부시간 순위 자리)
+              <div
+                v-if="!myRankLoading"
+                style="min-width:100%; overflow-x: hidden; max-height:300px"
+              >
+                <v-row
+                  v-for="(group, idx) in groupListThatIAm"
+                  :key="idx"
+                  justify="center"
+                >
+                  <v-col>
+                    <h3 style="max-width:90%; margin-bottom:10px;">
+                      {{ groupListThatIAm[idx].groupName }}
+                    </h3>
+                    <span style="color:#673fb4; font-size:1.3rem">{{
+                      groupListThatIAm[idx].groupMaxMemberCount
+                    }}</span
+                    >명 중,
+                    <span style="color:#673fb4; font-size:1.3rem">{{
+                      myRankList[idx]
+                    }}</span
+                    >등!
+                  </v-col>
                 </v-row>
+              </div>
+              <div
+                v-else
+                style="min-width:100%; min-height:300px; max-height:300px"
+              >
+                <v-progress-circular
+                  style="position:relative; top:50%; left:50%; transform:translate(-50%, -50%);"
+                  indeterminate
+                  color="purple"
+                  :size="50"
+                ></v-progress-circular>
               </div>
             </v-row>
           </v-col>
@@ -217,6 +252,8 @@ import MiddleNav from '../components/include/MiddleNav.vue';
 import MyInfo from '@/components/common/MyInfo.vue';
 import TodoList from '@/components/common/TodoList.vue';
 import AppCalendar from '@/components/common/AppCalendar.vue';
+import ChartMyTime from '@/components/common/ChartMyTime.vue';
+import ChartMainTime from '@/components/common/ChartMainTime.vue';
 import date from '@/date.js';
 import changeSec from '@/changeSec.js';
 
@@ -227,14 +264,16 @@ export default {
     'my-info': MyInfo,
     'todo-list': TodoList,
     'app-calendar': AppCalendar,
+    'chart-my-time': ChartMyTime,
+    'chart-main-time': ChartMainTime,
   },
   created: function() {
     // user 정보 받아오기
     this.$Axios
       .create({
-        headers: { 'jwt-auth-token': storage.getItem('jwt-auth-token') },
+        headers: { "jwt-auth-token": storage.getItem("jwt-auth-token") },
       })
-      .get('user')
+      .get("user")
       .then((response) => {
         this.user.userId = response.data.data.userId;
         this.user.userNickname = response.data.data.userNickname;
@@ -247,20 +286,36 @@ export default {
     let today = new Date();
     let day = date.dateFunc(today);
 
+    // 그룹 내 공부시간 순위
     this.$Axios
       .create({
         headers: {
-          'jwt-auth-token': storage.getItem('jwt-auth-token'),
+          "jwt-auth-token": storage.getItem("jwt-auth-token"),
         },
       })
-      .get('timer/today?datetime=' + day)
+      .get(`group/that-i-am?datetime=${day}`)
+      .then((res) => {
+        console.log(res);
+        console.log(res.data.groupListThatIAm[0].groupName);
+        this.myRankList = res.data.myRankList;
+        this.groupListThatIAm = res.data.groupListThatIAm;
+        this.myRankLoading = false;
+      });
+
+    this.$Axios
+      .create({
+        headers: {
+          "jwt-auth-token": storage.getItem("jwt-auth-token"),
+        },
+      })
+      .get("timer/today?datetime=" + day)
       .then((response) => {
         // console.log('RESPONSEEEEEEE!!!!', response);
         if (
           response.data.todayStudyTime == null ||
           response.data.todayStudyTime === 0
         ) {
-          this.user.todayStudyTime = '0:00:00';
+          this.user.todayStudyTime = "0:00:00";
           // console.log('TYPE♡♡♡♡♡♡', typeof response.data.todayStudyTime);
         } else {
           this.user.todayStudyTime = changeSec(response.data.todayStudyTime);
@@ -274,9 +329,9 @@ export default {
     // 투두리스트 받아오기
     this.$Axios
       .create({
-        headers: { 'jwt-auth-token': storage.getItem('jwt-auth-token') },
+        headers: { "jwt-auth-token": storage.getItem("jwt-auth-token") },
       })
-      .get('todo?datetime=' + this.pickedDate)
+      .get("todo?datetime=" + this.pickedDate)
       .then((response) => {
         if (response.data.todoList.length != 0) {
           this.user.todoList = response.data.todoList;
@@ -285,8 +340,11 @@ export default {
         }
       })
       .catch((error) => {
-        console.log('TODO-LIST ERROR!!!!!', error);
+        console.log("TODO-LIST ERROR!!!!!", error);
       });
+
+    // 공부 시간대 받아오기
+    this.getEachTimeAverage('day');
   },
   data: function() {
     return {
@@ -307,18 +365,31 @@ export default {
         todoList: [],
       },
       pickedDate: date.dateFunc(new Date()),
+      timeList: [],
+      timeDataset: [0, 0, 0, 0, 0, 0],
+      timeLabel: [
+        'dawn',
+        'morning',
+        'before lunch',
+        'afternoon',
+        'evening',
+        'night',
+      ],
+      isFinished: false,
     };
   },
   methods: {
     getPickedDate: function(value) {
       this.pickedDate = value;
+      console.log(this.myRankList);
+      console.log(this.groupListThatIAm);
 
       // 투두리스트 받아오기
       this.$Axios
         .create({
-          headers: { 'jwt-auth-token': storage.getItem('jwt-auth-token') },
+          headers: { "jwt-auth-token": storage.getItem("jwt-auth-token") },
         })
-        .get('todo?datetime=' + this.pickedDate)
+        .get("todo?datetime=" + this.pickedDate)
         .then((response) => {
           if (response.data.todoList.length != 0) {
             this.user.todoList = response.data.todoList;
@@ -327,8 +398,52 @@ export default {
           }
         })
         .catch((error) => {
-          console.log('TODO-LIST ERROR!!!!!', error);
+          console.log("TODO-LIST ERROR!!!!!", error);
         });
+    },
+    getEachTimeAverage(tmpRange) {
+      let today = date.dateFunc(new Date());
+      console.log(today);
+      this.$Axios
+        .create({
+          headers: { 'jwt-auth-token': storage.getItem('jwt-auth-token') },
+        })
+        .get(`timer/hourly/${tmpRange}?datetimeOrigin=2021-04-07 03:21:35`)
+        .then((response) => {
+          if (response.data.eachTimeAverage.length != 0) {
+            console.log(response);
+            this.timeList = response.data.eachTimeAverage;
+            if (this.timeList != null) {
+              this.divideTime();
+              // console.log(this.dawn);
+              // console.log(this.morning);
+              // console.log(this.beforeLunch);
+              // console.log(this.afternoon);
+              // console.log(this.evening);
+              // console.log(this.night);
+            }
+          }
+        });
+    },
+    divideTime() {
+      let tmp = [0, 0, 0, 0, 0, 0];
+      for (let i = 0; i < this.timeList.length; i++) {
+        if (i >= 1 && i <= 4) {
+          tmp[0] += this.timeList[i];
+        } else if (i >= 5 && i <= 8) {
+          tmp[1] += this.timeList[i];
+        } else if (i >= 9 && i <= 12) {
+          tmp[2] += this.timeList[i];
+        } else if (i >= 13 && i <= 16) {
+          tmp[3] += this.timeList[i];
+        } else if (i >= 17 && i <= 20) {
+          tmp[4] += this.timeList[i];
+        } else {
+          tmp[5] += this.timeList[i];
+        }
+      }
+      this.timeDataset = tmp;
+      this.isFinished = true;
     },
   },
 };

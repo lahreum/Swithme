@@ -42,7 +42,10 @@ export default {
   setTalkTime(state) {
     state.talkTime++;
   },
-  RECOMMENDGROUP(state, payload){
+  RECOMMENDGROUP(state, payload) {
     state.Rgroup = payload;
-  }
+  },
+  setIsStartCam(state) {
+    state.isStartCam = !state.isStartCam;
+  },
 };

@@ -1,5 +1,5 @@
 <template>
-  <v-avatar size="35px" style="margin-right: 5px;">
+  <v-avatar size="35px">
     <img :src="src" />
   </v-avatar>
 </template>

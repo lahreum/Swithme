@@ -169,6 +169,7 @@
                   ><input-bar
                     @pass-input="getEmail"
                     placeholder="이메일"
+                    @pressEnter="login"
                   ></input-bar
                 ></v-col>
               </v-row>
@@ -178,6 +179,7 @@
                   ><input-bar
                     :type="'password'"
                     @pass-input="getPw"
+                    @pressEnter="login"
                     placeholder="비밀번호"
                   ></input-bar
                 ></v-col>
@@ -253,7 +255,7 @@ export default {
     'input-bar': InputBar,
     'profile-small': ProfileSmall,
   },
-  data: function() {
+  data: function () {
     return {
       username: 'default',
       dialog: false,
@@ -278,7 +280,7 @@ export default {
   },
 
   methods: {
-    logout: function() {
+    logout: function () {
       alert('성공적으로 로그아웃 했습니다. 안녕히!');
       // this.isLogin = false;
       storage.removeItem('jwt-auth-token');
@@ -287,14 +289,14 @@ export default {
         this.$router.push('/');
       }
     },
-    goMyPage: function() {
+    goMyPage: function () {
       if (this.userInfo.userType != null) {
         this.$router.push('/my-page');
       } else {
         this.$router.push('/my-page-access');
       }
     },
-    goMain: function() {
+    goMain: function () {
       this.$router.push('/');
     },
     openLogin() {
@@ -313,7 +315,6 @@ export default {
           this.userInfo = res.data.data;
           this.userInfo['profileImg'] = res.data.profileImg;
           this.userInfo['isLogin'] = true;
-          console.log('히히', this.userInfo);
           this.$store.commit('LOGIN', this.userInfo);
 
           this.profileImg = this.$store.getters.getUserImage;
