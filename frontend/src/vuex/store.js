@@ -17,7 +17,8 @@ const state = {
   phoneTime: 0,
   sleepTime: 0,
   talkTime: 0,
-  Rgroup:{},
+  Rgroup: {},
+  isStartCam: false,
 };
 
 export default new Vuex.Store({
