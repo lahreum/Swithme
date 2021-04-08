@@ -23,7 +23,7 @@ import ProgressBar from '@/components/common/ProgressBar.vue';
 const storage = window.sessionStorage;
 
 export default {
-  props:["todoList", "date"],
+  props: ['todoList', 'date'],
   components: {
     TodoInput,
     Todo,
@@ -41,9 +41,9 @@ export default {
     changed: function() {
       this.$emit('updateTodoList', this.changed);
       this.changed = false;
-    }
+    },
   },
-  created(){
+  created() {
     this.todoList = this.todoList || [];
   },
   mounted() {
@@ -162,7 +162,7 @@ export default {
 <style>
 .todoList {
   padding: 0;
-  height: 18.2vw;
+  height: 360px;
   overflow: scroll;
 }
 </style>
