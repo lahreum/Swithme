@@ -535,7 +535,6 @@ export default {
       }
     },
     getDisturbingCause(value) {
-      console.log(value);
       let tmpDC = [0, 0, 0, 0, 0];
 
       this.$Axios
@@ -547,19 +546,19 @@ export default {
           if (response.data.disturbingCause.length != 0) {
             for (let i = 0; i < response.data.disturbingCause.length; i++) {
               if (response.data.disturbingCause[i].timeDailyAction == 1) {
-                tmpDC[0] += 1;
+                tmpDC[0] += response.data.disturbingCause[i].timeDailyTime;
               } else if (
                 response.data.disturbingCause[i].timeDailyAction == 2
               ) {
-                tmpDC[1] += 1;
+                tmpDC[1] += response.data.disturbingCause[i].timeDailyTime;
               } else if (
                 response.data.disturbingCause[i].timeDailyAction == 3
               ) {
-                tmpDC[2] += 1;
+                tmpDC[2] += response.data.disturbingCause[i].timeDailyTime;
               } else if (
                 response.data.disturbingCause[i].timeDailyAction == 4
               ) {
-                tmpDC[3] += 1;
+                tmpDC[3] += response.data.disturbingCause[i].timeDailyTime;
               } else {
                 console.log('공부 Action');
               }
