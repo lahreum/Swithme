@@ -5,6 +5,7 @@
 2. 속성 이름 propsdata 으로 해서 navInfo 배열을 props 해주기
  -->
   <v-img
+    style="margin-top:100px;"
     max-height="300"
     :src="require(`@/assets/img/nav/${propsdata[0]}`)"
     gradient="
@@ -30,10 +31,10 @@
 
 <script>
 export default {
-  props: ['propsdata'],
+  props: ["propsdata"],
   data: function() {
     return {
-      pageName: '',
+      pageName: "",
     };
   },
 };

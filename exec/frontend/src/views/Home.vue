@@ -2,9 +2,7 @@
   <div>
     <div
       style="z-index: 100; position:fixed; top: 0px; left: 0px; width: 100%;"
-    >
-      <app-header :darkmode="isDarkmode"></app-header>
-    </div>
+    ></div>
     <study-btn
       style="position: fixed; z-index: 100; left: 25%; top: 65%;"
       v-bind:propsdata="isTop"
@@ -35,7 +33,6 @@
 </template>
 
 <script>
-import AppHeader from "../components/include/AppHeader.vue";
 import HomeFirst from "../components/include/HomeFirst.vue";
 import HomeSecond from "../components/include/HomeSecond.vue";
 import HomeThird from "../components/include/HomeThird.vue";
@@ -46,7 +43,6 @@ import StudyBtn from "../components/common/StudyBtn.vue";
 
 export default {
   components: {
-    "app-header": AppHeader,
     "home-first": HomeFirst,
     "home-second": HomeSecond,
     "home-third": HomeThird,
@@ -82,11 +78,13 @@ export default {
         (index.index == 3 && direction == "up")
       ) {
         this.isDarkmode = false;
+        this.$emit("isDarkmode", this.isDarkmode);
       } else if (
         (index.index == 1 && direction == "up") ||
         (index.index == 2 && direction == "down")
       ) {
         this.isDarkmode = true;
+        this.$emit("isDarkmode", this.isDarkmode);
       }
     },
   },
