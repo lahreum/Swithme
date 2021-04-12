@@ -1,5 +1,5 @@
 <template>
-  <header>
+  <header style="z-index:10; position:absolute; width:100%">
     <v-row no-gutters align="center" style="height: 100px">
       <v-col cols="2" class="logo-header">
         <img
@@ -22,6 +22,7 @@
           >
             튜토리얼
           </router-link>
+          <!-- <h3 @click="toTutorial">튜토리얼</h3> -->
           <router-link
             class="menu-item"
             to="/timer"
@@ -36,13 +37,13 @@
           >
             나의학습
           </router-link>
-          <router-link
+          <!-- <router-link
             class="menu-item"
             to="/ranking"
             :class="{ 'white-text': darkmode, 'black-text': !darkmode }"
           >
             랭킹
-          </router-link>
+          </router-link> -->
           <router-link
             class="menu-item"
             to="/group"
@@ -63,7 +64,7 @@
       <v-col cols="2">
         <v-row
           no-gutters
-          v-if="!$store.getters.getUserIsLogin"
+          v-if="!successLogin"
           justify="center"
           style="margin-left: 60px"
         >
@@ -99,7 +100,7 @@
             transition="slide-y-transition"
             bottom
           >
-            <template v-slot:activator="{ on }">
+            <!-- <template v-slot:activator="{ on }">
               <v-col cols="2">
                 <profile-small
                   :src="'data:image/png;base64,' + $store.getters.getUserImage"
@@ -113,6 +114,22 @@
                 :class="{ 'white-text': darkmode, 'black-text': !darkmode }"
               >
                 {{ $store.getters.getUserNickname }}님, 안녕하세요!
+              </v-col>
+            </template> -->
+            <template v-slot:activator="{ on }">
+              <v-col cols="2">
+                <profile-small
+                  :src="'data:image/png;base64,' + userInfo.profileImg"
+                ></profile-small>
+              </v-col>
+              <v-col
+                style="cursor: pointer"
+                align="start"
+                align-self="center"
+                v-on="on"
+                :class="{ 'white-text': darkmode, 'black-text': !darkmode }"
+              >
+                {{ userInfo.userNickname }}님, 안녕하세요!
               </v-col>
             </template>
             <v-list>
@@ -266,35 +283,46 @@ export default {
       pw: "",
       recommendGroup: [],
       Rgroups: [],
+      successLogin: false,
       isLogin: this.$store.getters.getUserIsLogin,
       userNickname: this.$store.getters.getUserNickname,
       profileImg: this.$store.getters.getUserImage,
     };
   },
 
-  created() {
-    // console.log('마운티드됨?');
-    if (storage.getItem("jwt-auth-token")) {
-      axios
-        .create({
-          headers: {
-            "jwt-auth-token": storage.getItem("jwt-auth-token"),
-          },
-        })
-        .get("user")
-        .then((res) => {
-          this.userInfo = res.data.data;
-          console.log(this.userInfo);
-        });
-    } else {
-      this.$store.commit("userInit");
-    }
+  // created() {
+
+  //   if (storage.getItem("jwt-auth-token")) {
+  //     this.successLogin = true;
+  //     axios
+  //       .create({
+  //         headers: {
+  //           "jwt-auth-token": storage.getItem("jwt-auth-token"),
+  //         },
+  //       })
+  //       .get("user")
+  //       .then((res) => {
+  //         this.userInfo = res.data.data;
+  //         console.log(this.userInfo);
+  //       });
+  //   } else {
+  //     this.$store.commit("userInit");
+  //   }
+  // },
+  watch: {
+    successLogin(successlogin) {
+      console.log(successlogin);
+    },
   },
 
   methods: {
+    toTutorial() {
+      this.$router.push("/tutorial");
+      console.log(this.successLogin);
+    },
     logout: function() {
       alert("성공적으로 로그아웃 했습니다. 안녕히!");
-      // this.isLogin = false;
+      this.successLogin = false;
       storage.removeItem("jwt-auth-token");
       this.$store.commit("userInit");
       if (this.$router.currentRoute.path != "/") {
@@ -368,17 +396,16 @@ export default {
       axios
         .post("user/login", params)
         .then((res) => {
-          // console.log(res);
+          console.log(res);
           if (res.data.success === true) {
             this.dialog = false;
-            this.isLogin = true;
-            // console.log(res);
+            this.successLogin = true;
+            console.log(this.successLogin);
             this.getUserInfo(res.headers["jwt-auth-token"]);
             storage.setItem("jwt-auth-token", res.headers["jwt-auth-token"]);
 
             // console.log("유저닉네임", this.userNickname);
             // console.log(this.$store.state.user);
-
             // console.log("스토어", this.userNickname);
           } else {
             alert("아이디 또는 비밀번호를 잘못 입력하였습니다.");
