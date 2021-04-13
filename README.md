@@ -1,11 +1,8 @@
-![logo](exec/frontend/src/assets/img/logo_bl.png)
 <p align="center">
     <img src="exec/frontend/src/assets/img/logo_bl.png"/>
+    AI기반 학습 관리 서비스 💻🧠
 </p>
-AI기반 학습 관리 서비스 💻🧠
 
-
----
 
 ## 개발일정
 
