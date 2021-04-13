@@ -1,4 +1,5 @@
 ![logo](exec/frontend/src/assets/img/logo_bl.png)
+<center><img src="exec/frontend/src/assets/img/logo_bl.png"></center>
 AI기반 학습 관리 서비스 💻🧠
 
 
