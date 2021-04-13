@@ -1,14 +1,12 @@
-# 칼국수레인저
-
-## 🧠AI 스터디메이트🧠
-
+![logo](exec/frontend/src/assets/img/logo_bl.png)
+AI기반 학습 관리 서비스 💻🧠
 
 
 ---
 
 ## 개발일정
 
-![week2](deliverables/imgs/week2.png)
+
 
 ## 기획 의도
 
